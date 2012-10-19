@@ -2,7 +2,7 @@ import numpy as np
 import nibabel as nib
 #fos modules
 from fos import Actor
-from fos import Window, Region
+from fos import Window, Scene
 from fos.actor import Axes, Text3D
 from fos.modelmat import screen_to_model
 import fos.interact.collision as cll
@@ -13,19 +13,18 @@ from dipy.segment.quickbundles import QuickBundles
 from dipy.io.dpy import Dpy
 from dipy.io.pickles import load_pickle
 from dipy.viz.colormap import orient2rgb
-from dipy.tracking.metrics import downsample
 from dipy.viz.fos.guillotine import Guillotine
+from dipy.tracking.metrics import downsample
+from dipy.tracking.vox2track import track_counts
 #other
 import copy 
 import cPickle as pickle
-
+#trick for the bug of pyglet multiarrays
 glib=load_library('GL')
-
-from dipy.tracking.vox2track import track_counts
+#Tk dialogs
 import Tkinter, tkFileDialog
-
+#Pyside for windowing
 from PySide.QtCore import Qt
-
 
 question_message="""
 >>>>Track Labeler
@@ -52,6 +51,14 @@ ESC: Exit.
 """
 
 
+def rotation_matrix(axis,theta_degree):
+    theta = 1.*theta_degree*np.pi/180.
+    axis = 1.*axis/np.sqrt(np.dot(axis,axis))
+    a = np.cos(theta/2)
+    b,c,d = -axis*np.sin(theta/2)
+    return np.array([[a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c)],
+                     [2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b)],
+                     [2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c]])
 
 
 def track2rgb(track):
@@ -118,7 +125,7 @@ class TrackLabeler(Actor):
         if self.vol_shape !=None:
             #self.tracks_shifted =[t+np.array(vol_shape)/2. for t in self.tracks]
             self.virtuals_shifted =[downsample(t+np.array(self.vol_shape)/2.,30) for t in self.virtuals]
-            #self.virtuals_shifted =[downsample(t,30) for t in self.virtuals]
+
         else:
             #self.tracks_shifted=None
             self.virtuals_shifted=None
@@ -158,6 +165,7 @@ class TrackLabeler(Actor):
 
         This is done at every frame and therefore must be real fast.
         """
+        glDisable(GL_LIGHTING)
         # virtuals
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_BLEND)
@@ -189,8 +197,6 @@ class TrackLabeler(Actor):
                                     self.tracks_visualized_count.ctypes.data, 
                                     len(self.tracks_visualized_count))
             glPopMatrix()
-#moi them vao de rotate
-        #glRotatef(-90.,0.,0.,1.)                
         glDisableClientState(GL_COLOR_ARRAY)
         glDisableClientState(GL_VERTEX_ARRAY)      
         glLineWidth(1.)
@@ -354,8 +360,6 @@ class TrackLabeler(Actor):
             ids = self.maskout_tracks()
             self.select_track(ids)
 
-
-
     def freeze(self):
         print("Freezing current expanded real tracks, then doing QB on them, then restarting.")
         print("Selected virtuals: %s" % self.selected)
@@ -436,31 +440,6 @@ class TrackLabeler(Actor):
                 return closest_to_line_idx[0]
         else: # simpler and apparently more effective algorithm:
             return np.argmin(line_distance + screen_distance)
-            
-    
-    def set_state(self): # , line_width):
-        """Tell hardware what to do with the scene.
-        """
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glEnable(GL_LINE_SMOOTH)        
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST)
-        # glLineWidth(line_width)
-        
-
-    def unset_state(self):
-        """Close communication with hardware.
-
-        Disable what was enabled during set_state().
-        """
-        glDisable(GL_DEPTH_TEST)
-        glDisable(GL_BLEND)
-        glDisable(GL_LINE_SMOOTH)
-        # glLineWidth(1.)
-
-    def delete(self):
-        pass
 
     def maskout_tracks(self):
         """ retrieve ids of virtuals which go through the mask
@@ -504,123 +483,81 @@ class ThresholdSelector(object):
         self.value = self.s.get()
         self.parent.destroy()
 
-def rotation_matrix(axis,theta_degree):
-    theta = 1.*theta_degree*np.pi/180.
-    axis = 1.*axis/np.sqrt(np.dot(axis,axis))
-    a = np.cos(theta/2)
-    b,c,d = -axis*np.sin(theta/2)
-    return np.array([[a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c)],
-                     [2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b)],
-                     [2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c]])
-
 
 if __name__ == '__main__':
 
-    #v = np.array([(1,0,0),(1,1,0),(0,1,0)])
-    #axis = np.array([0,0,1])
-    #theta = 90. 
-    #print v
-    #print(np.dot(rotation_matrix(axis,theta),v))     
-    #1/0
     
-    #load T1 volume registered in MNI space     
-    #dname = '/home/bao/elef12/ADHD'
-    #dname = '/home/bao/elef12/data_temp/'
-    #dname = '/usr/share/fsl/data/standard/'
-    #fname = '/usr/share/fsl/data/standard/' + 'FMRIB58_FA_1mm.nii.gz'
-    
-    
-    dname = 'data_temp/'    
-    #img = nib.load(dname+'subj_05/MPRAGE_32/T1_flirt_out.nii.gz')        
-    img = nib.load(dname+'101/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz')           
-
-    #dname = 'data'
-    #img = nib.load(dname+'/1060223/session_1/MPRAGE_1/T1_flirt_out.nii.gz')           
-    
+    #load T1 volume registered in MNI space 
+    #dname='/home/eg309/Devel/fos_legacy/applications/'
+    dname='/home/bao/tiensy/data/'
+    img = nib.load(dname+'1891215/session_1/MPRAGE_1/T1_flirt_out.nii.gz')
     data = img.get_data()
-    data = np.interp(data, [data.min(), data.max()], [0, 255]).astype(np.ubyte)
     affine = img.get_affine()
-    
-    
+
     #load the tracks registered in MNI space 
-    #fdpyw = dname+'ADHD/1060223/session_1/DTI64_1/DTI/tracks_dti_1K_wapred.dpy'    
-    #fdpyw = dname+'101/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_10K_linear.dpy'    
-    
-    fdpyw = dname+'subj_05/101_32/DTI/tracks_dti_1M_linear.dpy'    
-    #fdpyw = dname+'101/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_10K_linear.dpy'
-    #fdpyw = dname+'/1060223/session_1/DTI64_1/DTI/tracks_dti_1K_linear_new.dpy'    
+    fdpyw = dname+'1891215/session_1/DTI64_1/DTI/tracks_dti_10K_linear.dpy'    
     dpr = Dpy(fdpyw, 'r')
     T = dpr.read_tracks()
-    dpr.close()
+    dpr.close() 
     
     T = T[:2000]
     
-    #T = [np.dot(downsample(t, 12), affine[:3, :3]) + affine[:3, 3] for t in T]    
-    T = [downsample(t, 12) - np.array(data.shape)/2. for t in T]    
-    #T = [np.dot(downsample(t, 12), affine[:3, :3]) for t in T]    
+    T = [downsample(t, 12) - np.array(data.shape[:3])/2. for t in T]
     
-    axis = np.array([0,0,1])
-    theta = -90. 
-    T = np.dot(T,rotation_matrix(axis,theta))
-
-    axis = np.array([1,0,0])
-    theta = -90. 
-    T = np.dot(T,rotation_matrix(axis,theta))
+    axis = np.array([1, 0, 0])
+    theta = - 90. 
+    T = np.dot(T,rotation_matrix(axis, theta))
+    axis = np.array([0, 1, 0])
+    theta = 180. 
+    T = np.dot(T,rotation_matrix(axis, theta))
     
-    #print v
-    #print(np.dot(rotation_matrix(axis,theta),v))   
-    
-    
+    #Rotate tractography
     #load initial QuickBundles with threshold 30mm
-    #fpkl = dname+'101/DIFF2DEPI_EKJ_64dirs_14/DTI/qb_dti_10K_linear_30.pkl'
-    #fpkl = dname+'subj_05/101_32/DTI/qb_gqi_1M_linear_30_temp.pkl'
-    
-    
-    qb=QuickBundles(T,30.,12)    
+    #fpkl = dname+'data/subj_05/101_32/DTI/qb_gqi_1M_linear_30.pkl'
+    qb=QuickBundles(T, 30., 12)
     #save_pickle(fpkl,qb)
     #qb=load_pickle(fpkl)
-    
+
     #create the interaction system for tracks 
-    tl = TrackLabeler('Bundle Picker',
-                        qb,qb.downsampled_tracks(),
-                        vol_shape=data.shape,tracks_alpha=1)   
-    
-#--------not need -------    
+    tl = TrackLabeler('Bundle Picker', 
+                        qb,qb.downsampled_tracks(), 
+                        vol_shape=None, 
+                        tracks_alpha=1)   
     #add a interactive slicing/masking tool
     #sl = Slicer(affine,data)    
     #add one way communication between tl and sl
     #tl.slicer=sl
-#-------------------------------
 
     title = 'Bundle Picking'
     w = Window(caption = title, 
                 width = 1200, 
                 height = 800, 
-                bgcolor = (0.,0.,0.2) )
+                bgcolor = (.5, .5, 0.9) )
 
-   
-    region = Region( regionname = 'Main',
+    #scene = Scene( scenename = 'Main',
+    #                    extent_min = np.array([-5.0, -5, -5]),
+    #                    extent_max = np.array([5, 5 ,5]))
+    scene = Scene( scenename = 'Main',
                         extent_min = np.array([-5.0, -5, -5]),
                         extent_max = np.array([5, 5 ,5]),
                         activate_aabb = False)
     
     ax = Axes(name = "3 axes", scale= 200, linewidth=2.0)
 
+    vert = np.array( [[2.0,3.0,0.0]], dtype = np.float32 )
+    ptr = np.array( [[.2,.2,.2]], dtype = np.float32 )
+    tex = Text3D( "Text3D", vert, "(0,0,0)", 10 * 2.5, 10 * .5, ptr)
 
-    #vert = np.array( [[2.0,3.0,0.0]], dtype = np.float32 )
-    #ptr = np.array( [[.2,.2,.2]], dtype = np.float32 )
-    #tex = Text3D( "Text3D", vert, "(0,0,0)", 10*2.5, 10*.5, ptr)
-    
-    data = np.interp(data, [data.min(), data.max()], [0, 255])  
-    #data = np.rot90(data,-1)      
+    data = np.interp(data, [data.min(), data.max()], [0, 255])    
     guil = Guillotine('Volume Slicer', data)
 
-    region.add_actor(ax)
-    #region.add_actor(tex)
-    region.add_actor(tl)
-    region.add_actor(guil)
+    #scene.add_actor(ax)
+    #scene.add_actor(tex)
+    scene.add_actor(guil)
+    scene.add_actor(tl)
 
-    
-    w.add_region(region)
+    #scene.add_actor(streamlines)
+    #w.screenshot( 'red.png' )
+    w.add_scene(scene)
     w.refocus_camera()
 
