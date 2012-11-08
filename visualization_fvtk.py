@@ -19,7 +19,8 @@ from dipy.io.dpy import Dpy
 
 #dirname = "data/111019"
 #dirname = "data"
-dirname= "data/1891215"
+#dirname= "data/1891215"
+dirname = "ADHD/1087458"
 for root, dirs, files in os.walk(dirname):
     if root.endswith('DTI64_1'):
         base_dir = root+'/'

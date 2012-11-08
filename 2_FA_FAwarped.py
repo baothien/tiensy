@@ -15,10 +15,11 @@ import os
 
 
 
-dirname = "data/1891215"
+#dirname = "data/1891215"
+dirname = "ADHD"
 b0_threshold = 50
-eudx_seeds = 10000
-eudx_fa_stop = 0.2
+#eudx_seeds = 1000
+#eudx_fa_stop = 0.2
 fsl_ref = '/usr/share/data/fsl-mni152-templates/FMRIB58_FA_1mm.nii.gz'
 
 for root, dirs, files in os.walk(dirname):    
@@ -75,7 +76,7 @@ for root, dirs, files in os.walk(dirname):
 
         print("Saving results.")
 
-        fa_filename = basedir_reconstruction + 'fa.nii.gz'
+        fa_filename = basedir_reconstruction + 'fa_resample.nii.gz'
         print "Saving FA:", fa_filename
         fa_img = nib.Nifti1Image(data=FA, affine=affine)
         nib.save(fa_img, fa_filename)
@@ -95,7 +96,7 @@ for root, dirs, files in os.walk(dirname):
         flirt_affine = basedir_reconstruction + 'flirt.mat'
         flirt_displacements = basedir_reconstruction + 'displacements.nii.gz'
         print "Reference:", fsl_ref
-        flirt_warp = basedir_reconstruction + 'fa_warped.nii.gz'
+        flirt_warp = basedir_reconstruction + 'fa_resample_warped.nii.gz'
         nonlin_nii = basedir_reconstruction + 'nonlinear.nii.gz'
         invw_nii = basedir_reconstruction + 'invw.nii.gz'
         disp_nii = basedir_reconstruction + 'disp.nii.gz'

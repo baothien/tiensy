@@ -96,7 +96,8 @@ def warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_file
      
     
 #dirname = "data_temp"
-dirname = "data/1891215/"
+#dirname = "data/1891215/"
+dirname = "ADHD"
 for root, dirs, files in os.walk(dirname):
     if root.endswith('DTI64_1'):
         base_dir = root+'/' 
@@ -118,8 +119,8 @@ for root, dirs, files in os.walk(dirname):
         
         tensors = Tensor(data, bvals, gradients, thresh=50)
         create_save_tracks(tensors.fa(), tensors.ind(), 10**4, .2, base_dir2+'tracks_dti_10K.dpy')
-        #create_save_tracks(tensors.fa(), tensors.ind(), 10**6, .2, base_dir2+'tracks_dti_1M.dpy')
-        #create_save_tracks(tensors.fa(), tensors.ind(), 3*10**6, .2, base_dir2+'tracks_dti_3M.dpy')
+        create_save_tracks(tensors.fa(), tensors.ind(), 10**6, .2, base_dir2+'tracks_dti_1M.dpy')
+        create_save_tracks(tensors.fa(), tensors.ind(), 3*10**6, .2, base_dir2+'tracks_dti_3M.dpy')
 
 #=====================  gqi ========================================        
 #        gqs=GeneralizedQSampling(data,bvals,gradients)
@@ -128,25 +129,22 @@ for root, dirs, files in os.walk(dirname):
 #        create_save_tracks(gqs.qa(), gqs.ind(), 3*10**6, .0239, base_dir2+'tracks_gqi_3M.dpy')
 #=====================  gqi ========================================                
              
-        flirt_filename =base_dir2+'flirt.mat'
-        fa_filename= base_dir2 + 'fa.nii.gz' 
+        print 'Done warped'        
         
-        #tracks_filename =  base_dir2+'tracks.dpy'
-        #linear_filename =  base_dir2+'tracks_linear.dpy'        
-        #warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)                
-        print 'Done warped'
+        flirt_filename =base_dir2+'flirt.mat'
+        fa_filename= base_dir2 + 'fa_resample.nii.gz' 
         
         tracks_filename =  base_dir2+'tracks_dti_10K.dpy'
         linear_filename =  base_dir2+'tracks_dti_10K_linear.dpy'        
         warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)
 
-        #tracks_filename =  base_dir2+'tracks_dti_1M.dpy'
-        #linear_filename =  base_dir2+'tracks_dti_1M_linear.dpy'        
-        #warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)
+        tracks_filename =  base_dir2+'tracks_dti_1M.dpy'
+        linear_filename =  base_dir2+'tracks_dti_1M_linear.dpy'        
+        warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)
 
-        #tracks_filename =  base_dir2+'tracks_dti_3M.dpy'
-        #linear_filename =  base_dir2+'tracks_dti_3M_linear.dpy'        
-        #warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)
+        tracks_filename =  base_dir2+'tracks_dti_3M.dpy'
+        linear_filename =  base_dir2+'tracks_dti_3M_linear.dpy'        
+        warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename)
 
 
 ##=====================  gqi ========================================                
@@ -196,9 +194,9 @@ for root, dirs, files in os.walk(dirname):
             qb=QuickBundles(tracks,20.,12)
             save_pickle(base_dir2+qb_filename_20[i],qb)
             
-            #print base_dir2+qb_filename_30[i]
-            #qb=QuickBundles(tracks,30.,12)            
-            #save_pickle(base_dir2+qb_filename_30[i],qb)            
+            print base_dir2+qb_filename_30[i]
+            qb=QuickBundles(tracks,30.,12)            
+            save_pickle(base_dir2+qb_filename_30[i],qb)            
 #================ quick bundles ==============================================
 
         print('Done')

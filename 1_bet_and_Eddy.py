@@ -10,7 +10,8 @@ import os
 
 visualize = False
 #dirname = "data/1891215"
-dirname = "ADHD"
+#dirname = "ADHD"
+dirname = "Sample/2020162"
 for root, dirs, files in os.walk(dirname):    
     if root.endswith('MPRAGE_1'):
         '''   anatomy bet    '''

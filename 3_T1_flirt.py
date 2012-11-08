@@ -23,8 +23,8 @@ def create_displacements_T1(in_nii,affine_mat,out_nii,nonlin_nii,invw_nii,disp_n
 
 
 visualize = False
-dirname = "data/1891215/"
-#dirname = "ADHD/"
+#dirname = "data/1891215/"
+dirname = "ADHD/"
 
 for root, dirs, files in os.walk(dirname):
     if root.endswith('MPRAGE_1'):
