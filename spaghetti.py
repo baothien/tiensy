@@ -7,10 +7,10 @@ import numpy as np
 import nibabel as nib
 from dipy.segment.quickbundles import QuickBundles
 from dipy.viz.fos.streamshow import StreamlineLabeler
-#from dipy.viz.fos.streamwindow import Window
-#from dipy.viz.fos.guillotine import Guillotine
-from streamwindow import Window  # for removing the Right Panel
-from guillotine import Guillotine # for binding slice moving key
+from dipy.viz.fos.streamwindow import Window
+from dipy.viz.fos.guillotine import Guillotine
+#from streamwindow import Window  # for removing the Right Panel
+#from guillotine import Guillotine # for binding slice moving key
 from dipy.io.dpy import Dpy
 from dipy.tracking.metrics import downsample
 from fos import Scene
@@ -111,8 +111,8 @@ if __name__ == '__main__':
 
     scene = Scene(scenename = 'Main Scene', activate_aabb = False)
 
-    data = np.interp(data, [data.min(), data.max()], [0, 255])    
-    guil = Guillotine('Volume Slicer', data)
+    #data = np.interp(data, [data.min(), data.max()], [0, 255])    
+    guil = Guillotine('Volume Slicer', data, affine)
 
     scene.add_actor(guil)
     scene.add_actor(tl)

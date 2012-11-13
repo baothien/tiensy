@@ -103,8 +103,8 @@ if __name__ == '__main__':
 
     scene = Scene(scenename = 'Main Scene', activate_aabb = False)
 
-    data = np.interp(data, [data.min(), data.max()], [0, 255])    
-    guil = Guillotine('Volume Slicer', data)
+    #data = np.interp(data, [data.min(), data.max()], [0, 255])    
+    guil = Guillotine('Volume Slicer', data, affine)
 
     scene.add_actor(guil)
     scene.add_actor(tl)
