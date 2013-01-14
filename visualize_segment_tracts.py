@@ -8,10 +8,10 @@ import numpy as np
 import nibabel as nib
 from dipy.segment.quickbundles import QuickBundles
 from dipy.viz.fos.streamshow import StreamlineLabeler
-#from dipy.viz.fos.streamwindow import Window
-#from dipy.viz.fos.guillotine import Guillotine
-from streamwindow import Window  # for remove Right Panel
-from guillotine import Guillotine # for slice moving
+from dipy.viz.fos.streamwindow import Window
+from dipy.viz.fos.guillotine import Guillotine
+#from streamwindow import Window  # for remove Right Panel
+#from guillotine import Guillotine # for slice moving
 from dipy.io.dpy import Dpy
 from dipy.tracking.metrics import downsample
 from fos import Scene

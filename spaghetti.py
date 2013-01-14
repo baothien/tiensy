@@ -82,7 +82,7 @@ if __name__ == '__main__':
     #print len(T)
     print len(T)   
    
-    T = T[:200]
+    T = T[:5000]
         
     T = [t for t in T if length(t)>= 15]
 
