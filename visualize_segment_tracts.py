@@ -8,13 +8,13 @@ import numpy as np
 import nibabel as nib
 from dipy.segment.quickbundles import QuickBundles
 from dipy.viz.fos.streamshow import StreamlineLabeler
-#from dipy.viz.fos.streamwindow import Window
-#from dipy.viz.fos.guillotine import Guillotine
-from streamwindow import Window  # for remove Right Panel
-from guillotine import Guillotine # for slice moving
+from dipy.viz.fos.streamwindow import Window
+from dipy.viz.fos.guillotine import Guillotine
+#from streamwindow import Window  # for remove Right Panel
+#from guillotine import Guillotine # for slice moving
 from dipy.io.dpy import Dpy
 from dipy.tracking.metrics import downsample
-from fos import Scene
+from fos import Scene, Init, Run
 #from dipy.tracking.metrics import length
 
 
@@ -80,35 +80,44 @@ if __name__ == '__main__':
         
     #T = [t for t in T if length(t)>= 15]
 
-    T = [downsample(t, 18) - np.array(data.shape[:3]) / 2. for t in T]
-    axis = np.array([1, 0, 0])
-    theta = - 90. 
-    T = np.dot(T,rotation_matrix(axis, theta))
-    axis = np.array([0, 1, 0])
-    theta = 180. 
-    T = np.dot(T, rotation_matrix(axis, theta))
+#    T = [downsample(t, 18) - np.array(data.shape[:3]) / 2. for t in T]
+#    axis = np.array([1, 0, 0])
+#    theta = - 90. 
+#    T = np.dot(T,rotation_matrix(axis, theta))
+#    axis = np.array([0, 1, 0])
+#    theta = 180. 
+#    T = np.dot(T, rotation_matrix(axis, theta))
     
     qb=QuickBundles(T, 1., 18)
     #save_pickle(fpkl,qb)
     #qb=load_pickle(fpkl)
+    
+    #save_pickle(fpkl,qb)
+    #qb=load_pickle(fpkl)
+    Init()
 
-    #create the interaction system for tracks 
-    tl = StreamlineLabeler('Bundle Picker', qb, qb.downsampled_tracks(), vol_shape=None, tracks_alpha=1)   
-
-    title = 'Visualization Segmentation'
+    title = '[F]oS Streamline Interaction and Segmentation'
     w = Window(caption = title, 
                 width = 1200, 
                 height = 800, 
-                bgcolor = (.5, .5, 0.9) )
+                bgcolor = (.5, .5, 0.9), right_panel=False)
 
     scene = Scene(scenename = 'Main Scene', activate_aabb = False)
+    
+    #create the interaction system for tracks 
+    tl = StreamlineLabeler('Bundle Picker', 
+                        qb,qb.downsampled_tracks(), 
+                        vol_shape=data.shape[:3], 
+                        tracks_alpha=1,
+                        affine=affine)
 
-    data = np.interp(data, [data.min(), data.max()], [0, 255])    
-    guil = Guillotine('Volume Slicer', data)
+    guil = Guillotine('Volume Slicer', data, affine)
 
     scene.add_actor(guil)
     scene.add_actor(tl)
 
     w.add_scene(scene)
     w.refocus_camera()
-    
+
+    Run()
+
