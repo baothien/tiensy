@@ -1,0 +1,36 @@
+\section{Discussion}
+\label{sec:discussion}
+In this document we investigated the degree of approximation of the
+dissimilarity representation for the goal of preserving the relative
+distances between streamlines within tractographies. Empirical
+assessment has been conducted on two different datasets and through
+various prototype selection methods. All of the results from both
+simulated data and real tractography data reached correlation $\ge
+0.95$ with respect to the distances in the original space. This fact
+proved that the dissimilarity representation works well for preserving
+the relative distances. Moreover on tractography data the maximum correlation
+was reached with just approximately $20-25$ prototypes proving that
+the dissimilarity representation can produce compact feature spaces
+for this kind of data.
+
+When comparing the different prototype selection policies we found
+that FFT had a small advantage over SFF but only when the number of
+prototypes was very low ($p<10$). Both FFT and SFF always outperformed
+the random policy. Moreover, since the computational cost of SFF does
+not increase with the size of the dataset but only with the number of
+prototypes, we observed that the SFF policy can be easily computed on
+a standard computer even in the case of a tractography of $3\times
+10^5$ streamlines. This is different from FFT which is several orders
+of magnitude slower than SFF, thus computationally less practical.
+
+We advocate the use of the dissimilarity approximation for the
+Euclidean embedding of
+tractography data in machine learning and pattern recognition
+applications. Moreover we strongly suggest the use of the SFF policy
+to obtain an efficient and effective selection of the prototypes.
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "nguyen_dissimilarity"
+%%% End: 

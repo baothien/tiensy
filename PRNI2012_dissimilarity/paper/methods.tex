@@ -1,0 +1,161 @@
+\section{Methods}
+\label{sec:methods}
+
+In the following we present a concise formal description of the
+dissimilarity projection together with a notion of approximation to
+quantify how accurate this representation is. Additionally we
+introduce three strategies for prototype selection that will be
+compared in Section~\ref{sec:experiments}.
+
+\subsection{The Dissimilarity Projection}
+
+Let $\mathcal{X}$ be the space of the objects of interest,
+e.g. streamlines, and let $X \in \mathcal{X}$. Let $P_X$ be a
+probability distribution over $\mathcal{X}$. Let $d:\mathcal{X} \times
+\mathcal{X} \mapsto \mathbb{R}^+$ be a distance function between
+objects in $\mathcal{X}$. Note that $d$ is not assumed to be
+necessarily metric. Let $\Pi = \{\tilde{X}_1, \ldots, \tilde{X}_p\}$,
+where $\forall i$ $\tilde{X}_i \in \mathcal{X}$ and $p$ is finite. We
+call each $\tilde{X}_i$ as \emph{prototype} or \emph{landmark}. The
+\emph{dissimilarity representation}/\emph{projection} is defined as
+$\phi_{\Pi}^d(X):\mathcal{X} \mapsto \mathbb{R}^p$
+s.t. 
+\begin{equation}
+  \phi_{\Pi}^d(X) = [d(X,\tilde{X}_1) ,\ldots, d(X,\tilde{X}_p)]
+\label{eq:dissimilarity_representation}
+\end{equation}
+and maps an object $X$ from its original space $\mathcal{X}$ to a
+vector of $\mathbb{R}^p$.
+
+Note that this representation is a \emph{lossy} one in the sense that
+in general it is not possible to exactly reconstruct $X$ from
+$\phi_{\Pi}^d(X)$ because some information is lost during the
+projection.
+
+We define the distance between projected objects as the Euclidean
+distance between them: $\Delta_{\Pi}^d(X, X') = || \phi_{\Pi}^d(X) -
+\phi_{\Pi}^d(X') ||_2$, i.e. $\Delta_{\Pi}^d:\mathcal{X} \times
+\mathcal{X} \mapsto \mathbb{R}^+$. It is intuitive that
+$\Delta_{\Pi}^d$ and $d$ should be strongly related. In the following
+sections we will present more details and explanations about this
+relation.
+
+\subsection{A Measure of Approximation}
+\label{sec:approximation}
+We investigate the relationship between the distribution of distances
+among objects in $\mathcal{X}$ through $d$ and the corresponding
+distances in the dissimilarity representation space through
+$\Delta_{\Pi}^d$. We claim that a good dissimilarity representation
+must be able to accurately preserve the partial order of the
+distances, i.e. if $d(X,X') \leq d(X,X'')$ then $\Delta_{\Pi}^d(X,X')
+\leq \Delta_{\Pi}^d(X,X'')$ for each $X,X',X'' \in \mathcal{X}$ almost
+always. As a measure of the degree of approximation of the
+dissimilarity representation we define the Pearson correlation
+coefficient $\rho$ between the two distances over all possible pairs
+of objects in $\mathcal{X}$:
+\begin{equation}
+  \label{eq:accuracy_correlation}
+  \boldsymbol{\rho} = \frac{\mathrm{Cov}(d(X,X'),
+    \Delta_{\Pi}^d(X,X'))}{\sigma_{d(X,X')} \sigma_{\Delta_{\Pi}^d(X,X')}}
+\end{equation}
+where $X,X' \sim P_X$. In practical cases $P_X$ is unknown and only a
+finite sample $S$ is available. We can approximate $\boldsymbol{\rho}$
+as the \emph{sample} correlation $\boldsymbol{r}$ where $X,X' \in
+S$. An accurate approximation of the relative distances between
+objects in $\mathcal{X}$ results in values of $\boldsymbol{\rho}$ far
+from zero and close to $1$\footnote{Note that negative correlation is
+  not considered as accurate approximation. Moreover it never occurred
+  during experiments}.
+
+In the literature of the Euclidean embeddings of metric spaces, the
+term of \emph{distortion} is used for representing the relation
+between the distances in the original space and the corresponding ones
+in the projected space. The embedding is said to have
+\emph{distortion}$\leq c$ if for every $x,x' \in \mathcal{X}$:
+\begin{equation}
+  \label{eq:distortion}
+  d(x,x') \geq \Delta_{\Pi}^d(x,x') \geq \frac{1}{c} d(x,x').
+\end{equation}
+An interesting embedding of metric spaces is described
+in~\cite{linial1995geometry}. It is based on ideas similar to the
+dissimilarity representation and has the advantage of providing a
+theoretical bound on the distortion. Unfortunately this embedding is
+computationally too expensive to be used in practice.
+
+We claim that correlation and distortion target slightly different
+aspects of the embedding quality, the first focussing on the
+\emph{averaged} differences between the original and projected space
+and the second on the worst case scenario. For this reason we claim
+that, in the context of machine learning and pattern recognition
+applications, correlation is a more appropriate measure.
+
+
+\subsection{Strategies for Prototype Selection}
+\label{sec:policies}
+The definition of the set of prototypes with the goal of minimising
+the loss of the dissimilarity projection is an open issue in the
+dissimilarity space representation literature. In the context of
+classification problems the policy of random selection of the
+prototypes was proved to be useful under certain
+assumptions~\cite{balcan2008theory}. In the following we address the
+issue of choosing the prototypes in order to achieve the desired
+degree of approximation but we do not restrict to the classification
+case only. We define and discuss the following policies for prototype
+selection: random selection, farthest first traversal (FFT) and subset
+farthest first (SFF). All these policies are parametric with respect
+to $p$, i.e. the number of prototypes.
+
+\subsubsection{Random Selection}
+\label{sec:random_draw_S}
+In practical cases we have a sample of objects $S = \{X_1,\ldots,X_N\}
+\subset \mathcal{X}$. This selection policy draws uniformly at random
+from $S$, i.e. $\Pi \subseteq S$ and $|\Pi|=p$. Note that sampling is
+\emph{without replacement} because identical prototypes provide
+redundant, i.e. useless, information. This policy was first proposed
+in~\cite{forgy1965cluster} for seeding clustering algorithms. This
+policy has the lowest computational complexity $O(1)$.
+
+\subsubsection{Farthest First Traversal (FFT)}
+\label{sec:fft}
+This policy selects an initial prototype at random from $S$ and then
+each new one is defined as the farthest element of $S$ from all
+previously chosen prototypes. The FFT policy is related to the
+\emph{$k$-center} problem~\cite{hochbaum1985best}: given a set $S$ and
+an integer $k$, what is the smallest $\epsilon$ for which you can find
+an $\epsilon$-cover\footnote{Given a metric space $(\mathcal{X},d)$,
+  for any $\epsilon > 0$, an $\epsilon$-cover of a set $S \subset
+  \mathcal{X}$ is defined to be any set $T \subset X$ such that
+  $d(x,T) \leq \epsilon, \forall x \in S$. Here $d(x,T)$ is the
+  distance from point $x$ to the closest point in set $T$.} of $S$ of
+size $k$?~\footnote{Note that in our problem $k$ is called $p$.}.
+The $k$-center problem is known to be an
+NP-hard~\cite{hochbaum1985best}, i.e. no efficient algorithm can be
+devised that always returns the optimal answer. Nevertheless FFT is
+known to be close to the optimal solution, in the following sense: If
+$T$ is the solution returned by FFT and $T^*$ is the optimal solution,
+then $\max_{x \in S}d(x,T) \leq 2 \max_{x \in S}d(x,T^*)$. Moreover,
+in metric spaces, any algorithm having a better ratio must be
+NP-hard~\cite{hochbaum1985best}. FFT has $O(p|S|)$
+complexity. Unfortunately when $|S|$ becomes very large this prototype
+selection policy becomes impractical.
+
+
+\subsubsection{Subset Farthest First (SFF)}
+In the context of radial basis function networks initialisation, a
+scalable approximation of the FFT algorithm, called \emph{subset
+  farthest first} (SFF), was proposed in~\cite{turnbull2005fast}. This
+approximation is also claimed to reduce the chances to select outliers
+that can lead to a poor representation of large datasets. The SFF
+policy samples $m = \lceil c p \log p \rceil$ points from $S$
+uniformly at random and then applies FFT on this sample in order to
+select the $p$ prototypes. In~\cite{turnbull2005fast} it was proved
+that under the hypothesis of $p$ clusters in $S$, the probability of
+not having a representative of some clusters in the sample is at most
+$p e^{-m/p}$. The computational complexity of SFF is $O(p^2 \log
+p)$. Note that for large datasets and small $p$ this prototype
+selection policy has a much lower computational cost than FFT.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "nguyen_dissimilarity"
+%%% End: 
