@@ -1,0 +1,7 @@
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_dMRI_preprocessing.tex"
+%%% End: 
+
+\section{Abstract}
+dMRI-Diffusion Magnetic Resonance Imaging is evolving into a potent tool in the examination of the central nervous system. Actually, it is a technique that produces in vivo images of biological tissues by exploiting the constrained diffusion properties of water molecules. In neuroscience, dMRI is used to the extraction of neuronal fibers from brain DMRI and it offers a good look into brain micro-structure at a scale that is not easily accessible with other modalities, in some cases improving the detection and characterization of white matter abnormalities. Because of that, dMRI can help understand brain connectivity deeply. This has lead to numerous beneficial in both diagnosis and clinical applications. However, optimal utilization of the widerange of data provided by many directional diffusion dMRI measurements requires careful attention to acquisition and preprocessing. This article will review the preprocessing of dMRI data inlcuding these main steps: reconstruction, tracking and coregistration. The outcome after these steps is the tractography of the whole brain from discrete measured diffusion tensor MRI data. The tractography is also registered in world space which makes it easy to view in any visulization tool. The implementation is done with the help from Dipy (Diffusion Imaging in Python) package, and FSL is used for visualization.

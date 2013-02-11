@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Abstract}{}
+\BOOKMARK [1][-]{section.2}{Introduction}{}
+\BOOKMARK [1][-]{section.3}{From raw data \(DICOM format\) to NIfTI format}{}
+\BOOKMARK [1][-]{section.4}{Reconstruction}{}
+\BOOKMARK [1][-]{section.5}{Tracking}{}
+\BOOKMARK [1][-]{section.6}{Coregistration: from native space to MNI space}{}
+\BOOKMARK [2][-]{subsection.6.1}{Linear vs. Non-linear registration: Issues}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Where is the Origin?}{section.6}
+\BOOKMARK [1][-]{section.7}{Future works}{}
+\BOOKMARK [2][-]{subsection.7.1}{What Eleftherios Garyfallidis has done in his PhD period}{section.7}
+\BOOKMARK [2][-]{subsection.7.2}{Interesting works}{section.7}
+\BOOKMARK [1][-]{section.8}{Cambridge dataset}{}

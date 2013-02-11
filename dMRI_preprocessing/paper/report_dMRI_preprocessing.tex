@@ -1,0 +1,45 @@
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
+
+
+\documentclass[12pt]{article}
+
+\include{pythonlisting}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{url}
+\usepackage{hyperref}
+
+\title{dMRI Preprocessing: from raw data to coregistered tractographies}
+
+\author{Thien Bao Nguyen, Eleftherios Garyfallidis, Emanuele Olivetti}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\input{abstract}
+
+\input{introduction}
+
+\input{raw_to_nifti}
+
+\input{reconstruction}
+
+\input{tracking}
+
+\input{coregistering}
+
+\input{futureworks}
+
+\input{cambridgedataset}
+
+\bibliographystyle{plain}
+\bibliography{ntbaovn-dmrireport}
+
+\end{document}

@@ -1,0 +1,19 @@
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_dMRI_preprocessing.tex"
+%%% End: 
+
+\section{Introduction}
+Diffusion imaging is a method for measuring the displacement distribution of water molecules in vivo. From the displacement distribution, we can infer the fibre orientation or orientations in each imaging volume element (or voxel). More recently, several groups have proposed tractography methods and have reported success in following fiber tracts. However, there are still some problems with the dataset for doing these things. First, the resolution and quality of diffusion images in vivo was not adequate for this demanding application. Second, the macroscopic fibertract direction field is obtained from measured dMRI data that is discrete, coarsely sampled, and noisy. It is difficult to construct fluid streamlines accurately from discrete, noisy, velocity field data.A pre-processing stage which is capable of generating a continuous, smooth representation and highly standard of the measured dMRI data first has to be done in order to ensure the reliability and robustness of dMRI fiber tractography. The aims of this article are to 1) propose and describe a process to perform tractography from discrete measured diffusion tensor MRI data; 2) present a general framework for testing this process in Python language; 3) demonstrate this process in finding fiber tracts in the brain using the dataset of Cambridge university and 4) visulize the tractography in FSL for dotor can see and manulate on it 5)describe potential works in future. This article is organizied as follow:
+\begin{enumerate}
+\item From raw data to Nifti format.
+\item Reconstruction.
+\item Tracking.
+\item Coregistration.
+\item Future works.
+\item Datasets.
+\end{enumerate}
+	
+
+

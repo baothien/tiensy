@@ -1,0 +1,31 @@
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "report_dMRI_preprocessing.tex"
+%%% End: 
+
+\section{Future works}
+We first see what have done before and then move to something we should work on in future.
+
+\subsection{What Eleftherios Garyfallidis has done in his PhD period}
+
+Eleftherios is a final year PhD candidate at the University of Cambridge and a visiting student at the MRC-CBU under the supervision of Dr. Ian Nimmo-Smith (MRC-CBU) and Dr. Guy Williams (WBIC). The focus of his work is the development of models, methods and tools for brain tractography using diffusion imaging (dMRI). His work involves signal processing, machine learning, scientific visualisation and medical imaging. The thesis is focussed on finding new ways to reconstruct the diffusion signal and creating new highly efficient algorithms to segment tractographies. Most of the dMRI work is being implemented in a free, multi-platform and open tool called DiPy (Diffusion Imaging in PYthon http://www.dipy.org). Most of the visualization work is implemented to another open platform called fos (Free On Shades https://github.com/Fos). He stay at NILab from October 12th to November 12th, 2011. Here is what he has done before
+\begin{enumerate}
+\item DiPy (Diffusion Imaging in PYthon \url{http://www.dipy.org}).
+\item FOS (Free On Shades \url{https://github.com/Fos}).
+\item DNI, EIT.
+\item EuDX (Euler integration Delta Crossing (for tracking).
+\item QB (QuickBundles for registering or tractography directly without T1 or FA - feature based registrator).
+\end{enumerate}
+
+\subsection{Interesting works}
+Some of interesting projects that we can join in future are listed bellow: for Data standardlization, for Tractography and for Reconstruction step
+\begin{enumerate}
+\item Eddy current - to correct the data from removing noise origional from wrong megietic signal.
+\item BET (Brain Etraction - although it is already intergrated in Nipy, but there are many things to study more).
+\item Connectivity-tractograms (find the tractography between two given points).
+\item Graph-theory tractography (apply graphic theory for tractography).
+\item MultiTensor (Reconstruction step - currently Nipy and Dipy only works on one-tensor. Combination many tensors will provide more information about the spatial distribution of the diffusion signal within each voxel).
+\item Diffusion Kurtosis\footnote{\url{http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=5711642&tag=1}} (Reconstruction step)
+\item ActiveAx (microlevel - CHARMED) web \footnote{\url{http://cmic.cs.ucl.ac.uk/camino/index.php?n=Tutorials.ActiveAx}} and paper ~\cite{alexander2010paper} \footnote{\url{http://www.sciencedirect.com/science/article/pii/S1053811910007755}}
+\end{enumerate}
