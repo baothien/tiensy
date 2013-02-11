@@ -1,0 +1,69 @@
+X-Account-Key: account2
+X-UIDL: 479750
+X-Mozilla-Status: 0001
+X-Mozilla-Status2: 00000000
+X-Mozilla-Keys:                                                                                 
+Received: from mail.fbk.eu (217.77.80.4) by NTCAS.pc.itc.it (10.0.30.50) with
+ Microsoft SMTP Server id 14.1.339.1; Mon, 14 May 2012 10:32:57 +0200
+X-AuditID: d94d5004-b7bf4ae0000074ac-82-4fb0c33880dc
+Authentication-Results: mx.fbk.eu
+Received: from hormel3.ieee.org ( [140.98.193.226])	by mail.fbk.eu (Symantec
+ Messaging Gateway) with SMTP id 2E.4F.29868.833C0BF4; Mon, 14 May 2012
+ 10:32:57 +0200 (CEST)
+Received: from Jacquard.ieeeconfpublishing.org (skywalker-ext.ieee.org
+ [140.98.210.253])	by hormel3.ieee.org (8.14.3/8.13.8/Debian-3+etch1) with
+ ESMTP id q4E8Wt2e027813	for <olivetti@fbk.eu>; Mon, 14 May 2012 04:32:55
+ -0400
+Received: from computer.org ([63.84.221.72]) by
+ Jacquard.ieeeconfpublishing.org with Microsoft SMTPSVC(6.0.3790.4675);	 Mon,
+ 14 May 2012 01:33:48 -0700
+From: Conference Publishing Services <PRNI2012@ieeeconfpublishing.org>
+To: <olivetti@fbk.eu>
+CC: <PRNI2012@ieeeconfpublishing.org>
+Subject: PRNI 2012 Confirmation of Successful Final Paper Submission
+Date: Mon, 14 May 2012 08:33:48 +0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-ID: <JACQUARDDCfT1TcGiEl00001f31@Jacquard.ieeeconfpublishing.org>
+X-OriginalArrivalTime: 14 May 2012 08:33:48.0919 (UTC) FILETIME=[48CDB870:01CD31AC]
+X-Spam-Score: 0.00 () [Tag at 10.00] SPF(none:0)
+X-CanIt-Geo: ip=140.98.210.253; country=US; region=NJ; city=Piscataway; postalcode=08855; latitude=40.5515; longitude=-74.4637; metrocode=501; areacode=732; http://maps.google.com/maps?q=40.5515,-74.4637&z=6
+X-CanItPRO-Stream: default
+X-Scanned-By: CanIt (www . roaringpenguin . com) on 140.98.193.226
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRWlGSWpSXmKPExsXSk3Twka7l4Q3+Bi9/SFg8X9PI5sDocf7f
+	Y5YAxigum5TUnMyy1CJ9uwSujJ7dF9gKpjJXrJ1ylKWB8SpTFyMnh4SAicTjFccZQWxGAUWJ
+	M9O/MkLExSQu3FvP1sXIxSEksJpRYtXeycwQzmNGiYXNW1hAqoQEZjJK3G/M62Lk4GAT8JDo
+	WWoPYooICEuc3xkGYjILKEt8WecNUiws4CJxec4qsPEsQOGNl9eygdjMAloSN/69ZIKw5SW2
+	v53DDGLzCnhKNDa+YQcZIyEQLHFkVjSEaSDxf54IyC0SAucZJY5uegJ1sZTEi0cnoWwnic/b
+	+9kmMArPQrJhFpINCxiZVjFy5lbopSVl66WWbmIEBuVN3wCWHYyn+/QOMQpwMCrx8L4w3eAv
+	xJpYVlyZe4hRkoNJSZT3xkGgEF9SfkplRmJxRnxRaU5q8SFGCQ5mJRHe9Q/X+wvxpiRWVqUW
+	5cOkmDjYDzHKcHAoSfCuPATUK1iUmp5akZaZA4xChBpOEMEFMogHaNAnkELe4oLE3OLMdIii
+	U4y6HKe3LLvGKMSSl5+XKiXO+wSkSACkKKM0D24YKEnU/////xKjrJQwLyMDA4MQT0FqUW5m
+	CUIelGReMYoDvSjMuwtkCk9mXgncpldARzABHcEvsA7kiJJEhJRUA6N41KWN2jN/GfGwzSwu
+	k/FtTPFVZcj6uGH/zZbGWZwu3FIhdinJR9at4D1UKxI6JU6+au3cR8fdDwrn3rjhNu2e6Z5l
+	F9zaftz5Z9/zKO6fpDfjzc8q6VO3yXss/Oa67VL6f9kFxTmsRS2L47u+Ml48euvE2vc1FRNm
+	f77LoHB2YdIc4aWzneYosRRnJBpqMRcVJwIAQJJmkg0DAAA=
+Return-Path: PRNI2012@ieeeconfpublishing.org
+X-MS-Exchange-Organization-AuthSource: NTCAS.pc.itc.it
+X-MS-Exchange-Organization-AuthAs: Anonymous
+X-MS-Exchange-Organization-PRD: ieeeconfpublishing.org
+X-MS-Exchange-Organization-SenderIdResult: None
+Received-SPF: None (NTCAS.pc.itc.it: PRNI2012@ieeeconfpublishing.org does
+ not designate permitted sender hosts)
+X-MS-Exchange-Organization-SCL: 0
+X-MS-Exchange-Organization-PCL: 2
+X-MS-Exchange-Organization-Antispam-Report: DV:3.3.10519.485;SID:SenderIDStatus None;OrigIP:217.77.80.4
+MIME-Version: 1.0
+
+Dear Emanuele Olivetti,
+
+Your paper, entitled The Approximation of the Dissimilarity Projection, has been successfully submitted to the CPS Online system for PRNI 2012. Thank you!
+
+I will contact you if there are any problems.
+
+Best regards,
+Lisa O'Conner
+CPS Editor, Conference Publishing Services (CPS)
+IEEE Computer Societyhttp://www.computer.org/cpsE-Mail: PRNI2012@ieeeconfpublishing.org
+
+
