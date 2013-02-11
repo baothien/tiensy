@@ -1,0 +1,30 @@
+\begin{abstract}
+  We developed a novel interactive system for human brain tractography
+  segmentation to assist neuroanatomists in identifying white matter
+  anatomical structures of interest from diffusion magnetic resonance
+  imaging data (dMRI). The difficulty in segmenting and navigating
+  tractographies lies in the very large number of \emph{streamlines},
+  in the order of hundreds of thousands, that modern MR techniques
+  provide. The novelty of our system resides in presenting a clustered
+  version of the tractography to the user which interactively selects
+  the clusters of interest to narrow down the initial tractography to
+  a subset containing the anatomical structure. The set of streamlines
+  of the selected clusters are then re-clustered in smaller clusters
+  so that the user can refine the previous selection and then
+  re-cluster again at a finer scale. This process is iterated until
+  the union of the remaining clusters faithfully represent the desired
+  structure. The proposed system adopts a solution to solve the
+  computational issue of clustering a large number of streamlines
+  under the strict time constraints requested by the interactive
+  use. The solution consists in projecting the streamlines into a
+  Euclidean space and then in adopting a state-of-the art scalable
+  implementation of the $k$-means algorithm. We tested the proposed
+  system on tractographies from amyotrophic lateral sclerosis (ALS)
+  patients and healthy subjects to study the systematic differences
+  within the corticospinal tract.
+\end{abstract}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "olivetti_boi"
+%%% End: 
