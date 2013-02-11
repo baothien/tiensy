@@ -1,0 +1,41 @@
+
+\section{Introduction}
+\label{sec:introduction}
+Diffusion imaging is a method for measuring the displacement distribution of water molecules in vivo. From the displacement distribution, we can infer the fibre orientation or orientations in each imaging volume element (or voxel). More recently, several groups have proposed tractography methods and have reported success in following fiber tracts~\cite{zhang2008identifying}. In this project, we want to investigate more deeper about the differences of tractography between a healthy brain and a patient one. 
+
+The outline of the work, we are planning to do, consists of three main step: (1) tractography reconstruction, (2) coricospinal segmentation, and (3) hypothesis testing based on tract quantification.
+%, both diffusion MRI (in folder $DIFF2DEPI_EKJ_64dirs_14$) and anatomy (in folder $MP_Rage_1x1x1_ND_3$)
+\begin{python}
+Step 1: Tractography Reconstruction
+	Input : source file(in DICOM format)
+	Output: tractography and anatomy 
+	       (in NIfTI format after brain extraction)
+\end{python}
+
+\begin{python}
+Step 2: Coricospinal Segmentation
+	Input : tractography
+	Output: two folders of CST segmentation.
+\end{python}
+The definition of Corticol Spinal Tracts(CST) is at \footnote{\url{http://www.na-mic.org/Wiki/index.php/DTI_Tractography_Challenge_Tract}}. More information can be found at DTI challenge \footnote{\url{http://dti-challenge.org/}} and \footnote{\url{http://www.na-mic.org/Wiki/index.php/Events:_DTI_Tractography_Challenge_MICCAI_2011}}
+
+\begin{python}
+Step 3: Quantification
+	Input : two folders of CST segmentation.
+	Output: the difference metrics
+\end{python}
+
+This step is interested in finding a method to hypo test the difference between CST of a healthy brain and a diseased one. We have to define some validation metrics based on a set of quantitative and qualitative criteria. The quantitative evaluation of the tracts will be performed using some basic ideas \footnote{\url{http://projects.iq.harvard.edu/dti_challenge/pages/challenge}}:
+\begin{enumerate}
+\item fiber profile on diffusion parameters
+\item correlation and absolute profile distance measures
+\item fiber geometry based on the Dice coefficient for volumetric overlap
+\item Hausdorff distances between bundles
+%qua	\item STAPLE sensitivity and specificity score
+\end{enumerate}
+
+
+The aims of this article are to 1) describe a process to perform tractography from discrete measured diffusion tensor MRI data of ALS-2012 dataset; 2) present a general framework for finding the differences between two folders of tracks based on tract quantification; and 3) demonstrate this process in finding the differences of the Corticol Spinal Tracts (CST) between a healthy brain and a patient. The structure of this paper is as the follow. The part \ref{sec:materials} describes about the ALS (Amyotrophic Lateral Sclerosis) dataset which is used as the main material for this project. The next part \ref{sec:experiments} focuses on three main step of this work. After that, some results and discussion will be presented in the last section \ref{sec:discussion}.
+	
+
+

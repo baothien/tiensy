@@ -1,0 +1,20 @@
+\section{Materials}
+\label{sec:materials}
+This part will concentrate on the description of the dataset used in our project. The dataset refers to a study on Amyotrophic Lateral Sclerosis (ALS) leaded by Nivedita Agarwal. The data is recorded with a 3T scanner (unknown brand) at Utah Brain Institute. Patients are referred as 1** while controls with 2** notation. The dataset originally includes the recordings of 12 patients and 12 controls. However, in practice the object 108 and the control 211 are missed. 
+
+The dataset includes the following kind of data:
+\begin{enumerate}
+\item anatomical scan (1x1x1)
+\item diffusion recording 
+	\begin{enumerate}
+	\item 64 gradients $+ B0$ (total 65 directions)
+	\item bval=1000.
+	\end{enumerate}	 
+\end{enumerate}
+
+Although there are many subfolders inside, but the only two subfolders of interest are MP\underline{ }RAGE\underline{ }1X1X1\underline{ }ND\underline{ }0003 (anatomy) and 
+\\DIFF2DEPI\underline{ }EKJ(64dirs)\underline{ }14 (diffusion data). 
+%The table of gradients can be found in the table \ref{table:gradient}
+
+Recently, Nivedita Agarwal provides three additional subjects 111, 112 and 113. Note that these three additional subjects 111, 112 and 113 have 3 series of data, and the MP\underline{ }RAGE\underline{ }1X1X1\underline{ }ND\underline{ }0003 subfolder includes 672 images, and DIFF2DEPI\underline{ }EKJ(64dirs)\underline{ }14 has 195 images rather than 224 and 65. After separating each series, we can re-construct the tractography of the whole brain.
+ 

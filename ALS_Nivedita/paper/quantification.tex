@@ -1,0 +1,218 @@
+\label{subsec:experiments_quatification}
+In the previous step, we can segment the Corticol Spinal Tracts (CST) of each subject/control. The next task is how to quantify the difference between the CST of the normal (control) brain and of the diseased (subject) brain.
+
+%define the notions of tract, track, corticospinal (left and right)
+Before going on more detail about how to quantify this difference, it is necessary to define some terms that will be used during this paper.
+
+\textit{\textbf{Track}} is an anatomical representation of about $\sim10K$ neuronal axons expressing structural connectivity. representation of thousands of neuronal axons. In some cases, \textit{track} is also called \textit{fiber} or \textit{streamline}, both of which more refers to the mathematical representation. The whole set of \textit{streamlines} of a brain is called \textit{tractography} and given that the resolution of modern MRI scanners is in the order of 1mm3 , a full brain tractography consists of $\approx3\times10^5$ streamlines. A group of close tracks is call \textit{\textbf{tract}} or \textit{bundle}. More recently, several groups have proposed tractography methods and have reported success in following fiber tracts~\cite{zhang2008identifying}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=8.25cm,height = 7.5cm]{CST.png}
+  \caption{The corticospinal tracts (CST).}
+  \label{fig:CST}
+\end{figure}
+
+The \textit{\textbf{corticospinal tract (CST)}} is a large bundle of about 1 million fibers. It start from the cerebral cortex, and terminates in the spinal cord. The CST converge in the subcortical white matter (corona radiata) and course through the posterior limb of the internal capsule, the cerebral peduncle of the midbrain, the ventral pons (basis pontis), the ventral surface of the medulla, decussate in the lower medulla (pyramidal decussation). The figure~\ref{fig:CST} shows a visualization of CST. In this figure, axons that compose pyramidal tracts come from neuron cell bodies in the cerebral cortex. After they descend through the internal capsule of the cerebrum and the white matter of the brainstem, about three fourths of the fibers decussate cross over from one side to the other, in the medulla. After that, the fibers continue downward in the lateral corticospinal tract on the opposite side of the cord. Each crossed corticospinal tract, therefore, conducts motor impulses from one side of the brain on interneurons or anterior horn motoneurons on the opposite site of the cord. That is the reason why impulses from one side of the cerebrum cause movements of the opposite side of the body.
+
+
+At the first idea, there is a short survey about the metric value evaluates the different of two CTS segmentation folders in DTI challenge website~\footnote{\url{http://dti-challenge.org/}}. In this survey, there are four metrics for quantitative evaluation of the tracts, as the following:
+\begin{enumerate}
+	\item fiber profile on diffusion parameters
+	\item correlation and absolute profile distance measures
+	\item fiber geometry
+	% based on the Dice coefficient 
+	for volumetric overlap
+	\item Hausdorff distances between bundles
+	%\item STAPLE sensitivity and specificity score
+\end{enumerate}
+
+Before discussing more detail of these four quantitive metrics, the next part will presented the generic definition of distance metric between two tracts, which is often used for most of these four metrics. Then,  following is the detail about these quantitive metrics. 
+
+\subsubsection{Fiber distance}
+\label{subsec:experiments_quatification_fiber_distance}
+\cite{tsai2007fiber, jiao2010metrics}
+
+
+
+\subsubsection{Diffusion parameters}
+\label{subsec:experiments_quatification_diffusion}
+There are two metrics commonly calculated from the diffusion tensor $(DT)$: the average diffusion rate in all
+directions denoted the mean diffusion $(MD)$, and the fractional anisotropy $(FA)$. The $MD$ is
+defined as the average of the eigenvalues, according to the trace of the DT divided by the
+number of dimensions, i.e. 3.
+
+\begin{equation}
+   MD=\frac{trace(DT)}{3}=\frac{\lambda_{1}+\lambda_{2}+\lambda_{3}}{3}
+   \label{Equ:MD}	
+\end{equation}
+
+where Trace(DT) is the trace of the tensor. Furthermore, the FA is in the range $0$ to $1$ and derived
+from the standard deviations of the three eigenvalues defined as mean value of the standard
+deviation in the three eigenvalues according to
+\begin{equation}
+   FA=\frac{1}{\sqrt{2}}\frac{\sqrt{(\lambda_{1}-\lambda_{2})^{2}+(\lambda_{2}-\lambda_{3})^{2}+(\lambda_{3}-\lambda_{1})^{2}}}{\sqrt{\lambda_{1}^{2}+\lambda_{2}^{2}+\lambda_{3}^{2}}}
+   \label{Equ:FA}	
+\end{equation}
+
+In other words, the FA is a dimensionless parameter, describing the degree of anisotropic diffusion. Isotropic diffusion would give a FA value of zero while completely directional diffusion ($\lambda_{1} > 0, \lambda_{2} = \lambda_{3} \sim 0$) would give a FA value of unity. 
+The relationship between the eigenvalues reflects the characteristics of diffusion. To describe the shape of diffusion with a scalar value, fractional anisotropy is most often used~\cite{bihan2001tensor}. However, other measures, such as those described by Westin et al~\cite{westin2002processing}, are available. In the brain, the FA values depend on the microstructure of axonal cell membranes and myelin sheaths. Higher FA values are observed in WM pathways, where the axons are highly ordered and myelinated. In the grey matter (GM), the microstructure is less ordered.
+
+In conclusion, in order to descrilbe the fiber profile on diffusion information, it is usually used $FA$, $DM$ and eigenvalues $(<\lambda_{1},\lambda_{2},\lambda_{3}>)$. These parameters are useful to compare the difference between some group such as old/young, healthy/diseased, etc ~\cite{johanna2011improved} \cite{clayden2008comparative}. 
+
+~\cite{johanna2011improved}developed an algorithm in order to analyse diffusion parameters in all
+positions along white matter $(WM)$ pathways. The developed algorithm was then applied to WM pathways
+that had been calculated and extracted in a software, based on streamline tractography
+calculations of the diffusion data. Co-registrations of the data made comparisons across
+subjects and between groups possible. The algorithm was tested by analysing the inferior-
+fronto occipital fasciculus (IFO) in males versus females as well as young versus old healthy
+volunteers. Comparisons were also performed to clinical research projects, by analyzing the
+IFO in semantic dementia (SD) patients versus healthy controls (HC-SD) and the inferior
+longitudinal fasciculus (IFL) in intrauterine growth restriction (IUGR) patients versus HC-
+IUGR. The calculated values of the diffusion parameters were in agreement with was expected from
+earlier published results. In the SD patients, diffusion parameters were significant different
+from the parameters in HC-SD in anterior as well as in posterior parts of the IFO. Large
+regions of significant differences were present the temporal lobe, when diffusion parameters
+of the IFL were compared between IUGR patients and HC-IUGR. First, ~\cite{johanna2011improved} computes the mean track of all the tracks. The values at different positions along the mean track, were calculated as the mean parameter value. Finally, the average and standard deviation of the parameters at each position along the segments were extracted for the different subjects and compared between the different groups. The parameter values representing the groups were statistically significance tested with a non-parametric rank sum test at each position
+along the segments.
+
+Recently,  to accurately identify MCI (mild cognitive impairment) patients from normal controls, ~\cite{wee2011enriched} extracted six white matter connectivity parameters (fiber count, FA, mean diffusivity and the principle diffusivities ($\lambda_{1},\lambda_{2},\lambda_{3}$). And support vector machines (SVMs) are finally trained using these features to classify the mild cognitive impairment (MCI) and the accurate MCI classifications is $88.9\%$ of 27 individuals
+
+
+
+These parameters can be extracted from dipy such as following steps:
+
+Loading Nifti file and all necessary information
+
+\begin{python}
+img = nib.load(nii_filename)
+data = img.get_data()
+affine = img.get_affine()
+bvals = np.loadtxt(bval_filename)
+gradients = np.loadtxt(bvec_filename).T 
+\end{python}
+
+Creating tensor
+\begin{python}
+        tensors = Tensor(data, bvals, gradients, thresh=50)
+\end{python}
+
+Computing fractional anisotropy(FA)
+\begin{python}
+        FA = tensors.fa()
+        print(FA.shape)
+\end{python}
+
+Computing mean diffusion (MD)
+\begin{python}
+        MD=tensors.md() 
+        print(MD.shape)
+\end{python} 
+
+Computing eigen value
+\begin{python}
+        evls=tensors.evals        
+        print(np.shape(evls))
+\end{python}      
+
+\subsubsection{Correlation and absolute profile distance measures}
+\label{subsec:experiments_quantification_correlation}
+In the previous section, we use the mean track as representing the groups and the average plus the standard deviation
+of the parameters at each position along the mean track segments are extracted for the different subjects
+and compared between the different groups. As contrast with this, this section does not base on the mean track, but will work on the profile of all tracks.
+\begin{enumerate}
+	\item Down sample: because tracks have different length, it should be down sample them to a specific number of intervals
+	\item Calculate the absolute distance between profile tracks ($FA$, $DM$ and eigenvalues $(<\lambda_{1},\lambda_{2},\lambda_{3}>)$)  profile
+	\item Compute the Pearson correlation of the absolute profile distance measures. The Pearson correlation
+coefficient $\rho$ between the two distances over all possible pairs of objects in $\mathcal{X}$:
+\begin{equation}
+\label{eq:accuracy_correlation}
+	\rho = \frac{\mathrm{Cov}(d(X,X'),\Delta_{\Pi}^d(X,X'))}{\sigma_{d(X,X')}\sigma_{\Delta_{\Pi}^d(X,X')}}
+%   \boldsymbol{\rho} = a
+%   \rho = a
+\end{equation}
+In this case, because we have three distance spaces ($FA$, $DM$ and eigenvalues $(<\lambda_{1},\lambda_{2},\lambda_{3}>)$),  totally there will be three correlations
+\end{enumerate}
+
+These correlations will be the representing for the groups and be used to compare between the different groups.
+%This is similar to the contain of the paper we published in the PRNI 2012~\footnote{\url{http://www.mlnl.cs.ucl.ac.uk/prni2012/papers.html}}
+
+\subsubsection{Fiber geometry 
+%based on the Dice coefficient 
+for volumetric overlap}
+\label{subsec:experiments_quatification_geometry}
+The following geometry features (size and shape) are from \cite{babak2012computer}:
+%K. Murphy, B. van Ginneken, A.M.R. Schilham, B.J. de Hoop, H. Gi-
+%etema, and M. Prokop. A Large Scale Evaluation of Automatic Pulmonary
+%Nodule Detection in Chest CT using Local Image Features and k-Nearest-
+%Neighbour Classification. Medical Image Analysis, 13:757–770, 2009.
+\begin{enumerate}
+	\item The volume of the candidates: vol 
+	\item The minimum, maximum and median length of bounding-box in x, y and z directions: $l_{min}$ , $l_{max}$ , $l_{med}$. The bounding-box in 3 dimensional images is the coordinates of the cubic border that encloses the bundles of interest
+	\item The ratios   $\frac{l_{min}}{l_{max}}$ and $\frac{l_{max}}{l_{med}}$ 
+	\item Compactness1: $\frac{vol}{l_{max}^3}$
+	\item Compactness2: $\frac{vol}{l_{x}\ast l_{y}\ast l_{z}}$, where $l_{x}$, $l_{y}$, $l_{z}$ are the length of the bounding box in x, y and z directions respectively.
+\end{enumerate}
+
+In \cite{babak2012computer}, by using a multistage classifier, these geometric-based features
+are used together with intensity-based features (extracted on T2*-MRI and Proton Density (PD) sequences) to detect cerebral microbleeds (CMBs), small hemorrhages in the brain that are known to be associated with risk of ischemic stroke and intracerebral bleeding. 
+
+In ~\cite{clayden2008comparative}, Clayden proposed the shape similarity algorithm between two tracks. The output of the algorithm is a scalar value. The calculation is asymmetric, so that in general, σ(a, b) = σ(b, a). The algorithm tacitly assumes that the seed points are equivalently located in the two tracts. Using the tract comparison algorithm described above, Clayden develops measures of shape and length similarity, and then combine them together to form an overall similarity score. The length, L(r) , of tract r can be defined as the number of voxels visited by itself
+
+\subsubsection{Hausdorff distances between bundles}
+\label{subsec:experiments_quatification_hausdorff}
+The distance used in this section refers to distances between pair of
+streamlines. See~\cite{zhang2008identifying} for a recent survey about
+these distances. A popular group of distances is the modified Hausdorff
+distances~\cite{dubuisson1994modified}. More detail can be found in ~\cite{zhang2008identifying}, and among the most popular are
+\begin{itemize}
+	\item ${d}_1(s_A,s_B)=\frac{1}{n_{s_A}}\sum_{i=1}^{n_{s_A}}d({x}_i^A,s_B)$
+	\item ${d}_2(s_A,s_B)=\min_{i=1,\ldots,n_{s_A}}d({x}_i^A,s_B)$
+	\item ${d}_3(s_A,s_B)=max_{i=1,\ldots,n_{s_A}}d({x}_i^A,s_B)$
+\end{itemize}
+where (see Figure~\ref{fig:structural_distance})
+\begin{equation}
+\label{eq:distance_point_streamline}
+d({x}_i^A, s_B) = \min_{j=1,\ldots,n_{s_B}}||{x}_i^A -{x}_j^B||_2
+\end{equation}
+which can be combined in order to get the symmetric versions:
+\begin{itemize}
+\item ${h}_a({d},s_A,s_B) = \frac{{d}(s_A,s_B)+{d}(s_B,s_A)}{2}$
+\item ${h}_b({d},s_A,s_B) = \min({d}(s_A,s_B),{d}(s_B,s_A))$
+\item ${h}_c({d},s_A,s_B) = \max ({d}(s_A,s_B),{d}(s_B,s_A))$
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=4cm,height = 4cm]{streamline_structural_distance.pdf}
+  \caption{Many distances between two streamlines, $s_A$ and $s_B$
+    (solid line), that are proposed in the literature are based on the
+    set of minimum distances between each point of $s_A$ to $s_B$.
+    The set of minimal distances is represented here as dotted lines.}
+  \label{fig:structural_distance}
+\end{figure}
+
+%\subsubsection{STAPLE sensitivity and specificity score}
+%\label{subsec:experiments_quatification_staple}
+%some text here
+
+\subsubsection{Proposed method for hypotesting}
+\label{subsec:experiments_quatification_proposedmethod}
+From the prior knowledge of neuroscientists and doctors, there is an evidence about the reducing of the number of fibers in CST of ALS patient compared with control people. It is also the same situation with the volume of CST. Beside the number of fibers and the volume, FA and MD also play an important role for recognizing the ALS disease \cite{horsfield2002applications}. \cite{ellis1999diffusion} shows that along the corticospinal tracts, mean diffusivity was found to be significantly increased
+$(p = 0.001)$ in ALS patients (limb onset: $0.771\times10^{-3} mm^2 s^{-1}$; bulbar onset: $0.778\times10^{-3} mm^2 s^{-1}$) compared with controls ($0.732\time10^{-3} mm^2 s^{-1}$). Fractional anisotropy was significantly reduced ($p = 0.007$) in bulbar onset subjects ($0.726$) compared with controls ($0.773$), but no significant difference was found between limb onset subjects ($0.761$) and controls.
+Ellis et al.\cite{ellis1999diffusion} also demonstrated a positive correlation between mean diffusivity and disease duration ($r = 0.57; p = 0.009$) but no correlation with disease severity ($p > 0.29$) or upper motor neuron involvement. On the other hand, fractional anisotropy was found to correlate with measures of disease severity (assessed using the Ashworth spasticity scale and the ALS severity scale $29$).While there was no correlation between anisotropy and disease duration ($r = -0.17; p = 0.48$), significant correlations between anisotropy and the ALS severity scale ($r = -0.63; p = 0.003$) and Ashworth spasticity scale
+($r = -0.56; p = 0.007$) existed.
+Following are some features effectively affecting on ALS
+
+\begin{itemize}
+	\item fiber count: the number of DTI streamlines extracted for a fiber tract
+	\item fiber min/max/mean length: length in $mm$ for all streamlines belonging to a fiber tract
+	\item fiber volume: number of voxels occupied by all streamlines for a particular fiber tract or the geometry cylinder bounding a particular fiber tract
+	\item fiber density: the ratio between fiber count and the number of voxel
+	\item FA
+	\item MD
+	\item fragmentation: can be quantified by the ratio between the number of fibers and the volume
+\end{itemize}
+These features have been used as the measurement for the correctness of tractography in \cite{wang2012comprehensive}. To correct for individual differences in head size, fiber count and tract volume were normalized by intracranial volume, which was calculated from T1-weighted images using the SIENAX program in FSL \cite{smith2004techniques, smith2002accurate, smith2002automated}. 
+
+
