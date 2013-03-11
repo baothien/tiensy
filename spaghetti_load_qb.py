@@ -68,14 +68,14 @@ if __name__ == '__main__':
      
      
     #load the volume
-    #img = nib.load('ALS/ALS_Data/'+str(subj)+'/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz') 
-    img = nib.load('ALS/ALS_temp/'+str(subj)+'/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz') 
+    img = nib.load('ALS/ALS_Data/'+str(subj)+'/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz') 
+    #img = nib.load('ALS/ALS_temp/'+str(subj)+'/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz') 
     data = img.get_data()
     affine = img.get_affine()
     print len(data)
     
     #load the tracks
-    fpkl = 'ALS/ALS_Data/'+str(subj)+'/DIFF2DEPI_EKJ_64dirs_14/DTI/qb_dti_'+str(num_seeds)+'M_linear_20_notransform.pkl'    
+    fpkl = 'ALS/ALS_Data/'+str(subj)+'/DIFF2DEPI_EKJ_64dirs_14/DTI/qb_dti_'+str(num_seeds)+'M_linear_20_no_transform.pkl'    
     qb=load_pickle(fpkl)
 
     Init()
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     w = Window(caption = title, 
                 width = 1200, 
                 height = 800, 
-                bgcolor = (.5, .5, 0.9), right_panel=True)
+                bgcolor = (.5, .5, 0.9), right_panel=False)
 
     scene = Scene(scenename = 'Main Scene', activate_aabb = False)
     
