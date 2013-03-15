@@ -1,12 +1,18 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Diffusion MRI (dMRI) techniques produces non-invasive images of the
-brain white matter. dMRI quantifies locally, i.e. in each voxel, the
-diffusion process of the water molecules which is mechanically
-constrained by the axons of the cortical neurons. Reconstruction and
-tracking algorithms...
+% What is dMRI and tractography
+Diffusion magnetic resonance imaging (dMRI) (REFERENCE) techniques
+provide non-invasive images of the brain white matter. dMRI quantifies
+locally, i.e. in each voxel, the diffusion process of the water
+molecules which is mechanically constrained by the axons of the
+cortical neurons. Reconstruction and tracking algorithms (REFERENCE)
+transform dMRI data into a set of streamlines, where a streamline is a
+3D reconstruction of neuronal pathways. The whole set of streamlines
+is called deterministic tractography. See for example
+Figure~\ref{fig:}
 
+% General clinical motivation for using dMRI
 From~\cite{clayden2009reproducibility} REPHRASE: ``A rapidly
 accumulating clinical literature based on the technique of diffusion
 magnetic resonance imaging (dMRI; see Le Bihan, 2003) is lending
@@ -24,20 +30,84 @@ caused, at least partly, by a breakdown in the connective efficacy of
 white matter. Such pathologies are known as disconnection syndromes, a
 denomination due to Geschwind (1965a,b).''
 
+% Our specific motivation: tractography segmentation to study ALS
 This work focuses on computer-assisted tractography segmentation and
-describes a software system we developed to support neuroanatomists
-and medical doctors in studying the white matter.
+describes the solutions we developed to build a software system we
+created to support neuroanatomists and medical doctors in studying the
+white matter. Our work is motivated by a clinical research hypothesis
+about the characterisation of the amiotrophic (ALS) disease. We
+collected dMRI data from ALS patients and healthy controls with the
+aim of studying the effects of the ALS disease on the corticospinal
+tract (CST), which connects cortical motor areas to the spine and the
+body. The CST is known to be affected by ALS (REFERENCE) and for this
+reason our long term goal is to characterise these effects in
+tractography data. The first task in this endeavour is to segment the
+CTS from the full brain tractography for each subject.
 
-Tractography segmentation can be performed manually,
-semi-automatically and automatically. Some comments and references (if
-available) on each modality.
+% Brief description of the proposed computer-assisted segmentation process
+Tractography segmentation can be performed manually or
+automatically. Despite an increasing literature in automatic
+segmentation (see a brief review in~\cite{WANG?}), applications in the
+clinical domain rely on manual segmentation. The manual segmentation
+process is a lengthy and complex task for two reasons: first the
+tractography is a very large set of reconstructed neuronal pathways,
+in the order of $3 \times 10^5$, which make it intrinsically difficult
+both to inspect and to unfold the anatomical structures (see
+Figure~\ref{fig:}. Second, we claim that there is a lack of software
+tools to support and to simply this segmentation process.
 
-Differently from the previous approaches in manual and assisted
-segmentation we present the user a summary of the tractography in
-terms of clustering of the whole set of streamlines. DESCRIPTION OF
-THE PROCESS.
+Differently from the previous approaches to tractography segmentation
+we conceived a novel computer-assisted interactive process which aims
+at greatly reducing the time required by an expert to segment a given
+anatomical white matter structure of interest. Our approach is based
+on fast-clustering techniques by means of which the expert is
+initially presented a summary, i.e. a clustering, of the whole
+tractography where she can easily select the subset of clusters to
+which restrict the attention. The selected subset of streamlines is an
+initial rough approximation of the structure of interest. This set is
+then re-clustered with an increased number of clusters so that further
+details are revealed. There the user can select what cluster is of
+interest and discard what is not. The selected clusters are then
+re-clustered in more and smaller clusters to reveal more details of
+the anatomical structure of interest. The selection and re-clustering
+process is repeated iteratively until the expert is confident of
+having segmented the structure of interest. A practical example of
+this process is presented in Figure~\ref{fig:}
 
-In the following we describe STRUCTURE OF THE PAPER.
+
+% Contents of the paper
+In this work we describe the algorithmic solutions we adopted in order
+to build the interactive tractography segmentation tool. The core of
+the problem is to obtain fast clustering of a large number of
+streamlines in order to comply with the requirements of human
+interaction. The proposed solution combines two state-of-the-art
+elements: first a recently proposed Euclidean embedding algorithm for
+streamlines, i.e. the dissimilarity representation with the scalable
+\emph{subset farthest first} (SFF) prototype selection
+policy~\cite{olivetti2012dissimilarity}. This embedding provides fast
+and accurate vectorial representation of streamlines, needed by most
+of the clustering algorithms. Second, a recently proposed improvement
+of the $k$-means clustering algorithm called \emph{mini-batch}
+$k$-means~\cite{sculley2010web} (MBKM). This algorithm drastically
+reduces the convergence time to the actual clusters in case of large
+and very-large sets of objects. We also tested a further potential
+improvement, i.e. a recently(?) proposed initialisation algorithm for
+the $k$-means family, called $k-means++$~\cite{arthur2007kmeans}. But
+we excluded it from the final system due to poor performance as
+illustrated in Section~\ref{sec:experiments}.
+
+% Structure of the paper
+The paper is structured as follows. In Section~\ref{sec:methods} the
+algorithmic elements of the proposed method are formally described. In
+Section~\ref{sec:experiments} we describe the segmentation process and
+report the details of the actual use of the proposed solution in the
+context of the CTS segmentation. We quantitatively describe the
+segmentation process and provide figures to evaluate the viability of
+the proposed solution. In Section~\ref{sec:discussion} we discuss the
+results and we show that the proposed solution is effective. We
+conclude by mentioning the future steps for the development of
+\emph{spaghetti} and the open computational (pattern recognition?)
+challenges that needs to be solved.
 
 %%% Local Variables: 
 %%% mode: latex

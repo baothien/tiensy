@@ -1,31 +1,57 @@
 \section{Experiments}
 \label{sec:experiments}
-TODO
+In the following we briefly describe the dataset we collected for the
+validation of the proposed approach. Then we describe the details of
+the interactive segmentation process on those data which is depicted
+in Figure\ref{fig:} and conclude with the actual timing of the
+competing approaches.
+
+\subsection{ALS Dataset}
+BAO/PAOLO: Brief description of the dataset, i.e. the parameters of
+the acquisition, reconstruction algorithms, number of subjects
+etc.. We just present results on one subject.
+
+\subsection{The Interactive Segmentation Process}
+Describe in more detail the clustering-based interactive segmentation
+process.
+
+Sequence of pictures from the initial tractography to the segmented
+cortico-spinal tract (CTS).
+
 
 Report timings for the actual dissimilarity projection of the entire
 tractography and the timing of SFF.
 
-Table: timing to cluster a given set of streamlines, i.e. at different
-steps of the iterative refinement: 300K, 20K, 5K, 1K...
-
-\subsection{ALS Dataset}
-Brief description of the dataset.
-
-\subsection{Example}
-Sequence of pictures from the initial tractography to the segmented
-cortico-spinal tract (CTS).
-
-Another image to compare a patient's CTS vs. a healthy subject CTS.
-
 Add a note to mention about the average amount of time to segment a
 CTS in a given subject (5 minutes?).
 
-Add a table about the number of clusters (selected/shown) and the
-related number of streamlines addressed, at each iteration of the
-segmentation process. Like (3/300)->(5000/300000),
-(10/15)->(4000/5000), etc.
 
-Mention DiPy and related URLs.
+\begin{table}
+  \centering
+  \begin{tabular}{ r | r | c | c | c | c}
+    size & $k$ & $k$-means(rnd) & MBKM(rnd) & $k$-means($k$++) &  MBKM($k$++) \\
+    \hline
+    \hline
+    $500$    &  $50$ &  $0.3s$ &  $\mathbf{0.2}s$ &   0.5s  &  0.3s \\
+    \hline
+    $1000$   &  $50$ &  $0.6s$ &  $\mathbf{0.2}s$ &   1.0s  &  0.3s \\
+    \hline
+    $5000$   &  $50$ &  $6.1s$ &  $\mathbf{0.4}s$ &   7.4s  &  0.5s \\
+    \hline
+    $10000$  &  $50$ & $14.4s$ &  $\mathbf{0.6}s$ &  16.9s  &  1.0s \\
+    \hline
+    $15000$  &  $50$ & $29.9s$ &  $\mathbf{0.7}s$ &  32.4s  &  1.1s \\
+    \hline
+    $250000$ & $150$ & $>1000s$ & $\mathbf{21.8}s$ &  $>1000s$  &  24.8s \\
+    \hline
+  \end{tabular}
+  \caption{Clusterning results.}
+  \label{tab:results}
+\end{table}
+
+
+
+Mention DiPy, Scikit-learn and related URLs.
 
 Mention this is an open-source project.
 
