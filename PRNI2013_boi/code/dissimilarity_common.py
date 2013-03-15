@@ -47,7 +47,7 @@ def subset_furthest_first(S, k, distance, permutation=True, c=2.0):
     # note: no need to add extra permutation here below:
     return idx[furthest_first_traversal(S[idx], k, distance, permutation=False)]
 
-def compute_disimilarity(data, distance, prototype_policy, num_prototypes, verbose=False, size_limit=1000):
+def compute_disimilarity(data, distance, prototype_policy, num_prototypes, verbose=False, size_limit=500000):
     print "Computing disimilarity data for the original data:",
     data_original = data
     num_proto = num_prototypes
@@ -55,10 +55,9 @@ def compute_disimilarity(data, distance, prototype_policy, num_prototypes, verbo
         print
         print "Datset too big: subsampling to %s entries only!" % size_limit
         data = data[np.random.permutation(data.shape[0])[:size_limit], :]
-    od = distance(data, data)     
-    print od.shape
-    original_distances = squareform(od)
-
+    #od = distance(data, data)     
+    #print od.shape
+    #original_distances = squareform(od)
     
     print prototype_policy    
     print "number of prototypes:", num_proto
