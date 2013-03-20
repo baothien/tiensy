@@ -21,7 +21,8 @@ from dipy.io.dpy import Dpy
 #dirname = "data"
 #dirname= "data/1891215"
 #dirname = "ADHD_data/1087458"
-dirname = "ALS/ALS_temp"
+#dirname = "ALS/ALS_temp"
+dirname = "DTI_Cattaneo"
 for root, dirs, files in os.walk(dirname):
     #if root.endswith('DTI64_1'):
         #base_dir = root+'/'       
@@ -38,19 +39,28 @@ for root, dirs, files in os.walk(dirname):
 #        dpr_tracks = Dpy(tracks_filename, 'r')
 #        tensor_tracks=dpr_tracks.read_tracks();
 #        dpr_tracks.close()
+
+#----------------------------------------------------------------------------        
+#for visualization of dpy convert from trackvis format in DTI_Cattaneo folder
+    if root.endswith('Sub1'):                
+        base_dir = root+'/'       
+        basedir_recon = os.getcwd() + '/' + base_dir        
+        tracks_filename = basedir_recon + 'tracks_dti.dpy'
+        dpr_tracks = Dpy(tracks_filename, 'r')
+        tensor_tracks=dpr_tracks.read_tracks();
+        dpr_tracks.close()
+        print(len(tensor_tracks))
+        
         
 #-------------------------------------------------------------------------
 #load tracks in .trk format     
-     if root.endswith('trackvis_format'):        
-        base_dir = root+'/'
-        basedir_recon = os.getcwd() + '/' + base_dir + '/'       
-        tracks_filename = basedir_recon + 'tracks_dti_10K.trk'
-        dpr_tracks, hdr = nib.trackvis.read(tracks_filename)
-        tensor_tracks =(sl[0] for sl in dpr_tracks) 
-        #for i in [0,len(dpr_tracks)]:
-        #    tensor_tracks[i] = dpr_tracks.__iter__(),dpr_tracks.next() 
-        #tensor_tracks=dpr_tracks[0:]#.throw#.read_tracks();
-        
+     #if root.endswith('trackvis_format'):              
+#        base_dir = root+'/'
+#        basedir_recon = os.getcwd() + '/' + base_dir + '/'       
+#        tracks_filename = basedir_recon + 'tracks_dti_10K.trk'
+#        
+#        dpr_tracks, hdr = nib.trackvis.read(tracks_filename)
+#        tensor_tracks =[sl[0] for sl in dpr_tracks]
         #end of load tracks in .trk format
 #------------------------------------------------------------------------
         
