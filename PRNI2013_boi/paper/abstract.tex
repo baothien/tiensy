@@ -2,26 +2,27 @@
   We developed a novel interactive system for human brain tractography
   segmentation to assist neuroanatomists in identifying white matter
   anatomical structures of interest from diffusion magnetic resonance
-  imaging data (dMRI). The difficulty in segmenting and navigating
-  tractographies lies in the very large number of \emph{streamlines},
-  in the order of hundreds of thousands, that modern MR techniques
-  provide. The novelty of our system resides in presenting a clustered
-  version of the tractography to the user which interactively selects
-  the clusters of interest to narrow down the initial tractography to
-  a subset containing the anatomical structure. The set of streamlines
-  of the selected clusters are then re-clustered in smaller clusters
-  so that the user can refine the previous selection and then
-  re-cluster again at a finer scale. This process is iterated until
-  the union of the remaining clusters faithfully represent the desired
-  structure. The proposed system adopts a solution to solve the
+  imaging (dMRI) data. The difficulty in segmenting and navigating
+  tractographies lies in the very large number of reconstructed
+  neuronal pathways, i.e. the streamlines, which are in the
+  order of hundreds of thousands with modern dMRI techniques. The
+  novelty of our system resides in presenting the user a clustered
+  version of the tractography in which she selects some of the
+  clusters to identify a superset of the streamlines of interest. This
+  superset is then re-clustered at a finer scale and again the user is
+  requested to select the relevant clusters. The process of
+  re-clustering and manual selection is iterated until the remaining
+  streamlines faithfully represent the desired anatomical structure of
+  interest. In this work we present a solution to solve the
   computational issue of clustering a large number of streamlines
   under the strict time constraints requested by the interactive
-  use. The solution consists in projecting the streamlines into a
+  use. The solution consists in embedding the streamlines into a
   Euclidean space and then in adopting a state-of-the art scalable
   implementation of the $k$-means algorithm. We tested the proposed
   system on tractographies from amyotrophic lateral sclerosis (ALS)
-  patients and healthy subjects to study the systematic differences
-  within the corticospinal tract.
+  patients and healthy subjects that we collected for a forthcoming
+  study about the systematic differences between their corticospinal
+  tracts.
 \end{abstract}
 
 %%% Local Variables: 

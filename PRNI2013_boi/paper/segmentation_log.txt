@@ -1,0 +1,8 @@
+
+ALS Dataset
+Subject 102 - 3 (obfuscating enumeration)
+Coritcospinal Tract - RIGHT
+
+Tracks	      301.118	15.988	3.308	1.537	519
+Virtuals                 168	       64          52            48
+Distance	               20            15          10             5

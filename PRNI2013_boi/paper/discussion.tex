@@ -1,6 +1,30 @@
 \section{Conclusion}
 \label{sec:discussion}
-TODO.
+\begin{itemize}
+\item We created an effective software tool to support the interactive
+  segmentation of tractography data with pattern recognition
+  algorithms.
+\item To handle the computational burden of clustering a large number
+  of streamline under strong time constraints, we propose a solution
+  based on the dissimilarity representation and the MBKM algorithm.
+\item As shown in Table~\ref{tab:results} the time required to cluster
+  the streamlines with the proposed solution is always the lowest and
+  always $<1$s, which meets the requirements of interactive use.
+\item Conversely, the time required by the standard $k$-means
+  algorithm becomes inadequate, i.e. $>5$s, with more than $\approx
+  5000$ streamlines (see the 3rd column in Table~\ref{tab:results}).
+\item At the first step of the segmentation session the clustering of
+  the whole tractography requires $\approx 20$s with the proposed
+  method. This may be an issue with interactive use, but can be solved
+  by pre-computing this clustering once and then by storing the result
+  together with the actual dataset for future use.
+\item We also tested the $k$-means++ seeding to initialise the
+  $k$-means and MBKM algorithm but observed slightly increased
+  computational cost, as reported in Table~\ref{tab:results} (cf. 3rd
+  vs 5th and 4th vs 6th columns).
+\item To conclude we plan to improve the software segmentation tool to
+  make it production stable.
+\end{itemize}
 
 %%% Local Variables: 
 %%% mode: latex

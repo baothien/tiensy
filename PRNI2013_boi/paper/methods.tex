@@ -1,24 +1,26 @@
 \section{Methods}
 \label{sec:methods}
-In the following we describe the three elements that characterise our
-proposed method. After introducing the notation we formally describe
-the dissimilarity representation Euclidean embedding for streamlines,
-then the mini-batch $k$-means algorithms and the $k$-means++ seeding
-procedure.
-
+In the following we describe the elements that we evaluated in order
+to build the proposed method. After introducing the notation we
+formally describe the dissimilarity representation, i.e. a Euclidean
+embedding for streamlines, and then we present the mini-batch
+$k$-means algorithm. We conclude by reporting how we efficiently
+compute the medoids of the clusters from the centroids.
 
 \subsection{Notation}
 \label{sec:notation}
 Let $X \in \mathcal{X}$ be a streamline, i.e. a sequence of points in
 $3$D space $X = \left((\mathbf{x}_1),\ldots,(\mathbf{x}_n)\right)$,
-$\mathbf{x} = (x,y,z) \in \mathbb{R}^3$. Note that in general $n$ is
-different from one streamline to another within the same
-tractography. Let $T = \{X_1,\ldots,X_M\}$ be a brain tractography,
-for which $M \sim 3 \times 10^5$ usually. Let $d:\mathcal{X} \times
-\mathcal{X} \mapsto \mathbb{R}^+$ be a distance function between
-streamlines. A common distance between streamlines is the symmetric
-minimum average distance (see~\cite{zhang2008identifying}) defined as
-$d(X_a,X_b) = \frac{1}{2}(\delta(X_a,X_b) + \delta(X_b,X_a))$ where
+$\mathbf{x} = (x,y,z) \in \mathbb{R}^3$. Notice that in general $n$ is
+different from one streamline to another, which means that streamlines
+are heterogeneous objects that cannot be directly represented as
+vectors of the same vector space. Let $T = \{X_1,\ldots,X_M\}$ be a
+brain tractography, for which $M \approx 3 \times 10^5$ usually. Let
+$d:\mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}^+$ be a distance
+function between streamlines. A common distance between streamlines is
+the symmetric minimum average distance
+(see~\cite{zhang2008identifying}) defined as $d(X_a,X_b) =
+\frac{1}{2}(\delta(X_a,X_b) + \delta(X_b,X_a))$ where
 \begin{equation}
   \label{eq:mam_distance}
   \delta(X_a,X_b) = \frac{1}{|X_a|} \sum_{\mathbf{x}_i \in X_a}
@@ -28,124 +30,122 @@ $d(X_a,X_b) = \frac{1}{2}(\delta(X_a,X_b) + \delta(X_b,X_a))$ where
 
 
 \subsection{The Dissimilarity Representation}
+\label{sec:dissimilarity}
 The \emph{dissimilarity representation}~\cite{pekalska2002generalized}
 is a lossy Euclidean embedding algorithm that maps general objects
 into vectors of a common vectorial space $\mathbb{R}^p$. In our case
 these objects are the streamlines, as it was previously proposed
 in~\cite{olivetti2012approximation}. The dissimilarity representation
-is defined as $\phi_{\Pi}^d(X):\mathcal{X} \mapsto \mathbb{R}^p$ s.t.
+is a function $\phi_{\Pi}^d(X):\mathcal{X} \mapsto \mathbb{R}^p$ s.t.
 \begin{equation}
   \phi_{\Pi}^d(X) = [d(X,\tilde{X}_1) ,\ldots, d(X,\tilde{X}_p)]
 \label{eq:dissimilarity_representation}
 \end{equation}
-where $d$ is a distance function between streamlines, and $\Pi =
-\{\tilde{X}_1, \ldots, \tilde{X}_p\} \subset \mathcal{X}$ is a set of
-$p$ streamlines called \emph{prototypes}. The quality of the Euclidean
-embedding is strongly dependent on the selection of the prototypes
-(see~\cite{pekalska2006prototype,olivetti2012approximation}).
+where $d$ is a given distance function between streamlines, and $\Pi =
+\{\tilde{X}_1, \ldots, \tilde{X}_p\} \subset \mathcal{X}$ is a given
+set of $p$ streamlines called \emph{prototypes} or
+\emph{landmarks}. The quality of the Euclidean embedding is strongly
+dependent on the choice of $d$ and on the selection of the prototypes
+(see~\cite{pekalska2006prototype,olivetti2012approximation}). In this
+work we adopt the distance of Equation~\ref{eq:mam_distance}, as
+suggested in~\cite{olivetti2012approximation,zhang2008identifying}.
 
 An efficient procedure to select effective prototypes in the case of
 tractography data was presented in~\cite{olivetti2012approximation}:
 the \emph{subset farthest first} (SFF) algorithm. This procedure is a
-stochastic and scalable version of the farthest first traversal (FFT)
-algorithm which is a standard greedy solution to the well known $k$
-centre problem. This problem, put in our context, entails selecting a
-set $\Pi$ of $p$ streamlines~\footnote{Note that here we use $p$ to
-  denote the size of $\Pi$ instead of the $k$ of the ``$k$ centre
-  problem''. This is to avoid confusion with the notation we adopt in
-  this paper.} such that the sum of the distances of each streamline
-of the tractography to closest streamline in $\Pi$ is minimised.
-% Intuitively the streamlines in $\Pi$ are designed to be a
-% \emph{representative} sample of the whole tractography.
-
+scalable approximation of the well known farthest first traversal
+(FFT) algorithm.
+% which is a standard greedy solution to the well known $k$
+% centre problem. This problem, put in our context, entails selecting a
+% set $\Pi$ of $p$ streamlines~\footnote{Note that here we use $p$ to
+%   denote the size of $\Pi$ instead of the $k$ of the ``$k$ centre
+%   problem''. This is to avoid confusion with the notation we adopt in
+%   this paper.} such that the sum of the distances of each streamline
+% of the tractography to closest streamline in $\Pi$ is minimised.
+% % Intuitively the streamlines in $\Pi$ are designed to be a
+% % \emph{representative} sample of the whole tractography.
 The FFT algorithm selects one streamline at random from the
 tractography as the first prototype $\tilde{X}_1$ and then iteratively
-adds a new prototype as the one maximising the distance to the already
-selected prototypes. The SFF algorithms is a stochastic scalable
-version of FFT, which subsamples $m = \lceil c p \log p \rceil$
-streamlines from the whole tractography, and then applies FFT to the
-subsample. For the case of tractography data, when $c>=3$ the SFF
-algorithm is comparable to the FFT algorithm with high probability,
-following the proof in~\cite{turnbull2005fast} and the empirical
-results in~\cite{olivetti2012approximation}.
+adds a new prototype as the streamline maximising the distance to the
+already selected prototypes. The SFF algorithms is a stochastic
+scalable version of FFT, which subsamples $m = \lceil c p \log p
+\rceil$ streamlines from the whole tractography, and then applies FFT
+to the subsample. For the case of tractography data, when $c>=3$ the
+SFF algorithm is comparable to the FFT algorithm with high
+probability, following the proof in~\cite{turnbull2005fast} and the
+empirical results in~\cite{olivetti2012approximation}.
 
 
 \subsection{Mini-Batch $k$-means}
 \label{sec:mbkm}
-The $k$-means clustering problem is a hallmark of the clustering
-literature. Given $k$, the number of clusters, the problem is find $k$
-cluster centres $C = \{\mathbf{c}_1,\ldots,\mathbf{c}_k\}$,
+The $k$-means clustering problem is a cornerstone of the clustering
+literature. Given $k$, the number of clusters, the problem is to find
+$k$ cluster centres $C = \{\mathbf{c}_1,\ldots,\mathbf{c}_k\}$,
 $\mathbf{c} \in \mathbb{R}^p$, and to assign each element of the
 vectorial dataset $\Phi(T) = \{\phi(X_1),\ldots,\phi(X_M)\} \subset
-\mathbb{R}^p$ to the closest cluster\footnote{We denote
-  $\phi_{\Pi}^d(X)$ as $\phi(X)$ to simplify notation without
+\mathbb{R}^p$ to the closest cluster\footnote{From now on, we denote
+  $\phi_{\Pi}^d(X)$ as $\phi(X)$ to simplify the notation without
   introducing ambiguity.}. The $k$-means problem is then to compute
 centres $C$ such as to minimise the loss function
-% \begin{equation}
-%   \label{eq:kmeans}
-%   \min \sum_{\phi(X) \in \Phi(T)}||f(C,\phi(X)) - \phi(X)||_2^2 
-% \end{equation}
-% where $f(C,\phi(X)) = \min_{\mathbf{c} \in C}||\mathbf{c} -
-% \phi(X)||_2$ returns the closest cluster centre.
 \begin{equation}
   \label{eq:kmeans_loss}
-  \min \sum_{\phi(X) \in \Phi(T)}\left\Vert\min_{\mathbf{c} \in C}||\mathbf{c}
-  - \phi(X)||_2 - \phi(X)\right\Vert_2^2.
+  \min \sum_{\phi(X) \in \Phi(T)} D(\phi(X),C)^2
 \end{equation}
-The exact solution of the $k$-means problem is $NP$-hard and the
-standard algorithm computational complexity, the Lloyd's algorithm, is
-$O(kM^2)$ which is unfeasible for a full tractography data (see
-Section~\ref{sec:experiments}).
+Where $D(\phi(X),C) = \min_{\mathbf{c} \in C}||\phi(X) -
+\mathbf{c}||_2$ is the distance between $\phi(X)$ and the closest
+centre. The exact solution of the $k$-means problem is $NP$-hard and
+the computational complexity of the standard algorithm, the Lloyd's
+algorithm~\footnote{\url{http://en.wikipedia.org/wiki/K-means_clustering#Standard_algorithm}},
+has been proved to be $O(M^{34})$ in the general
+case~\cite{arthur2009kmeans}, even though much less in practical
+applications. Nevertheless the standard algorithm impractical when
+clustering a tractography data in an interactive setting, as we show
+in Section~\ref{sec:experiments}.
 
 The \emph{mini-batch $k$-means} (MBKM) algorithm~\cite{sculley2010web}
-is a modification of the standard algorithm that is able to reduce the
-computational costs by orders of magnitude. The intuitive idea is to
-use a stochastic gradient descent approach to find the centres $C$
-starting from a random initialisation. This idea was introduced
-in~\cite{bottou1995convergence} where the points of the dataset were
-given one at a time in an online fashion.
+is a recently proposed modification of the standard algorithm that is
+able to reduce the computational costs by orders of magnitude. The
+intuitive idea is to use a stochastic gradient descent approach to
+find the centres $C$ starting from a random initialisation. This idea
+was introduced in~\cite{bottou1995convergence} where the points of the
+dataset were given one at a time in an online fashion.
 
-Instead of an online update of the centers, the MBKM algorithm
-proposes to use multiple random subsets of the dataset, i.e. the
-\emph{mini batches}, to update the cluster centres and to compute a
-per-centre learning rate. As soon as the objective function in
-Equation~\ref{eq:kmeans_loss} converges the process is stopped. The
-pseudocode algorithm of MBKM is shown in~\cite{sculley2010web} and we
-do not report it here for lack of space.
+Instead of updating the centers with one streamline at a time, the
+MBKM algorithm proposes to use multiple random subsets of the dataset,
+i.e. the \emph{mini batches}, to update the cluster centres and to
+estimate the per-centre learning rates. As soon as the objective
+function in Equation~\ref{eq:kmeans_loss} converges the process
+stops. The pseudocode algorithm of MBKM is shown
+in~\cite{sculley2010web} and we do not report it here for lack of
+space.
 
-The MBKM algorithm computational complexity cannot be generally
-determined due to its stochastic nature. Empirical results
-in~\cite{sculley2010web} show a reduction of two orders of magnitude
-in computation time. We present additional results on tractography
-data in Section~\ref{sec:experiments}.
+The computational complexity of the MBKM algorithm is not known in the
+general case but empirical results in~\cite{sculley2010web} show a
+reduction of two orders of magnitude in computation time with respect
+to the standard $k$-means. We present analogous results on
+tractography data in Section~\ref{sec:experiments}.
 
 
-\subsection{$k$-means++ Seeding}
-For the most of the $k$-means algorithms the initialisation of the
-centres, called \emph{seeding}, is usually done by selecting $k$
-points at random in the dataset. In~\cite{arthur2007kmeans} it was
-shown that careful initialisation can dramatically improve both the
-quality of clustering and the convergence time. The $k$-means++
-seeding algorithm~\cite{arthur2007kmeans} proposes to select the
-initial centres through these steps:
-\begin{enumerate}
-\item Choose $\mathbf{c}_1$ uniformly at random from $\Phi(T)$.
-\item The next centre $\mathbf{c}_i$ is selected at random from the
-  dataset $\Phi(T)$ such that $\mathbf{c}_i = \phi(X) \in \Phi(T)$
-  with probability $\frac{D(\phi(X))^2}{\sum_{\phi(X_i) \in \Phi(T)}
-    D(\phi(X_i))^2}$
-\item Repeat the previous step until $k$ centres are selected.
-\end{enumerate}
-where $D(\phi(X)) = \min_{\mathbf{c} \in C}||\phi(X) - \mathbf{c}||_2$
-is the distance of $\phi(X)$ to the closest
-centre. In~\cite{arthur2007kmeans} it is proved that the $k$-means++
-initialisation guarantees a tight upper bound to the expected value of
-the loss function of Equation~\ref{eq:kmeans_loss} w.r.t. the optimal
-value. Moreover experiments in~\cite{arthur2007kmeans} shows that it
-reduces the time to compute the centres of a factor $2$ to $5$. We
-present additional results on tractography data in
+
+\subsection{From Centroids to Medoids}
+\label{sec:trees}
+In order to visually present the clusters of streamlines to the user
+one representative streamline of each cluster needs to be selected. In
+the general case the dissimilarity representation is not invertible,
+i.e. given a vector $\mathbf{c} \in \mathbb{R}^p$ it is not possible
+to construct the streamline $X_{\mathbf{c}}$ such that $\mathbf{c} =
+\phi{X}$. This means that the centroids $C$ obtained with the
+$k$-means or the MBKM cannot be shown to the user as streamlines. For
+this reason we decided to display the \emph{medoid} of each cluster,
+i.e. the streamline of the tractography closest to each centroid
+$\mathbf{c}$. The exhaustive search of the medoids requires the
+computation of $kM$ distances, which is too slow for interactive
+use. For this reason we adopted a data structure for efficient
+computation of the nearest neighbour in high-dimensional spaces: the
+\emph{Ball Tree}. We refer the reader to~\cite{omohundro1989balltree}
+for additional details. We present empirical results of the time
+required for the computation of the medoids in
 Section~\ref{sec:experiments}.
-
 
 %%% Local Variables: 
 %%% mode: latex
