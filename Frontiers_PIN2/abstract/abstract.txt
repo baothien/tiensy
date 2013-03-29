@@ -1,0 +1,20 @@
+* Title
+
+Spaghetti: Clustering-Aided Tractography Segmentation
+
+
+* Authors (random order)
+
+Paolo Avesani
+Thien Bao Nguyen
+Emanuele Olivetti
+Eleftherios Garyfallidis
+Nivedita Agarwal
+
+
+* Abstract
+
+In this work we present Spaghetti, a novel 3D interactive software
+system to support neuroanatomists and medical doctors in exploring and
+segmenting the white matter of the brain reconstructed by diffusion
+magnetic resonance imaging (dMRI) techniques.

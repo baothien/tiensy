@@ -1,0 +1,157 @@
+CALL FOR CONTRIBUTIONS
+
+Research Topic: "Python in Neuroscience II"
+Journal:
+co-hosted by Frontiers in Neuroinformatics
+[http://www.frontiersin.org/neuroinformatics]
+and Frontiers in Brain Imaging Methods
+[http://www.frontiersin.org/Brain_Imaging_Methods]
+
+URL:
+http://www.frontiersin.org/Neuroinformatics/researchtopics/Python_in_Neuroscience_II/1591
+
+Editors:
+Andrew P. Davison, CNRS, France
+Markus Diesmann, Research Center Juelich, Germany
+Marc-Oliver Gewaltig, Ecole Polytechnique Federale de Lausanne, Switzerland
+Satrajit S. Ghosh, Massachusetts Institute of Technology, USA
+Fernando Perez, University of California at Berkeley, USA
+Eilif B. Muller, Blue Brain Project, EPFL, Switzerland
+James A. Bednar, The University of Edinburgh, United Kingdom
+Bertrand Thirion, Institut National de Recherche en informatique et automatique, France
+Yaroslav O. Halchenko, Dartmouth College, USA
+
+Important Dates:
+
+Abstract/outline submission deadline: April 7th, 2013.
+Invitations for full paper submissions sent by April 21st, 2013.
+Invited full paper submission deadline: July 15, 2013.
+
+
+*** Research Topic Abstract ***
+
+Frontiers in Neuroinformatics hosted the research topic â€œPython in
+Neuroscienceâ€ in 2008-2009 [1], documenting the first wave of mature
+tools to propel Python into common use in the field. This widespread
+convergence on Python as the systems integration language of choice in
+neuroscience has brought with it exciting new possibilities for
+cross-fertilization, collaboration, and interdisciplinary interaction.
+
+The Python ecosystem remains vibrant and inventive, and continues to
+produce cutting edge tools for neuroscience research. With this second
+research topic on â€œPython in Neuroscienceâ€ we seek to showcase the most
+exciting developments since 2009 that include, but are not limited to,
+the following themes:
+
+- interactive simulation and visualization
+- workflows and automation
+- brain-machine interfaces
+- advances in neuroimaging analysis methods
+- sharing, re-use, storage and databasing of models and data
+- data analysis libraries and frameworks
+- brain atlasing, ontologies, semantic web
+- model description and abstraction languages
+
+We invite contributions that promote innovative use of Python for
+scientific work from any branch of neuroscience.
+
+This research topic is dedicated to the memory of Prof. Dr. Rolf
+Koetter, visionary, colleague and friend.
+
+[1] - http://www.frontiersin.org/Neuroinformatics/researchtopics/Python_in_neuroscience/8
+
+
+*** Submission Procedure ***
+
+Researchers and practitioners are invited to submit on or before April
+7th, 2013 a max. 1 page abstract/outline of work related to the focus
+of the research topic to python.in.neuroscience@gmail.com for
+consideration for inclusion as an elaborated full article in the
+research topic.
+
+Please include a provisional title, a full author list, and format the
+subject of your email as follows: "[python RT] outline - Your Name".
+
+Authors will be notified whether their contribution has been accepted
+by April 21st, 2013.
+
+
+*** Full Article Information ***
+
+* Full articles will be solicited based on the abstracts/outlines we
+receive by April 7th, 2013.
+
+* The deadline for submission of full articles will be July 15, 2013.
+
+* Manuscripts should be clearly different from user manuals or web
+pages. Rather they should focus on the underlying concepts and
+innovations in architecture, algorithms, data-structures, workflows,
+etc.
+
+* The research topic is co-hosted by Frontiers in Neuroinformatics and
+Frontiers in Brain Imaging Methods. Authors choose the journal which
+is named when citing their article (Front. Neuroinformatics or Front.
+Brain Imaging Methods) by submitting the full article to the
+respective journal. All research topic articles will be listed in
+the research topic page appearing in both journals.
+
+* Article formatting will be as for standard Frontiers "Original
+Research", â€œMethodsâ€ or â€œReviewâ€ articles. Guidelines and instructions
+for their preparation can be found at
+http://www.frontiersin.org/about/AuthorGuidelines
+
+* Frontiers in Neuroinformatics and Frontiers in Brain Imaging Methods
+are open access journals, following a pay-for-publication model.
+Research Topic articles enjoy a generous discount, thanks to the
+support of the Frontiers Research Foundation. Details of the
+publication fees can be found at
+http://www.frontiersin.org/about/PublishingFees.
+
+* Further details will be provided to authors of accepted abstracts by
+April 21st, 2013.
+
+
+*** Confirmed Submissions ***
+
+The following authors have been contacted in the preparation phase of
+the research topic and have confirmed they would submit a manuscript.
+Article titles and author lists are preliminary.
+
+Henrik LindÃ©n*, Espen Hagen*, Szymon Leski, Eivind S. Norheim, Klas H.
+Pettersen, Gaute T. Einevoll (*equal contribution), "LFPy: A tool for
+simulation of extracellular potentials with biophysically detailed
+model neurons".
+
+VK Jirsa, AR McIntosh, et al., "Integrating neuroinformatics tools in
+TheVirtualBrain".
+
+Andrew P. Davison, Eilif Muller, Jochen M. Eppler and Mikael Djurfeldt,
+"Multisimulations in PyNN: Integrating PyNN and MUSIC".
+
+Robert PrÃ¶pper and Klaus Obermayer, "Spyke Viewer: a flexible and
+extensible electrophysiological data analysis platform".
+
+Michael Hull and David Willshaw, "morphforge: an object-model for
+simulating small networks of biologically detailed neurons in python".
+
+Alexandre Abraham, Fabian Pedregosa, Andreas Muller, Jean Kossaifi,
+Alexandre Gramfort, Bertrand Thirion, GaÃ«l Varoquaux, â€œStatistical
+learning for Neuroimaging with scikit-learnâ€ .
+
+A. Gramfort, M. Luessi, E. Larson, D. Engemann, D. Strohmeier, C.
+Brodbeck, M. Hamalainen, â€œMNE-Python: MEG and EEG data analysis with
+Pythonâ€ .
+
+Thomas Vincent, Solveig Badillo, Lotfi Chaari, Christine Bakhous,
+Florence Forbes, Philippe Ciuciu, "Flexible multivariate hemodynamics fMRI
+data analyses and simulations with PyHRF"
+
+Wiecki, Thomas V. and Sofer, Imri and Frank, Michael J. "HDDM:
+Hierarchical Bayesian estimation of the Drift-Diffusion Model in Pythonâ€ .
+
+M. Djurfeldt, A.P. Davison, J.M. Eppler: "Modeling connectivity: Connection-set
+Algebra in NEST and PyNN"
+
+
+
+------------------------------

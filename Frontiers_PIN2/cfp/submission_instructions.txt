@@ -1,0 +1,23 @@
+Submission Procedure
+
+Researchers and practitioners are invited to submit on or before April 7th, 2013 a max. 1 page abstract/outline of work related to the focus of the research topic to python.in.neuroscience@gmail.com for consideration for inclusion as an elaborated full article in the research topic.
+
+Please include a provisional title, a full author list, and format the subject of your email as follows: "[python RT] outline - Your Name".
+
+Authors will be notified whether their contribution has been accepted by April 21st, 2013.
+
+Full Article Information
+
+* Full articles will be solicited based on the abstracts/outlines we receive by April 7th, 2013.
+
+* The deadline for submission of full articles will be July 15, 2013.
+
+* Manuscripts should be clearly different from user manuals or web pages. Rather they should focus on the underlying concepts and innovations in architecture, algorithms, data-structures, workflows, etc.
+
+* The research topic is co-hosted by Frontiers in Neuroinformatics and Frontiers in Brain Imaging Methods. Authors choose the journal which is named when citing their article (Front. Neuroinformatics or Front. Brain Imaging Methods) by submitting the full article to the respective journal. All research topic articles will be listed in the research topic page appearing in both journals.
+
+* Article formatting will be as for standard Frontiers "Original Research", “Methods” or “Review” articles. Guidelines and instructions for their preparation can be found here.
+
+* Frontiers in Neuroinformatics and Frontiers in Brain Imaging Methods are open access journals, following a pay-for-publication model. Research Topic articles enjoy a generous discount, thanks to the support of the Frontiers Research Foundation. Details of the publication fees can be found here.
+
+* Further details will be provided to authors of accepted abstracts by April 21st, 2013. 
