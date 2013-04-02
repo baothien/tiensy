@@ -39,7 +39,7 @@ if __name__ == '__main__':
     tracks_all = np.array(tracks_all, dtype=np.object)
     t_batch=0
     t_batch_random=0
-    print "Num tracks \t num clusters \t btree \t dissimilarity \t minibatch (random) \t medoids"
+    print "Num tracks \t num clusters \t btree \t dissimilarity \t minibatch (random) \t medoids \t exhaustive search \t smart exhaustive search"
     for i in range(len(num_trks)):   
       
         ##############################################################################
@@ -84,5 +84,27 @@ if __name__ == '__main__':
                 medoid = bt.query(mbk_means_cluster_centers[i], k=1, return_distance=False)
             t_medoids_mini_batch_random = time.time() - t0              
            
-            print len(tracks),'\t',len(mbk_means_cluster_centers),'\t',t_btree,'\t', t_disi,'\t',  t_mini_batch_random, '\t', t_medoids_mini_batch_random
+            #print "exhaustive search of the medoids:",
+            medoids_exh = np.zeros(len(mbk_means_cluster_centers), dtype=np.int)
+            t0 = time.time()
+            for i, centroid in enumerate(mbk.cluster_centers_):
+                tmp = X - centroid
+                medoids_exh[i] = (tmp * tmp).sum(1).argmin()
+            t_exh_query = time.time() - t0
+            #print t_exh_query, "sec"
+        
+        
+            #print "exhaustive smarter search of the medoids:",
+            medoids_exhs = np.zeros(len(mbk_means_cluster_centers), dtype=np.int)
+            t0 = time.time()
+            for i, centroid in enumerate(mbk.cluster_centers_):
+                idx_i = np.where(mbk.labels_==i)[0]
+                if idx_i.size == 0: idx_i = [0]
+                tmp = X[idx_i] - centroid
+                medoids_exhs[i] = idx_i[(tmp * tmp).sum(1).argmin()]
+            t_smart_exh_query = time.time() - t0
+            #print t_exhs_query, "sec"           
+           
+           
+            print len(tracks),'\t',len(mbk_means_cluster_centers),'\t',t_btree,'\t', t_disi,'\t',  t_mini_batch_random, '\t', t_medoids_mini_batch_random, '\t', t_exh_query,'\t',t_smart_exh_query
             
