@@ -1,9 +1,10 @@
+
 * Title
 
-Spaghetti: Clustering-Aided Tractography Segmentation
+Clustering-Aided Tractography Segmentation
 
 
-* Authors (random order)
+* Authors
 
 Paolo Avesani
 Thien Bao Nguyen
@@ -14,7 +15,77 @@ Nivedita Agarwal
 
 * Abstract
 
-In this work we present Spaghetti, a novel 3D interactive software
-system to support neuroanatomists and medical doctors in exploring and
-segmenting the white matter of the brain reconstructed by diffusion
-magnetic resonance imaging (dMRI) techniques.
+In this work we present a novel 3D interactive software system to
+support neuroscientists and neuroanatomists in exploring and
+segmenting the white matter of the human brain reconstructed by
+diffusion magnetic resonance imaging (dMRI) techniques.
+
+Within the white matter, the local quantification of the diffusion
+process of the water molecules provides in vivo information on the
+directionality of the neuronal axons. Reconstruction and tracking
+algorithms transform this information into streamlines, i.e. 3D
+polylines approximating the neuronal pathways. Then, the hundreds of
+thousands of streamlines that can be reconstructed from a single brain
+represent its anatomical connectivity structure.
+
+The clinical literature indicates that a wide range of pathologies,
+such as multiple sclerosis and the Alzheimer disease, induce
+degenerative processes in the white matter of the brain. The
+disruption of the anatomical connectivity is part of these effects and
+for this reason, such diseases may be investigated through inspection
+and analysis of tractography data. A necessary step in this direction
+is to unveil the anatomical structures of interest hidden within the
+whole brain tractography, a task called tract segmentation.
+
+The literature and the software tools available for tract segmentation
+describe two main approaches: manual segmentation and automatic
+segmentation. In the first approach an expert defines regions of
+interest (ROIs) within the brain and filters out the streamlines not
+crossing those regions. In the second approach clustering algorithms
+attempt to group the streamlines according only to their geometric
+properties. Manual segmentation is time consuming for the expert and
+it is based on the assumption that the reconstruction of streamlines
+is highly accurate. Conversely, automatic segmentation exclude the
+expert from the process and for this reason may have limited adoption
+in the clinical domain.
+
+We propose a novel approach based on the notion of computer-assisted
+tract segmentation. The process of segmentation is driven by the
+expert but at the same time efficient clustering techniques are
+exploited in order to dynamically create a simplified representation
+of the large set of streamlines presented on the screen. The first key
+element of this approach is to cluster the streamlines and then to
+show just one representative of each cluster instead of them. In this
+way the expert is presented with a 3D scene that balances an accurate
+representation with the possibility user interaction.
+
+The second key element of this approach is to let the expert directly
+select the clusters of interest by pointing and clicking on their
+representative streamlines. In this way the expert segments the
+anatomical structures of interest by selecting the streamlines having
+shape and location compliant with the target anatomical
+structure. This is different from the ROI-based approach in which
+there is no direct selection of the streamlines.
+
+Once the expert selects the few clusters of interest the remaining
+ones are removed from the scene. Then the subset of streamlines of the
+few selected clusters is then re-clustered into a larger number of
+clusters, thus revealing more anatomical details. The expert then
+selects the cluster of interest. The steps of re-clustering and manual
+selection are repeated iteratively until the expert is confident of
+having segmented the anatomical structure of interest.
+
+We validated the approach implemented in the tool on data from a
+clinical study about the Amyotropic Lateral Syndrome (ALS), where an
+expert neuroanatomist segmented the corticospinal tract of patients
+and healthy subjects. We include the tractography data of one patient
+and one subject of this study in the distribution of the software.
+
+The software tool is implemented in Python, on top of NumPy, OpenGL, DiPy and
+Scikit-Learn. It is currently in alpha/beta stage and we plan to
+release it for the submission of this article.
+
+
+
+
+
