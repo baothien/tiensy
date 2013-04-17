@@ -1,0 +1,94 @@
+\section{Introduction}
+\label{sec:introduction}
+%p1 Context
+%p2 Problem
+%p3 Solution
+%p4 Why new
+%p5 structure of paper
+
+%     P1: Context
+%    
+%     P2: Problem
+%    
+%     P3: Solution
+%    
+%     P4: Why new
+%    
+%     P5: Structure of paper
+
+%	+ 1 pages: stable the main goals of your work
+%   	+ Context+to get the idea -> 1 paragraph (no citation)
+%   	+ Problem + Citations -> <20 lines
+%   	+ Approach + Solution -> <20 lines
+%   	+ [Why you are novel]
+%   	+ Structure of paper, by section -> <20 lines
+     
+%\textbf{Context + to get the idea -> 1 paragraph (no citation)}
+
+%Neuroimaging techniques allow researchers and clinicians to gain insights of unprecedented quality on the cerebral anatomy. Three main focuses of neuroimaging include \textit{brain decoding}, \textit{brain mapping} and \textit{brain connectivity}. Both brain mapping and brain decoding concern about the prediction or detection of a cognitive stimulus given a recording brain activity and reverse. Contrast with them, 
+In neuroimaging, brain connectivity refers to building a model of the connections between different brain areas. \textit{Functional connectivity} focuses on the temporal correlation between the brain activity of anatomically remote areas. \textit{Effective connectivity} investigates causal links between different brain structures. \textit{Anatomical connectivity} refers to the structural links between different areas that develop in the white matter of the brain. Anatomical connectivity is the main focus of this work. 
+%Before going on more detail, it is necessary to define some terms that will be used in this paper:
+%\begin{itemize}
+%	\item \textit{\textbf{Streamline}} is an approximation of about $\sim10K$ neuronal axons sharing the same structural connectivity path. In some cases, \textit{streamline} is also called \textit{\textbf{track}} or \textit{\textbf{fiber}}.
+	%, both of which more refers to the mathematical representation.
+%	 \item The whole set of \textit{streamlines} of a brain is called \textit{\textbf{tractography}}. And given that the resolution of modern MRI scanners is in the order of $1mm^3$, a full brain tractography consists of $\approx3\times10^5$ streamlines. (see Figure~\ref{fig:tractography})
+%	  \item \textit{\textbf{Bundle}} is a set of streamlines with similar spatial and shape characteristics e.g. they are close to each other according to a streamline distance.
+%	  \item \textit{\textbf{Tract}} is the real anatomical group of neuronal axons.
+%\end{itemize}   
+%More recently, several groups have proposed tractography methods and have reported success in following fiber tracts~\cite{zhang2008identifying}.
+%\textbf{Problem + Citations -> <20 lines}
+Currently, diffusion magnetic resonance imaging (dMRI) techniques are commonly used to find the anatomical connectivity in brain~\cite{basser1994diffusion,tuch2002high}. dMRI is a set of methods for measuring the displacement distribution of water molecules in vivo. From the displacement distribution, we can infer the fiber orientation or orientations in each imaging volume element, called \emph{voxel}, and that allows to reconstruct white matter fiber tracts as a set of \emph{streamlines}. A streamline is an approximation of about $\sim10^3$ neuronal axons sharing the same structural connectivity path. A set of streamlines with similar spatial and shape characteristics is called \emph{bundle}. The whole set of streamlines of a brain is called \emph{tractography}. More recently, several groups have proposed tractography methods and reported success in following fiber tracts (for example deterministic tractography algorithms~\cite{mori2002fiber},\cite{garyfallidis2012towards}). 
+One problem raises is how to group streamlines belonging to a common anatomical area into one segmentation. This task is known as \emph{tract segmentation}.
+%However, the segmentation process is really slow and requires experience from neuroanatomists. Moreover, the variability of the brain anatomy among different subjects makes the segmentation become a difficult task~\cite{bozzali2002white}.
+%\begin{figure*}
+%  \centering
+%  \includegraphics[width=16.2cm, height=1.27cm ]{figures/ov_research2.png}
+%  \caption{Tract segmentation takes as input a huge tractography, the result of reconstruction step done on original dMRI data. It produces as output a tract segmentation, which is then used in clinical applications}
+%  \label{fig:ov_research}
+%\end{figure*}
+
+%\textbf{Approach + Solution -> <20 lines}
+Traditionally the segmentation task is done by neuroanatomists, and it consumes a lot of time and effort due to the large number of streamlines (about $3 \times 10^5$ in a normal brain). Moreover, the variability of the brain anatomy among different subjects makes the segmentation become a difficult task~\cite{bozzali2002white}. Recently, the literature about machine learning techniques to solve this problem is increasing. Up to now, there are two approaches for tractography segmentation: supervised~\cite{caruna2006emperical} and unsupervised~\cite{ghahramani2004unsupervised} learning. The unsupervised techniques often rely on expert-crafted streamline-streamline distance functions~\cite{dubuisson1994modified, zhang2008identifying} encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). Supervised tract segmentation~\cite{caruna2006emperical,olivetti2011supervised} instead aims at learning how to segment the tractography from expert-made examples provided as input. Although both supervised and unsupervised techniques get some encouraging results, but they are below the expectation of medical practitioners. Unsupervised techniques usually work on the whole tractography while medical practitioner often focus on a specific tract. In the case of supervised learning, the lack of ground truth data makes the results be not good and need the refinement from experts. 
+%Moreover, both of them are off-line methods which require the refinement from experts. 
+
+This research is motivated by the need for interaction of medical pratitioners when they do the tract segmentation task. It is impossible for them to have a look at the whole tractography of a brain due to the huge number of streamlines ($\approx 3 \times 10^5$). And it is often an important requirement to view the tractography at different partial views. Medical practitioners usually changes between these levels for better visualization. This demand raises a question of how we can present the whole tractography at different level of zooming in $3D$ space? 
+
+Currently, both supervised and unsupervised learning are unsatisfactory. In this work, we want improve the support of machine learning for the segmentation task. In another way, we want to help medical practitioner to do the segmentation task more easily, and more accurately based on machine learning. More precisely, following are things we want to investigate in this project.
+%In this project, following are what we want to investigate:
+\\\textbf{Brain tractography segmentation:} In %A novel contribution of 
+this work, we combine both \textit{unsupervised} and \textit{supervised} learning to do the task of segmentation. The reason is that each technique is suitable for different steps in the whole process. The framework of our process is showed in the figure \ref{fig:ov_tool}. First, supervised learning is used in the tract identification stage to create the tentative segmentation. Then, this candidate is interactively refined by experts based on fast clustering technique.
+\textbf{\textit{Multimodal brain image visualization:}} In order to help medical practitioners to do the segmentation task more easily, and faster, we provide an interactive visualization tool for a large volume brain imaging data in $3D$ space, which is the implementation of our proposed framework for tract segmentation. In this scientific interactive tool, we present a simple way to interact and to segment streamlines, which goes, as far as we know, beyond any other available medical imaging software.
+%This method takes as input a huge brain tractography plus the repository of manual segmentation examples, and produces as output a segmentation after refining by experts. 
+%To help user can use it friendly, easily, beside the main functions (select/deselect bundle, explore bundle, move/hide slice,etc...) some other common tasks should be integrated such as undo, save current work, load the previous work, etc.
+% to help them interact with tracts easier and faster.
+%\par{}
+%%\textbf{How we can do this?} 
+%\textbf{\textit{Supervised tract segmentation:%Multimodal brain image pattern classification methods }} to classify brain tractography into a specific group using supervised learning technique. The idea of the supervised learning is to exploit examples of manually segmented tracts to learn how to extract them automatically from new subjects. This motivation raises from working with doctors and neuroscientists who have already collected many segmented tractogarphy data but it is very difficult for them to use the knowledge in this data for segmentation the new brain. With supervised learning technique, firstly it is necessary to collect enough the manually segmented tractography data. After that, a system will automatic extract some common features from this dataset. These features will be put into a classifier kernel as the standard to classify the tracts belong to which segmentation. At the first idea, some useful features could be the size of bundle, the number of tracts, the length of tracts. This method focuses on the potential benefit of adapting the model learnt from one subject to an other subject. 
+%\par{}
+%\textbf{\textit{Fast clustering:}} in contrast with the supervised learning, the unsupervised method requires no prior knowledge from neuroscientists. Such techniques often rely on expert-crafted streamline-streamline distance functions encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). Due to the fact that result of the classification based on supervised learning usually does not satisfy the requirement of the doctors/neural scientists, it is necessary to let them refine the segmentation again with the help of fast clustering technique. 
+%After projecting the tractography into a vector space, one algorithm for clustering the projected tractography can be used. 
+%The first idea is to use hierarchical clustering techniques. The motivation behind this is that this algorithm does not base on a specific number of cluster centers. It creates the whole clusters in a hierarchical tree, and when users change the number of cluster, the result of different clusters or segmentations will be appeared. This clustering technique do help doctors/neural scientists to do the segmentation refinement task easier, faster and instantly.
+%seperate  swe want to cross-validate the result to know which method has the senior advantage for segmentation tractography task. With the unsupervised method, it requires no prior knowledge from neuroscientists. Such techniques often rely on expert-crafted streamline-streamline distance functions encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). 
+% In the other side, the idea of the supervised learning is to exploit examples of manually segmented tracts to learn how to extract them automatically from new subjects. This motivation raises from working with doctors and neuroscientists who have already collected many segmented tractogarphy data but it is very difficult for them to use the knowledge in this data for segmentation the new brain. The challenge is to design an effective computational supervised learning approach for tract segmentation in contrast to unsupervised approach.\\
+%\par{}
+%\textbf{\textit{Dissimilarity approximation:}} both supervised and unsupervised segmentation method base on machine learning technique which requires the input to be from a vectorial space. This requirement contrasts with the intrinsic nature of the tractography because its basic elements, called streamlines or tracks, have different lengths and different number of points and for this reason they cannot be directly represented in a common vectorial space. This lack of the vectorial representation avoids the use of some of those algorithms and of computationally efficient implementations. The dissimilarity space representation could be the way to provide such a vectorial representation and for this reason it is crucial to assess the currently machine learning techniques. Actually, the dissimilarity representation is an Euclidean embedding technique defined by selecting a set of objects (e.g. a set of streamlines) called \emph{prototypes}, and then by mapping any new object (e.g. any new streamline) to the vector of distances from the prototypes. This representation~\cite{pekalska2002generalized,balcan2008theory,chen2009similarity} is usually presented in the context of classification and clustering problems. More detail about this can be found in the section \ref{subsec:dissimilarity}.
+\textbf{\textit{Clinical applications:}}
+%computer aided diagnosis and follow-up of brain diseases via multimodal images, early diagnosis of brain diseases via multimodal images, and differential diagnosis of brain diseases via multimodal images. 
+%\textbf{How we can do this?} \textbf{- clinical diagnosing applications}
+The result of tract segmentation is applied to computer aided early diagnosis brain diseases. At a preliminary application, we want to find what differs between the healthy brain and the diseased brain of patients with the ALS disease (Amyotrophic Lateral Sclerosis)\footnote{\url{http://www.alsa.org/about-als/what-is-als.html}}. 
+%For this purpose, the diagnosing can be evaluated based on a set of quantitative and qualitative criteria. The qualitative evaluation of the tract reconstruction will be only performed by expert neurosurgeons and radiologists. Therefore, in this work, the main focus is the quantitative criteria which provide useful information for diagnosing brain diseases. Some useful quantitative signal can be used such as fiber profile on diffusion parameters (FA - fractional anisotropy, MD - mean diffusion, eigenvalues ($<\lambda_1,\lambda_2,\lambda_3>$)), correlation and absolute profile distance measures, fiber geometry of volumetric overlap, and the Hausdorff distances between bundles. These parameters are hints for diagnosing some brain diseases, and we here focus on the ALS (Amytrophy Lateral Smytrophic) disease.
+
+%In this work, we want to build an interaction visualization tool that can help instantly medical practitioners to do the segmentation online. This interaction tool uses technique of both supervised (at the first step - hypo generation) and unsupervised learning (at the second step - tract refinement). The frame work of our project is described in the figure \ref{fig:ov_research}, while detail of two main steps of our interactive visualization tool can be found in the figure \ref{fig:ov_tool}
+%Instead of using supervised~\cite{caruna2006emperical} and unsupervised~\cite{ghahramani2004unsupervised} machine learning techniques to get the segmentation, we propose the \emph{fast clustering} techniques. Because both supervised and unsupervised learning are off-line method, while in this work, we want to build a tool that can help instantly doctors/neuro scientists to do the segmentation online. 
+%We use both supervised~\cite{caruna2006emperical} and unsupervised~\cite{ghahramani2004unsupervised} machine learning techniques to get the segmentation for the whole brain and to compare the results. The unsupervised techniques often rely on expert-crafted streamline-streamline distance functions~\cite{dubuisson1994modified, zhang2008identifying} encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). Supervised tract segmentation instead aims at learning how to segment the tractography from expert-made examples provided as input. Up to present, there is a little attention in the literature about supervised tract segmentation.
+%\textbf{Summary of the next sections}
+%\input{state_of_the_art}
+%\input{problem_statement}
+%\input{solution}
+%\input{preliminary_results}
+%\input{conclusion}
+The structure of this paper is as follows. In Section~\ref{sec:state_of_the_art}, we introduce the basic background of dMRI and tractography segmentation. The latter part of this section briefly summarizes some current trends in segmentation tractography task. Section ~\ref{sec:problem_statement} formally presents the problem of clustering a tractography, which is one of the contribution of this project. In Section~\ref{sec:solution}, we describe the proposed solution for online clustering tractogprahies. In this part, we also illustrate the dissimilarity representation based on the most common streamline-streamline distance functions. In Section~\ref{sec:preliminary_results}, we present the preliminary result of our experiment about the dissimilarity approximation on a real dMRI dataset from the University of Cambridge (UK). An interactive visualization software tool for segmentation, called \textbf{Spaghetti}, is also presented. Moreover, one clinical application to support the diagnosing of the ALS-disease is also introduced. %(this work has not finished yet, and will be presented detail in near future). 
+The last section, Section ~\ref{sec:conclusion}, discusses results
+% supporting the claim that machine learning techniques are straightforward and effective for the tract segmentation task. In this part, we also 
+and points out some future works.% oriented on clinical applications.
+%for applying the tractography segmentation complementing the segmentation task.

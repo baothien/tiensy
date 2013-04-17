@@ -1,0 +1,242 @@
+%ACKNOWLEDGMENTS are optional
+\section{Problem statement}
+\label{sec:problem_statement}
+\textbf{\textit{Basic notation:}} Let the polyline $s =\{ \vec{x_1},\ldots,\vec{x}_{n_s}\}$, where $\vec{x} \in \mathbb{R}^3$, be a \emph{streamline} reconstructed from dMRI data by deterministic tractography algorithms~\cite{mori2002fiber}. Let the \emph{tractography} $ \mathbb{T}  = \{s_1,\ldots,s_n\}$ be defined as a set of $n$ streamlines. 
+%We assume that $\mathbb{T}$ is sampled according to a probability distribution $\mathfrak{T}$ which incorporates the variance of data related to the dMRI measurement process and the variability of subjects. %Current dMRI techniques operated on adult humans generate tractography of size in the order of $3 \times 10^5$ streamlines. 
+Let $\tau$ be an anatomical fiber tract of interest, e.g. the cortical spinal tract (see figure~\ref{fig:CST}), and let $\mathsf {T} \subset \mathbb{T}$ be its corresponding streamline-based approximation within given the tractography.
+
+\textbf{\textit{Process design:}} we propose a design of interactive segmentation process based on two steps(figure \ref{fig:ov_tool}): tract identification based on supervised learning and tract refinement based on unsupervised learning.
+The \emph{tract identification step} generates the first hypothesis of segmentation instead of starting from the whole tractography. It uses the manual segmentation examples from experts to create the candidate of tract segmentation.  The tract identification step  corresponds to a mapping $f : \mathbb{T} \mapsto \{0,1\}$ where
+\begin{equation}
+\label{eq:neuroanatomist_f}
+f(s) =
+\left\{
+  \begin{array}{rl}
+    1 & \mbox{if } s \mbox{ in } \mathsf{T} \\
+    0 & \mbox{otherwise}
+  \end{array}
+\right.
+\end{equation}
+In the machine learning terminology, the function $f$ is called \emph{classifier} and each pair $(s,f(s))$ is a class-labeled
+\emph{example}. In practice $f$ is not available % in algorithmic form
+and the problem is then to infer an approximation $g$ from data. We
+may have many samples of $\mathsf{T}$ for the same fiber tract $\tau$, e.g. the
+cortical spinal tract, when the annotation is operated by different neuroanatomists. The labelling is prone to error and has to be considered an approximation of the true fiber tract. A classifier $g$ is learned by training a classification
+algorithm from the set $\mathsf{T}$.
+% $A$ which optimize a loss function $L$. 
+%Common classification algorithms are the $k$-nearest neighbor ($k$NN)~\cite{devroye1996probabilistic} and the Support Vector Machines (SVMs)~\cite{boser1992training}. A usual loss function is the $0-1$ loss $L(s,g(s)=I(s,g(s))$ where $I$ is the indicator function.
+Detail about supervised classifier for tractography can be found in~\cite{olivetti2011supervised}. Our main focus in this project is not on this step, but on the next step.
+
+%\subsection{\textbf{Analytic definition of problem}}
+%Formal definition of clustering problem
+Let $\mathcal{T} \subset \mathbb{T}$ and $\mathcal{T} =\{ \mbox{s  } \mid \mbox{ } g(s)=1, \forall s \in \mathbb{T} \}$. In an ideal case, $\mathcal{T} \equiv \mathsf{T}$, but it rarely happens due to the error of function $g(s)$ during the training stage.
+The \emph{tract refinement step} aims at refining the $\mathcal{T}$ for being close to the $\mathsf{T}$ by excluding any unnecessary streamlines or selecting additional ones. In contrast to the previous step, which automatically done by learning from a repository of examples, this refinement step is manually performed by medical practitioners. When they do the segmentation, it is often an important requirement of viewing $\mathcal{T}$ at different levels of grouping for better visualization in detail.
+%. Medical practitioners usually changes between these levels for better visualization. 
+This demand raises a question of how to present $\mathcal{T}$ in different level of abstraction. This requirement is much stricter than randomly sampling representatives of $\mathcal{T}$ and hiding the others. In another way, we need a clustering algorithm which has a capability of producing different partitions of $\mathcal{T}$ corresponding to different levels of viewing. We consider it as an unsupervised learning problem. 
+
+\textbf{\textit{Data representation:}}
+%The efficiency structure for representation, storing and accessing data:}}
+However, most of the state-of-the-art learning techniques (both supervised and unsupervised) 
+%in order to calculate the (dis)similarity bewteen two items, this method (also other state-of-the-art clustering approaches)
+often require the data to lie in a vectorial space, which is not the case of streamlines. Streamlines are polylines in $3$D space. Each streamline $s =\{ \vec{x_1},\ldots,\vec{x}_{n_s}\}$, where $\vec{x} \in \mathbb{R}^3$, has different length and different number of points, and for this reason they cannot be directly represented in a common vectorial. The lack of the vectorial representation avoids the use of some of these algorithms and of computationally efficient implementations. In this case, we need to find a representation $\phi$ of streamline in a vectorial space $\phi : \mathbb{T} \mapsto \mathbb{R}^d$, where $d$ is the dimension of the new space. This representation $\phi$ maps a streamline $s$ from its original space $\mathbb{T}$ to a
+vector of $\mathbb{R}^d$. This representation is a \emph{lossy} one in the sense that in general it is not possible to exactly reconstruct $s$ from $\phi(s)$ because some information is lost during the projection. How we can minimize this \emph{lossy} is really a challenge. 
+%Each streamline$s =\{ \vec{x_1},\ldots,\vec{x}_{n_s}\}$, where $\vec{x} \in \mathbb{R}^3$, has different length and different number of points and for this reason they cannot be directly represented in a common vectorial space, which is the input requirement of most of the current machine learning algorithms. In this work, it is our duty to propose a method for representing streamline in another space with the same dimension. 
+Beside, due to the huge number streamlines, the number of partitions and clusters are also very large. It makes storing and accessing partitions and clusters hard and resource consuming. Therefore, an efficiency structure for representation, storing and accessing clusters and partitions is another important requirement which needs to be fulfilled.
+\\After projecting streamlines into a vectorial space $\mathbb{R}^d$ by using an efficient representation $\phi$, the next step is how we can cluster streamlines (in representation space $\phi(s)$) into different clusters corresponding to different levels of viewing.% from users. 
+In the following part, we will first present the formal definition of clustering problem, and then state the problem of tractography clustering.
+%The simplest way is to re-run the clustering algorithm whenever the experts change the level of viewing. But this will consume a lot of time and cost computation a lot. In this part, we will first present the formal definition of clustering problem, and then state the task of tractography clustering. 
+%In the general view, from this point to end, it is possible to consider $\mathcal{T}$ as an N-streamline \textit{tractography} $ \mathcal{T}  = \{s_1,\ldots,s_N\}$.
+%And our task is to provide an interaction visualization tool to help them to do this task more easily and more accurately.
+
+\textbf{\textit{Clustering problem:}} Clustering is a division of data (or data representation) into a certain number of clusters (groups, subsets, or categories). Up to present, the definition of clustering has still not been agreed universally. Most researchers describe a cluster by considering the internal homogeneity and the external separation, i.e., the similarity between objects within a subgroup is larger than the similarity between objects belonging to different subgroups. Both the similarity and the dissimilarity should be defined in a clear and meaningful way. Here, we give some simple mathematical descriptions of several types of clustering, based on the description in~\cite{xu2005survey}.
+\\Given a set of input patterns denoted as $\mathcal{X} = \{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$ where $\mathsf{x_j} = (x_{j1},x_{j2}, \ldots,x_{jd})^T \in \mathfrak{R}^d$ and each measure $x_{ji}$ is said to be a feature (attribute, dimension, or variable).
+Clustering attempts to seek a $K$-partition of $\mathcal{X}$, $C = \{C_{1}, \ldots, C_{K}\}$, with $K \leq N$, such that
+\begin{equation}
+\label{clustering_condition}
+C_{i}\neq \varnothing, \textit{i = 1, \ldots, K} \mbox{  and  } \cup_{i=1}^{\textit{K}}C_{i} = \mathcal{X}
+\end{equation}
+%\begin{equation}
+%\label{condition1_cluster}
+%\cup_{i=1}^{\textit{K}}C_{i} = \mathcal{X}
+%\end{equation}
+%\begin{enumerate}
+%	\item	$C_{i}\neq \varnothing, \textit{i = 1, \ldots, K}$
+%	\item $\cup_{i=1}^{\textit{K}}C_{i} = \mathcal{X}$
+%	\label{clustering_condition}
+%\end{enumerate}
+The difference of the definition of the separation between clusters leads to different types of clustering.
+%\begin{itemize}
+%	\item 
+\textit{Hard partitional clustering} accepts no overlaping between partitions. All clusters are exclusive, so that each patterns only belongs to one cluster
+	$C_{i} \cap C_{j} = \varnothing$, $i,j = \textit{1, \ldots, K}$, and $i \neq j$.
+%	\item 
+\textit{Hierarchical clustering} tries to construct a tree-like nested structure partition of $\mathcal{X}$:	
+	$H = \{H_{1}, \ldots, H_{Q}\}$, with $Q \leq N$, such that $C_{i} \in H_{m}, C_{j} \in H_{l}, m > l$ 	
+	imply  $C_{i} \in C_{j}$ or $C_{i} \cap C_{j} = \varnothing$, for all $i,j \neq i, m, l = 1, \ldots, Q$.
+%	\item 
+\textit{Fuzzy clustering} allows one pattern to belong to all clusters with a degree of membership, $\mu_{i,j} \in [0,1]$, which represents the membership coefficient of the $j$th object in the $i$th cluster and satisfies the following two constraints:
+	$\sum_{i=1}^{K} \mu_{i,j} = 1,  \forall j$ and $\sum_{j=1}^{N} \mu_{i,j} \leq N, \forall i$
+%\end{itemize} 
+
+\textbf{\textit{Distance and similarity:}}
+It is natural to ask what kind of standards we should use to determine the closeness, or how to measure the distance (dissimilarity) or similarity between a pair of objects, an object and a cluster, or a pair of clusters. A data object is described by a set of features, usually represented as a multidimensional vector. 
+%The features can be quantitative or qualitative, continuous or binary, nominal or ordinal, which determine the corresponding measure mechanisms. 
+\\A distance or dissimilarity function on a data set $\mathcal{X}$ between individuals is defined to satisfy the following conditions.
+\begin{equation}
+     (d(\mathsf{x_i},\mathsf{x_j}) = d(\mathsf{x_j},\mathsf{x_i})) 
+     \wedge
+     (d(\mathsf{x_i},\mathsf{x_j}) \geq 0), \forall \mathsf{x_j},\mathsf{x_i}
+\end{equation}
+if two following conditions (triangle inequality~\ref{distance_triangle_ineuqality} and reflexity~\ref{distance_reflexity}) are still hold, the distance is called a metric
+\begin{equation}
+     d(\mathsf{x_i},\mathsf{x_k}) + d(\mathsf{x_k},\mathsf{x_j}) \geq d(\mathsf{x_i},\mathsf{x_j}), 
+     \forall \mathsf{x_i},\forall\mathsf{x_j},\forall\mathsf{x_k}
+     \label{distance_triangle_ineuqality}
+\end{equation}
+\begin{equation}
+     d(\mathsf{x_i},\mathsf{x_j}) = 0 \leftrightarrow \mathsf{x_j}\equiv \mathsf{x_i} 
+     \label{distance_reflexity}
+\end{equation}
+Likewise, a similarity function is defined to satisfy the conditions in the following.
+\begin{equation}
+     (s(\mathsf{x_i},\mathsf{x_j}) = s(\mathsf{x_j},\mathsf{x_i})) 
+     \wedge
+     (0 \leq s(\mathsf{x_i},\mathsf{x_j}) \leq 1), \forall \mathsf{x_j},\mathsf{x_i}
+\end{equation}
+if two following conditions are still satisfied, it is called a similarity metric
+\begin{equation}
+     [s(\mathsf{x_i},\mathsf{x_k}) + s(\mathsf{x_k},\mathsf{x_j})]s(\mathsf{x_i},\mathsf{x_j}) \geq s(\mathsf{x_i},\mathsf{x_k})s(\mathsf{x_k},\mathsf{x_j}), 
+     \forall \mathsf{x_i},\mathsf{x_j},\mathsf{x_k}
+\end{equation}
+\begin{equation}
+     s(\mathsf{x_i},\mathsf{x_j}) = 1 \leftrightarrow \mathsf{x_j}\equiv \mathsf{x_i} 
+\end{equation}
+Based on the definition (dis)similarity between two objects, there are many way to define the (dis)similarity between a object and a cluster, or a pair of clusters. A popular group of distances is the modified Hausdorff distances~\cite{dubuisson1994modified}. See~\cite{zhang2008identifying} for a recent survey about these distances. 
+\\For a data set with $N$ input patterns, we can define an $N \times N$ symmetric matrix, called proximity matrix, whose $(i,j)$th element represents the (dis)similarity measure for the $i$th and $j$th patterns $(i,j = 1, \ldots, N)$. Obviously, the (dis)similarity measure directly affects the formation of the resulting clusters. Almost all clustering algorithms are explicitly
+or implicitly connected to some definition of proximity measure. Some algorithms even work directly on the proximity matrix. Once
+a proximity measure is chosen, the construction of a clustering criterion function makes the partition of clusters an optimization problem, which is well defined mathematically, and has rich solutions in the literature. The survey of clustering algorithms and distance functions can be found in~\cite{xu2005survey, rai2010survey}. Different approaches usually lead to different clusters; and even for the same algorithm, parameter identification or the presentation order of input patterns may affect the final results. Therefore, it is important to carefully investigate the characteristics of the problem at hand, in order to select or design an appropriate clustering strategy.
+ %Most of clustering algorithms often rely on distance functions, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{xu2005survey, rai2010survey} for a recent brief review). 
+
+%\subsection{\textbf{What we want to do: clustering tractography}}
+\textbf{\textit{Clustering tractography}}
+Given a set of $N$ streamlines $ \mathcal{T}  = \{s_1,\ldots,s_N\}$~\footnote{note that $s_i, \forall i \in [1, .., N]$ 
+is the representation of the original streamline $s_{i}^{'}$ through a representation method $\phi$: $s_i = \phi(s_{i}^{'})$},
+traditional approaches for clustering tractography usually find a partition $C = \{C_{1}, \ldots, C_{K}\}$ with $K \leq N$, satisfying two conditions of clustering~\ref{clustering_condition} $C_{i}\neq \varnothing, \textit{i = 1, \ldots, K}$ and $\cup_{i=1}^{\textit{K}}C_{i} = \mathcal{T}$ (see more in section~\ref{sec:state_of_the_art}). However, in this work, as declared before, we want to seek not only one partition but instead, a set $m$ partitions of a $\mathcal{T}$: $\mathbb{P} = \{P_{1}, P_{2}, \ldots, P_{m}\}$, where $P_{i} = \{C_{1}^{i}, C_{2}^{i}, \ldots, C_{d_{i}}^{i}\}$ is one partition of $\mathcal{T}$ ($d_{i}$ is the number of clusters in partition $P_{i}$). Each partition $P_i$ represents for the $i$th level of abstraction of $\mathcal{T}$. Obviously, within one partition $P_{i}$, there is no intersection between two clusters: $C_{k}^{i} \cap C_{l}^{i} = \varnothing$, with $\forall k,i \in [1,\ldots, d_{i}], k \neq i$. But it is allowed to overlap between one cluster belonging to one partition with another cluster of the other partition:
+\begin{equation}
+\label{eq:condition_clusters}
+ (C_{k}^{i} \cap C_{l}^{j} = \varnothing) \vee (C_{k}^{i} \cap C_{l}^{j} \neq \varnothing), \forall i,j \in [1, .., m], i \neq j  
+\end{equation}
+The simplest way to solve this problem is to run $m$ times one current clustering algorithm. But take in to account that the number of streamlines is really huge, and most of clustering algorithms often need to calculate pairwise distances of size $N \times N$ where $N$ is the number of tracks. This amount of comparisons puts a massive load on clustering algorithms forcing them to be inefficient and therefore impractical for our purpose. 
+Beside, partitions of $\mathbb{P}$ are not unrelated to each other at all. Supposed that the abstraction of the $i$th level is higher than $j$th level. 
+%Another reason is that, although there is no explicit rule about constrain between the partition $P_i$ and $P_j$($i,j \in [1, .., m]$), but it dose not mean that there is no relationship between $P_i$ and $P_j$. Because 
+Let $P_i$ and $P_j$ represent for the level of abstraction $i$th and $j$th respectively. Then the relationship between clusters $C_{l}^{i} \in P_i$ and $C_{k}^{j} \in P_j$ can be presented as: 
+\begin{equation}
+\label{eq:parttition_ij}
+%	\forall  P_i, P_j, i \geq j \longmapsto \exists C_{k}^{i}:  C_{k}^{i} \in P_j, k \in [1, \ldots, d_i]   
+	\forall  P_i, P_j, i \geq j \mapsto [(C_{k}^{j} \subset C_{l}^{i}) \vee (C_{k}^{j} \cap  C_{l}^{i} = \emptyset)]    
+\end{equation}
+with $l \in [1, \ldots, d_i],k \in [1, \ldots, d_j]$. The most challenge is to design a clustering algorithm, based on a specific distance function, which is able to create a set of $m$-partition $\mathbb{P}$ of $\mathcal{T}$, which satisfies condition~\ref{eq:parttition_ij}. 
+%This character would be effective in real time adapting to the responding of users. 
+It makes our method different to most of the state-of-the-art approaches~\cite{wakana2007reproducibility,odonnell2007automatic}, which can produce only one partition of $\mathcal{T}$.
+%, which can not adjust to the user feedback. 
+%Involving to this algorithm, there are also many related issues we have to take into account, such as how we can decide the number of partitions $m$? For each partition $P_i$, what is the number of cluster $d_i$? What is the strategy for initializing clusters? Which function we use to measure the (dis)similarity?% between a pair of streamlines, a streamline and a cluster, or a pair of clusters? 
+%The drawback of these approaches is to work on a large number of tracks and most of them are not interested to the medical experts. Another disadvantage is that all the tracks are not related to the anatomic (for example\cite{wakana2007reproducibility} based on ROI-region of interest,~\cite{odonnell2007automatic} needed an Atlas), and it makes difficult to validate the result. In contrast with them, in this project, we propose a framework using \textbf{BOI}(Bundles of Interest), which focuses on the group of interesting tracks, and of course it also based on the anatomy. Moreover, while all the current methods are off-line and medical practitioners can not interact or modify the result of segmentation, in this project, we want to build a tool that can help them instantly to adjust the segmentation result. It is also another novelty of our approach. The most challenge is to design a clustering algorithm based on a specific distance function and this algorithm must be effective and real time adaptive to the responding of users. This is also the other different of our method to most of the state-of-the-art approaches, which can not adjust to the user feedback.
+
+%Up to present, only Hierarchal clustering~\cite{johnson1967hierarchical} has a capability of producing a structure of clusters, while all of the other current methods only have result of one partition.
+Another raising problem is that, when medical practitioners do the segmentation, eventhough they do select some clusters, they also want to \textit{check} that some neighbor streamlines \textit{"close"} to these clusters should be included into or excluded from the result or not (called \textit{neighbor checking} problem). Let $P_{i} = \{C_{1}^{i}, C_{2}^{i}, \ldots, C_{d_{i}}^{i}\}$ be the current viewing partition of $\mathcal{T}$, and $\mathcal{T}_{s}$ be the set of $m$-selected streamlines $ \mathcal{T}_s  = \{s_1^s,\ldots,s_m^s\}$. At the beginning, $\mathcal{T}_s = \bigcup_{j=1}^{d_i} C_j^i = \mathcal{T}$. % (in the later steps the first condition is not satisfied). %, there is no requirement of $\mathcal{T}_s = \{s_k,\mbox{ } \forall s_k \in C_j^i, \mbox{ } j \in [1,\ldots,d_{i}] \}$. 
+Given a distance threshold $\theta$, let $\mathit{neighbor}(s,\theta)$ be a set of close streamlines of streamline $s$. 
+\begin{equation}
+\label{eq:neighbor_s}
+\mathit{neighbor}(s,\theta) = \{s_i \mbox{ |  }d(s,s_i) \leq \theta \mbox{ } \wedge s_i \neq s, \mbox{  }\forall s_i \in \mathbb{T} \}
+\end{equation}
+where $d(s_i,s_j)$ is a distance function between $s_i$, $s_j$; and $\mathbb{T}$ is the whole brain tractography. With a streamline set $S$, neighbor of $S$ is defined as $\mathit{neighbor}(S,\theta) = \bigcup_{s_i \in S}\mathit{neighbor}(s_i,\theta)$.
+%$\{\mathit{neighbor}(s_i), \mbox{ }\forall s_i \in S\}$. And neighbor of a   If they do choose additional neighbor streamlines, the  which somehow meets our requirement. 
+\\\textit{Removing streamline:} Let streamline $s_{rm} \in C_{j}^{i} $ be removed from $\mathcal{T}_{s}$. In this case, only cluster $C_{j}^{i}$ is affected and there is no significant change on $\mathbb{P}$:
+\begin{equation}
+\label{eq:remove_s}
+C_{j}^{k} = C_{j}^{k} \setminus \{ s_{rm}\} \mbox{, if } C_{j}^{k} =\emptyset \mbox{ then }  P_{k} = P_{k} \setminus C_{j}^{i}, \forall k \in [i,..,m]
+\end{equation}
+%Assuming that after being removed, one streamline could not be re-selected. Under this assumption, every time. 
+\textit{Adding streamline:} Supposed streamline $s_{add} \in \mathit{neighbor}(\mathcal{T}_{s},\theta)$ is additionally selected. The new selected set is $\mathcal{T}_{s}^{'} = \mathcal{T}_{s} \cup \{s_{add}\}$ and new partition of $\mathcal{T}_{s}^{'}$ be $P_{i}^{'}$.
+Let $\mathbb{P}^{'}$ be the new $m$-partition set of $\mathcal{T}_{s}^{'}$: $\mathbb{P^{'}} = \{P_{1}^{'}, P_{2}^{'}, \ldots, P_{m}^{'}\}$, where $P_{i}^{'}$ is one partition of $\mathcal{T}_{s}^{'}$ at the $ith$ level. 
+We consider how to generate $\mathbb{P}^{'}$ from the current $\mathbb{P}$.
+Let a triple $<\mathsf{P}, \mathsf{T}, \gamma>$ denote for the partition set $\mathsf{P}$ generated from a set of streamlines $\mathsf{T}$ according to some constraints in $\gamma$. It is clear that $\mathbb{P}$ is generated on $\mathcal{T}$ only based on the constrain $\gamma_1$ of equation~\ref{eq:parttition_ij}: $<\mathbb{P}, \mathcal{T}, \gamma_1>$.
+
+Let $d(s,C)$ be the distance between a streamline $s$ and a cluster $C$. Let $d(C_{i}, C_{j})$ be the distance between two clusters $C_i$ and $C_j$. Let $d(C_{j}^{i},P_{i})$ be the min distance between cluster $C_{j}^{i} \in P_{i}$ with all the other clusters of partition $P_{i}$: 
+\begin{equation}
+\label{eq:min_dis_cluster}
+d(C_{j}^{i},P_{i}) = min_{k\in [1,..d_{i}], k \neq j}(d(C_{j}^{i},C_{k}^{i}))
+\end{equation}
+Let $C_{close}(s,P_i)$ be the cluster in $P_i$ closest to streamline $s$: 
+\begin{equation}
+\label{eq:closest_streamline_cluster}
+C_{close}(s,P_{i}) = argmin_{\forall C_{l}^{i} \in P_{i}}(d(s,C_{l}^{i}))
+\end{equation}
+If $d(s_{add}, C_{close}(s_{add},P_{i})) > d(C_{close}(s_{add},P_{i}),P_{i})$, obviously $s_{add}$ would become a new cluster in partition $P_{i}^{'}$: $P_{i}^{'} = P_{i} \cup \{s_{add}\}$.
+In this case, $\mathbb{P}^{'}$ is generated from $\mathbb{P}$, with the constraint $\gamma_2$: $<\mathbb{P}^{'}, \mathcal{T}_{s}^{'}, \gamma_2>$, where   $\gamma_2$ is the condition of that all the partitions of $\mathbb{P}^{'}$ lower than $i$th level must be contain $\{s_{add}\}$ as a separative cluster: 
+\begin{equation}
+\label{eq:separate_cluster}
+	\forall j \in [1,..,i], \mbox{ } \exists {C'}_{l}^{j} \in P_{j}^{'}: {C'}_{l}^{j} = \{s_{add}\}
+\end{equation}
+If $d(s_{add}, C_{close}(s_{add},P_{i})) \leq d(C_{close}(s_{add},P_{i}),P_{i})$, then it is clear that $s_{add}$ would be merged into the cluster $C_{close}(s_{add},P_{i})$: $C_{close}(s_{add},P_{i}) = C_{close}(s_{add},P_{i}) \cup \{s_{add}\}$. In another word, $s_{add}$ and $C_{close}^{i}(s_{add})$ must be in the same cluster from the $ith$ level of abstraction.
+For that reason, 
+%$s_{add}$ and $C_{close}^{i}(s_{add})$ must be in the same cluster from the $(i+1)th$ level of abstraction,    Obviously, medical practitioners, with their experience, want to group $s_{add}$ and $C_{close}^{i}(s_{add})$ in the same cluster after the $ith$ level of abstraction. 
+the set of partitions $\mathbb{P}^{'}$ of $\mathcal{T}_{s}^{'}$ is driven from $\mathbb{P}$: $<\mathbb{P}^{'}, \mathcal{T}_{s}^{'}, \gamma_3>$, with constrain $\gamma_3$:
+\begin{equation}
+\label{eq:constrain_new_partition}
+\forall k \in [i,..,m],\exists C_{j}^{k} \in P_{k}^{'}:(C_{close}(s_{add},P_{i}) \cup \{s_{add}\})\subseteq C_{j}^{k}  
+\end{equation}
+%In the easy case that $s_{add} \in \mathcal{T}$, then $P_{i}^{'} = P_{i}$. Other while, if $s_{add} \notin \mathcal{T}$, the question is which $C_j^i \in P_{i}$ that $s_{add}$ should belong to? Or it is necessary to create a new cluster $C_{d_{i}+1}^i$? 
+%How we can generate $P_{i}^{'}$ from $P_{i}$ is one of the most difficult challenge. 
+%Moreover, because $P_i$ is an element of an ordered set of partitions $\mathbb{P}$ (as condition~\ref{eq:parttition_ij}), it makes the determining the place of the new element $s_{add}$ do affect not only on $P_i$ but also on other partitions of $\mathbb{P}$.
+%~\cite{ widyantoro2002incremental, wang2010document,ribert1999incremental  }
+%the hierarchyhow to an o structure 
+
+
+%there is no approach addressing this problem. All of the most state-of-the-art methods only produce the result of one partition (except for hierarchal clustering). But for the sake of the end users (doctors, medical practitioners), the requirement of having a set $m$ partitions of $\mathcal{T}$ is necessary and useful. Because we are the first one stating this problem, we also have to face with many challenges as following:
+%\begin{itemize}
+%	\item \textbf{\textit{A robust clustering algorithm creating $m$ partitions of $\mathcal{T}$:}} 
+%	\item
+% 	\item\textbf{\textit{Neighbor checking:}} This challenge original comes from the need of practical activity. When doctors or experts do the segmentation, although they do select one  cluster, they also want to \textit{check} that some neighborhood streamlines \textit{"close"} to that cluster should be included into the result or not. All of the state-of-the-art clustering algorithms do not allow to add more object into a cluster after clustering. If we can provide this function for experts, then the task of segmentation would be done more easily and accurately.      
+%\end{itemize} 
+%\begin{equation}
+%\label{eq:neuroanatomist_f}
+%f(s) =
+%\left\{
+%  \begin{array}{rl}
+%    1 & \mbox{if } s \mbox{ in } t \\
+%    0 & \mbox{otherwise}
+%  \end{array}
+%\right.
+%\end{equation}
+%\textbf{The novelty of our work compared with related works}
+%Recently there are many approaches to solve the tractography clustering. In~\cite{savadjiev2008streamline}, Savadjiev et. al clustered diffusion orientation distribution functions maxima instead of clustering fiber tracts directly. This algorithm based on the geometric coherence of fiber orientations is proposed. Maddah et al. in~\cite{maddah2008modeling} proposed a probabilistic approach to cluster fibers. There is no need to computing pairwise distances in this approach, because it uses a Dirichlet distribution as a prior to incorporate anatomical information. It used a parametric model, assuming that the number of clusters is known and required manual initialization of cluster centers. This algorithm also required establishing point correspondence which was difficult to define. Wang et al.~\cite{wang2011tractography} proposed a non-parametric Bayesian framework to cluster white matter fiber tracts into bundles using a hierarchical Dirichlet processes mixture (HDPM) model. After the models of bundles is learned from training data without supervision, they can be used as prior to cluster fibers of new subjects for comparison across subjects. This approach does not require computing pairwise distances between fibers, and the number of clusters is automatically learned driven by data with Dirichlet process prior instead of being manually specified.
+ %Recently, there is a rise of applying pattern recognition techniques to solve this problem. 
+%More precisely, following are what we want to investigate in this project:
+%\begin{enumerate}
+%\item \textbf{Multimodal brain image visualization:} 
+%visualization of large-volume, dynamical multimodal brain image data. A novel contribution of this work is to build up an online interaction visualization software that help doctors/neuro scientists to do the segmentation task easier, faster and instantly.\\
+%This tool is the implementation of the step segmentation in the figure \ref{fig:ov_research}. The input of this software is the whole brain tractography plus the repository of manual segmentation examples. The out put is the segmentation after refining by doctors/neural scientists. To help user can use it friendly, easily, beside the main functions (select/deselect bundle, explore bundle, move/hide slice,etc...) some other common tasks should be integrated such as undo, save current work, load the previous work, etc.
+%\item \textbf{Brain tractography segmentation:} to do the segmentation of the tractography, in this work, we use both \textit{unsupervised} and \textit{supervised} learning. The reason why using both of them is that each technique is suitable for different steps in the whole process (see more detail about two steps in the figure \ref{fig:ov_tool}. First, supervised learning is used in the hypo generation stage to create the candidate of segmentation. Then, this candidate is refined by doctors/neural scientists based on a fast clustering technique.% to help them interact with tracts easier and faster.
+%\par{}
+%%\textbf{How we can do this?} 
+%\textbf{\textit{Supervised tract segmentation:%Multimodal brain image pattern classification methods}} to classify brain tractography into a specific group using supervised learning technique. The idea of the supervised learning is to exploit examples of manually segmented tracts to learn how to extract them automatically from new subjects. This motivation raises from working with doctors and neuroscientists who have already collected many segmented tractogarphy data but it is very difficult for them to use the knowledge in this data for segmentation the new brain. With supervised learning technique, firstly it is necessary to collect enough the manually segmented tractography data. After that, a system will automatic extract some common features from this dataset. These features will be put into a classifier kernel as the standard to classify the tracts belong to which segmentation. At the first idea, some useful features could be the size of bundle, the number of tracts, the length of tracts. This method focuses on the potential benefit of adapting the model learnt from one subject to an other subject. 
+%\par{}
+%\textbf{\textit{Fast clustering:}} 
+%in contrast with the supervised learning, the unsupervised method requires no prior knowledge from neuroscientists. Such techniques often rely on expert-crafted streamline-streamline distance functions encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). Due to the fact that result of the classification based on supervised learning usually does not satisfy the requirement of the doctors/neural scientists, it is necessary to let them refine the segmentation again with the help of fast clustering technique. 
+%After projecting the tractography into a vector space, one algorithm for clustering the projected tractography can be used. 
+%The first idea is to use hierarchical clustering techniques. The motivation behind this is that this algorithm does not base on a specific number of cluster centers. It creates the whole clusters in a hierarchical tree, and when users change the number of cluster, the result of different clusters or segmentations will be appeared. This clustering technique do help doctors/neural scientists to do the segmentation refinement task easier, faster and instantly.
+%seperate  swe want to cross-validate the result to know which method has the senior advantage for segmentation tractography task. With the unsupervised method, it requires no prior knowledge from neuroscientists. Such techniques often rely on expert-crafted streamline-streamline distance functions encoding informative relationships for the segmentation task, then followed by a clustering algorithm (agglomerative, k-means, Gaussian mixture model, etc. see~\cite{wang2011tractography} for a recent brief review). 
+% In the other side, the idea of the supervised learning is to exploit examples of manually segmented tracts to learn how to extract them automatically from new subjects. This motivation raises from working with doctors and neuroscientists who have already collected many segmented tractogarphy data but it is very difficult for them to use the knowledge in this data for segmentation the new brain. The challenge is to design an effective computational supervised learning approach for tract segmentation in contrast to unsupervised approach.\\
+%\par{}
+%\textbf{\textit{Dissimilarity approximation:}}
+%both supervised and unsupervised segmentation method base on machine learning technique which requires the input to be from a vectorial space. This requirement contrasts with the intrinsic nature of the tractography because its basic elements, called streamlines or tracks, have different lengths and different number of points and for this reason they cannot be directly represented in a common vectorial space. This lack of the vectorial representation avoids the use of some of those algorithms and of computationally efficient implementations. The dissimilarity space representation could be the way to provide such a vectorial representation and for this reason it is crucial to assess the currently machine learning techniques. Actually, the dissimilarity representation is an Euclidean embedding technique defined by selecting a set of objects (e.g. a set of streamlines) called \emph{prototypes}, and then by mapping any new object (e.g. any new streamline) to the vector of distances from the prototypes. This representation~\cite{pekalska2002generalized,balcan2008theory,chen2009similarity} is usually presented in the context of classification and clustering problems. More detail about this can be found in the section \ref{subsec:dissimilarity}.
+%\item \textbf{Clinical applications:} 
+%computer aided diagnosis and follow-up of brain diseases via multimodal images, early diagnosis of brain diseases via multimodal images, and differential diagnosis of brain diseases via multimodal images. At the first stage, we want to find the different between the healthy brains and diseased brains of the patients of the ALS disease (Amyotrophic Lateral Sclerosis)\footnote{\url{http://www.alsa.org/about-als/what-is-als.html}}\\
+%\textbf{How we can do this?} \textbf{- clinical diagnosing applications}
+%The result of tract segmentation based on fast clustering technique is used for early clinical diagnosis applications. For this purpose, the diagnosing can be evaluated based on a set of quantitative and qualitative criteria. The qualitative evaluation of the tract reconstruction will be only performed by expert neurosurgeons and radiologists. Therefore, in this work, the main focus is the quantitative criteria which provide useful information for diagnosing brain diseases. Some useful quantitative signal can be used such as fiber profile on diffusion parameters (FA - fractional anisotropy, MD - mean diffusion, eigenvalues ($<\lambda_1,\lambda_2,\lambda_3>$)), correlation and absolute profile distance measures, fiber geometry of volumetric overlap, and the Hausdorff distances between bundles. These parameters are hints for diagnosing some brain diseases, and we here focus on the ALS (Amytrophy Lateral Smytrophic) disease.
+%\end{enumerate}
+%\subsection{\textbf{Who: target of this research is for who?}}
+%This research is motivated to help medical practitioners to do the task of tractography segmentation more easily and accurately. Results of tract segmentation are immediately applicable to surgical intervention, to the design of medical interventions and to the treatment of psychological and psychiatric disorders. The end users who got benefit from this work are patients who have problem with their brain or other cognitive issues.
+
+
