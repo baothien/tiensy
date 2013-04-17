@@ -4,8 +4,9 @@ In the following we describe the elements that we evaluated in order
 to build the proposed method. After introducing the notation we
 formally describe the dissimilarity representation, i.e. a Euclidean
 embedding for streamlines, and then we present the mini-batch
-$k$-means algorithm. We conclude by reporting how we efficiently
-compute the medoids of the clusters from the centroids.
+$k$-means algorithm.  
+% We conclude by reporting how we efficiently compute the medoids of the
+% clusters from the centroids.
 
 \subsection{Notation}
 \label{sec:notation}
@@ -19,13 +20,13 @@ brain tractography, for which $M \approx 3 \times 10^5$ usually. Let
 $d:\mathcal{X} \times \mathcal{X} \mapsto \mathbb{R}^+$ be a distance
 function between streamlines. A common distance between streamlines is
 the symmetric minimum average distance
-(see~\cite{zhang2008identifying}) defined as $d(X_a,X_b) =
-\frac{1}{2}(\delta(X_a,X_b) + \delta(X_b,X_a))$ where
+(see~\cite{zhang2008identifying}) defined as 
 \begin{equation}
   \label{eq:mam_distance}
-  \delta(X_a,X_b) = \frac{1}{|X_a|} \sum_{\mathbf{x}_i \in X_a}
-    \min_{\mathbf{y} \in X_b} ||\mathbf{x}_i - \mathbf{y}||_2.
+  d(X_a,X_b) = \frac{1}{2}(\delta(X_a,X_b) + \delta(X_b,X_a))
 \end{equation}
+where $\delta(X_a,X_b) = \frac{1}{|X_a|} \sum_{\mathbf{x}_i \in X_a}
+\min_{\mathbf{y} \in X_b} ||\mathbf{x}_i - \mathbf{y}||_2$.
 
 
 
@@ -33,10 +34,10 @@ the symmetric minimum average distance
 \label{sec:dissimilarity}
 The \emph{dissimilarity representation}~\cite{pekalska2002generalized}
 is a lossy Euclidean embedding algorithm that maps general objects
-into vectors of a common vectorial space $\mathbb{R}^p$. In our case
-these objects are the streamlines, as it was previously proposed
-in~\cite{olivetti2012approximation}. The dissimilarity representation
-is a function $\phi_{\Pi}^d(X):\mathcal{X} \mapsto \mathbb{R}^p$ s.t.
+into $\mathbb{R}^p$. In our case the objects are the streamlines, as
+it was previously proposed in~\cite{olivetti2012approximation}. The
+dissimilarity representation is a function
+$\phi_{\Pi}^d(X):\mathcal{X} \mapsto \mathbb{R}^p$ s.t.
 \begin{equation}
   \phi_{\Pi}^d(X) = [d(X,\tilde{X}_1) ,\ldots, d(X,\tilde{X}_p)]
 \label{eq:dissimilarity_representation}
@@ -48,7 +49,7 @@ set of $p$ streamlines called \emph{prototypes} or
 dependent on the choice of $d$ and on the selection of the prototypes
 (see~\cite{pekalska2006prototype,olivetti2012approximation}). In this
 work we adopt the distance of Equation~\ref{eq:mam_distance}, as
-suggested in~\cite{olivetti2012approximation,zhang2008identifying}.
+suggested in~\cite{olivetti2012approximation}.
 
 An efficient procedure to select effective prototypes in the case of
 tractography data was presented in~\cite{olivetti2012approximation}:
@@ -86,21 +87,21 @@ vectorial dataset $\Phi(T) = \{\phi(X_1),\ldots,\phi(X_M)\} \subset
 \mathbb{R}^p$ to the closest cluster\footnote{From now on, we denote
   $\phi_{\Pi}^d(X)$ as $\phi(X)$ to simplify the notation without
   introducing ambiguity.}. The $k$-means problem is then to compute
-centres $C$ such as to minimise the loss function
-\begin{equation}
-  \label{eq:kmeans_loss}
-  \min \sum_{\phi(X) \in \Phi(T)} D(\phi(X),C)^2
-\end{equation}
-Where $D(\phi(X),C) = \min_{\mathbf{c} \in C}||\phi(X) -
+centres $C$ such as to minimise the loss function $f(C) =
+\sum_{\phi(X) \in \Phi(T)} D(\phi(X),C)^2$,
+% \begin{equation}
+%   \label{eq:kmeans_loss}
+%   \min \sum_{\phi(X) \in \Phi(T)} D(\phi(X),C)^2
+% \end{equation}
+where $D(\phi(X),C) = \min_{\mathbf{c} \in C}||\phi(X) -
 \mathbf{c}||_2$ is the distance between $\phi(X)$ and the closest
 centre. The exact solution of the $k$-means problem is $NP$-hard and
 the computational complexity of the standard algorithm, the Lloyd's
-algorithm~\footnote{\url{http://en.wikipedia.org/wiki/K-means_clustering#Standard_algorithm}},
-has been proved to be $O(M^{34})$ in the general
+algorithm, has been proved to be $O(M^{34})$ in the general
 case~\cite{arthur2009kmeans}, even though much less in practical
-applications. Nevertheless the standard algorithm impractical when
-clustering a tractography data in an interactive setting, as we show
-in Section~\ref{sec:experiments}.
+applications. Nevertheless the standard algorithm is impractical when
+clustering tractography data in an interactive setting, as we show in
+Section~\ref{sec:experiments}.
 
 The \emph{mini-batch $k$-means} (MBKM) algorithm~\cite{sculley2010web}
 is a recently proposed modification of the standard algorithm that is
@@ -114,7 +115,7 @@ Instead of updating the centers with one streamline at a time, the
 MBKM algorithm proposes to use multiple random subsets of the dataset,
 i.e. the \emph{mini batches}, to update the cluster centres and to
 estimate the per-centre learning rates. As soon as the objective
-function in Equation~\ref{eq:kmeans_loss} converges the process
+function $f(C)$ converges the process
 stops. The pseudocode algorithm of MBKM is shown
 in~\cite{sculley2010web} and we do not report it here for lack of
 space.
@@ -127,25 +128,25 @@ tractography data in Section~\ref{sec:experiments}.
 
 
 
-\subsection{From Centroids to Medoids}
-\label{sec:trees}
-In order to visually present the clusters of streamlines to the user
-one representative streamline of each cluster needs to be selected. In
-the general case the dissimilarity representation is not invertible,
-i.e. given a vector $\mathbf{c} \in \mathbb{R}^p$ it is not possible
-to construct the streamline $X_{\mathbf{c}}$ such that $\mathbf{c} =
-\phi{X}$. This means that the centroids $C$ obtained with the
-$k$-means or the MBKM cannot be shown to the user as streamlines. For
-this reason we decided to display the \emph{medoid} of each cluster,
-i.e. the streamline of the tractography closest to each centroid
-$\mathbf{c}$. The exhaustive search of the medoids requires the
-computation of $kM$ distances, which is too slow for interactive
-use. For this reason we adopted a data structure for efficient
-computation of the nearest neighbour in high-dimensional spaces: the
-\emph{Ball Tree}. We refer the reader to~\cite{omohundro1989balltree}
-for additional details. We present empirical results of the time
-required for the computation of the medoids in
-Section~\ref{sec:experiments}.
+% \subsection{From Centroids to Medoids}
+% \label{sec:trees}
+% In order to visually present the clusters of streamlines to the user
+% one representative streamline of each cluster needs to be selected. In
+% the general case the dissimilarity representation is not invertible,
+% i.e. given a vector $\mathbf{c} \in \mathbb{R}^p$ it is not possible
+% to construct the streamline $X_{\mathbf{c}}$ such that $\mathbf{c} =
+% \phi{X}$. This means that the centroids $C$ obtained with the
+% $k$-means or the MBKM cannot be shown to the user as streamlines. For
+% this reason we decided to display the \emph{medoid} of each cluster,
+% i.e. the streamline of the tractography closest to each centroid
+% $\mathbf{c}$. The exhaustive search of the medoids requires the
+% computation of $kM$ distances, which is too slow for interactive
+% use. For this reason we adopted a data structure for efficient
+% computation of the nearest neighbour in high-dimensional spaces: the
+% \emph{Ball Tree}. We refer the reader to~\cite{omohundro1989balltree}
+% for additional details. We present empirical results of the time
+% required for the computation of the medoids in
+% Section~\ref{sec:experiments}.
 
 %%% Local Variables: 
 %%% mode: latex

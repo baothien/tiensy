@@ -3,25 +3,27 @@
 
 % What is dMRI and tractography
 Diffusion magnetic resonance imaging
-(dMRI)~\cite{basser1994mr,tuch2002high} techniques provide
+(dMRI)~\cite{basser1994mr} techniques provide
 non-invasive images of the brain white matter. dMRI quantifies
 locally, i.e. in each voxel, the diffusion process of the water
-molecules which is mechanically constrained by the axons of the
-neurons. Reconstruction and tracking algorithms~\cite{mori2002fiber}
-transform dMRI data into a set of streamlines, i.e. 3D polylines that
-approximates neuronal pathways. The whole set of streamlines is called
-tractography which represents the anatomical connectivity of the
-brain. See for example Figure~\ref{fig}.
+molecules which are mechanically constrained in their motion by the
+axons of the neurons. Reconstruction and tracking
+algorithms~\cite{mori2002fiber} transform dMRI data into a set of
+streamlines, i.e. 3D polylines that approximate the neuronal
+pathways. The whole set of streamlines is called tractography and it
+represents the anatomical connectivity of the brain. See for example
+Figure~\ref{fig}.
 
 % % General clinical motivation for using dMRI
-The investigation of white-matter anatomical structures plays a
-central role in understanding and characterising diseases such as
-multiple sclerosis and Alzheimer's disease. The hypothesis of a
-reduction anatomical connectivity is considered as one of the possible
-causes. Then the quantification of this reduction may be done from the
-analysis of tractography data and for this reason the segmentation of
-the tractography into known anatomically bundles is a task of interest
-in neurological studies~\cite{clayden2009reproducibility}.
+% REMOVE THIS PARAGRAPH. The investigation of white-matter anatomical
+% structures plays a central role in understanding and characterising
+% diseases such as multiple sclerosis and Alzheimer's disease. The
+% hypothesis of a reduction in the anatomical connectivity is considered
+% as one of the possible causes of them. The quantification of this
+% reduction may be done from the analysis of tractography data and for
+% this reason the segmentation of the tractography into known
+% anatomically tract is a task of interest in neurological
+% studies~\cite{clayden2009reproducibility}.
 
 % Our specific motivation: tractography segmentation to study ALS
 This work focuses on computer-assisted tractography segmentation and
@@ -31,57 +33,84 @@ matter. Our work is motivated by a clinical research hypothesis about
 the characterisation of the amiotrophic lateral sclerosis (ALS)
 disease. We collected dMRI data from ALS patients and healthy controls
 with the aim of studying the effects of the ALS disease on the
-corticospinal tract (CST) (see Figure~\ref{fig}I), which connects
-cortical motor areas to the spine and the body. The CST is known to be
-affected by ALS~\cite{cosottini2010evaluation,sage2009quantitative}
-and for this reason, our long term goal is to characterise these
-effects through tractography data. The first task in this endeavour is
-to segment the CTS from the full brain tractography for each subject.
+corticospinal tract (CST) (see Figure~\ref{fig}I), an anatomical
+structure that connects cortical motor areas to the spine and the
+body. The CST is known to be affected by
+ALS~\cite{cosottini2010evaluation} and for this
+reason, our long term goal is to characterise these effects through
+tractography data. The first task in this endeavour is to segment the
+CST from the full brain tractography of each subject.
 
 % Brief description of the proposed computer-assisted segmentation process
 Tractography segmentation can be performed manually or
 automatically. Despite an increasing literature in automatic
 segmentation (see a brief review
-in~\cite{wang2011tractography,olivetti2011supervised}), applications
-in the clinical domain rely on manual segmentation. The manual
-segmentation process is a lengthy and complex task for two reasons:
-first the tractography is a very large set of streamlines, in the
-order of $3 \times 10^5$, which makes it intrinsically difficult both
-to inspect and to unfold the anatomical structures of interest (see
-Figure~\ref{fig}A). Second we observe a lack of software tools to
-support and to simplify this manual segmentation process.
+in~\cite{wang2011tractography}), the
+application in the clinical domain usually rely on manual
+segmentation. The manual segmentation process usually consists in
+selecting the subset of the streamlines connecting a few manually
+located regions of interest\footnote{See for example \url{http://www.trackvis.org}.}. This task is a lengthy and complex one,
+for two reasons: first the tractography is a very large set of
+streamlines, in the order of $3 \times 10^5$, which makes it
+intrinsically difficult both to inspect and to unfold anatomical
+structures (see Figure~\ref{fig}A). Second, the reconstruction of the
+streamlines is frequently suboptimal due to the noise in the
+measurement process and to the limitations of reconstruction
+algorithms. For this reason, a single neuronal pathway may be just
+partially reconstructed, resulting in multiple disconnected
+polylines. These \emph{broken} streamlines would be discarded by the
+manual segmentation procedure mentioned above, because not
+connecting the regions of interest defined by the expert.
 
 Differently from the previous approaches of tractography segmentation,
 we conceived a novel computer-assisted interactive process based on
 clustering algorithms, which aims at greatly reducing the time
 required to manually segment a given anatomical white matter structure
-of interest. Our approach is based on fast-clustering techniques by
-means of which the expert is initially presented a summary, i.e. the
-medoids~\footnote{A medoid is the element of a cluster closest to the
-  centroid.} of the clusters (see for example Figure~\ref{fig}B), of
-the whole tractography where she can manually select the subset of
-clusters to which to restrict the attention to. The selected subset of
-medoids (see them in white in Figure~\ref{fig}B) is an initial rough
-approximation the streamlines of interest (depicted in
-Figure~\ref{fig}C). This set is then re-clustered with an increased
-number of clusters so that more anatomical details are revealed (see
-Figure~\ref{fig}D). There the user can select what cluster is of
-interest and discard what is not. The selected clusters are then
-re-clustered in more and smaller clusters to reveal more details of
-the anatomical structure of interest. The selection and re-clustering
-process is repeated iteratively until the expert is confident of
-having segmented the structure of interest (see for example
+of interest. 
+% SHORT VERSION (SEE LONG VERSION BELOW):
+Our approach is based on a fast-clustering technique by means of which
+the expert is presented with a summary of the streamlines, i.e. the
+clusters represented by their medoids~\footnote{A medoid is the
+  element of a cluster closest to its centre.}. The expert manually
+selects the medoids/clusters of interest in order to remove most of
+the streamlines not related to the anatomical structure of interest.
+Interacting with the summary, instead of the actual streamlines, is
+much simpler for the user. In the example of Figure~\ref{fig}, the
+user selects $15000$ streamlines (see \ref{fig}C) of the $3 \times
+10^5$ streamlines (see \ref{fig}A) just by clicking on $20$ of the
+$150$ medoids (see \ref{fig}B, the selected medoids are shown in
+white).  The process of reclustering the selected streamlines and of
+manual selection by the expert is iterated until the expert is
+confident of having segmented the structure of interest (see
 Figure~\ref{fig}I).
+% THIS IS THE LONG VERSION OF THE PREVIOUS PARAGRAPH:
+% Our approach is based on a fast-clustering technique by means of which
+% the expert is initially presented a summary, i.e. the
+% medoids~\footnote{A medoid is the element of a cluster closest to the
+%   centroid.} of the clusters (see for example Figure~\ref{fig}B), of
+% the whole tractography where she can manually select the subset of
+% clusters to which to restrict the attention to. The selected subset of
+% medoids (see them in white in Figure~\ref{fig}B) is an initial rough
+% approximation the streamlines of interest (depicted in
+% Figure~\ref{fig}C). This set is then re-clustered with an increased
+% number of clusters so that more anatomical details are revealed (see
+% Figure~\ref{fig}D). There the user can select what cluster is of
+% interest and discard what is not. The selected clusters are then
+% re-clustered in more and smaller clusters to reveal more details of
+% the anatomical structure of interest. The selection and re-clustering
+% process is repeated iteratively until the expert is confident of
+% having segmented the structure of interest (see for example
+% Figure~\ref{fig}I).
 
 % Contents of the paper
 In this work we describe the algorithmic solution we adopted in order
 to build the interactive tractography segmentation tool. The core of
-the problem is to cluster a large number of streamlines in seconds, to
-allow a comfortable interactive user experience to the expert. The
-proposed solution combines two state-of-the-art elements: first a
-recently proposed Euclidean embedding algorithm for streamlines,
-i.e. the dissimilarity representation with the scalable \emph{subset
-  farthest first} (SFF) prototype selection
+the problem is to cluster a large number of streamlines in no more
+than a few seconds, to allow a comfortable interactive user experience
+to the expert. The proposed solution combines two state-of-the-art
+elements: first a recently proposed Euclidean embedding algorithm for
+streamlines, i.e. the dissimilarity representation with the scalable
+\emph{subset farthest first} (SFF) prototype selection
 policy~\cite{olivetti2012approximation}. This embedding provides fast
 and accurate vectorial representation of streamlines. Second, a
 recently proposed improvement of the $k$-means clustering algorithm
@@ -90,7 +119,7 @@ algorithm, which require the data to lie in a vector space,
 drastically reduces the convergence time to the actual clusters in
 case of large and very-large sets of objects. We claim that the
 dissimilarity embedding together with the MBKM algorithm provides a
-viable solution to our problem.
+viable solution to problem of fast clustering of streamlines.
 % REMOVE
 % We also tested a further potential
 % improvement, i.e. a recently proposed initialisation algorithm for the
@@ -103,7 +132,7 @@ The paper is structured as follows. In Section~\ref{sec:methods} the
 algorithmic elements of the proposed method are formally described. In
 Section~\ref{sec:experiments} we describe the segmentation process and
 report the details of the actual use of the proposed solution in the
-context of the CTS segmentation. We quantitatively describe the
+context of the CST segmentation. We quantitatively describe the
 segmentation process and provide timings to evaluate the viability of
 the proposed solution. In Section~\ref{sec:discussion} we discuss the
 results and we show that the proposed solution confirms our claims. 
