@@ -1,39 +1,13 @@
 \begin{abstract}
-%dMRI - brain connectivity - tracking - tract segmentation
-Diffusion MRI (dMRI) data allow to reconstruct the 3D pathways of axons within the
-white matter of the brain as a set of \textit{streamlines}, called tractography. A streamline is a vectorial representation of thousands of neuronal axons expressing structural connectivity.
-%Diffusion MRI (dMRI) is the principal non-invasive method that provides information about the directional structure of neural tracts in white matter. It opens up the possibility of investigating \emph{brain connectivity}, which 
-%tries to understand the structure of the brain.
-%refers to the description of how brain areas interact. The connectivity pattern is formed by structural pathways. Thousands of neuronal axons sharing the same structural connectivity pathway is represented by a \emph{streamline}. The whole set of streamlines of a brain is called \emph{tractography}. From the dMRI data, we can reconstruct the tractography of a brain by using \emph{fiber-tracking algorithms}. 
-%model the pathways of white matter tracts. from the dMRI data, by using \emph{fiber-tracking algorithms}, we can extract the %structural connectivity information, called \textit{tractography}. 
-An important task is to group streamlines belonging to a common anatomical area in the same cluster. This task is known as  \emph{tract segmentation task}, 
 %why is it relevant - important?
-and it is extremely helpful for neuro surgery or for diagnosing brain diseases. 
 %Why is it critic - difficult?
-%However, the segmentation process is time consuming due to the large number of streamlines (about $3 \times 10^5$ in a normal brain). Moreover, the variability of the brain anatomy among different subjects makes this task more difficult. 
-However, the segmentation process is difficult and time consuming due to the large number of streamlines (about $3 \times 10^5$ in a normal brain) and the variability of the brain anatomy among different subjects. 
+Nowadays, the large multivariate datasets become more and more common. However, traditional multivariate visualization techniques, which although allow to visually analyze and explore data, can not scale well with the large one. This restrain the ability of detecting, recognizing and classifying phenomena of interest, such as patterns, clusters, trends, ect.
 %What is our goal?
-In our project, the goal is: first, to design an effective method for tract segmentation task based on \emph{machine learning}
-%techniques
-and second, to develop an interactive tool to help medical practitioners to perform this task more precisely and easily.
+This paper proposes a general framework for interactive multi-resolution visualization to overcome the problem of traditional visualization techniques when working with a large dataset. The main idea is to develop a multiple abstraction-levels of the data via hierarchical clustering. Based on hierarchical clustering, users can not only examine the dataset at different levels of detail, but also can explore many regions of interest. Beside, the navigation tool and filtering operations create an easy environment for interactive exploration without re-run the clustering algorithm.  also   and    , our project, the goal is: first, to design an effective method for tract segmentation task based on \emph{machine learning}
+
 %What is the outline of research?
 We propose a design of the interactive segmentation process, consisting of two steps: tract identification 
-%based on supervised learning 
-and tract refinement. 
-%with the help from unsupervised learning. 
-The tract identification step generates the first hypothesis of segmentation to avoid the expert to start segmenting from the whole tractography. This step uses the manual segmentation examples from experts to create the candidate of tract segmentation, and is conceived as a supervised learning task. The next step aims at refining the proposed segmentation and takes place by removing or adding streamlines. With the goal to aid medical practitioners to perform this refinement task more precisely and easily, it is necessary to cluster some \textit{similar} streamlines %with similar spatial and shape characteristics 
-into one set, called \emph{bundle}. We design it as a clustering task.   
-%, by medical practitioners with the help from an efficient clustering algorithm.
-%briefly mention about ALS
-Some of our preliminary results are used for clinical usecase, such as finding the difference between healthy and ALS (Amyotrophy Lateral Smytrophic) diseased brains. Based on this, we believe that with our work, the task of tract segmentation can be performed more easily, at an acceptable computational cost, high accuracy, and can bring benefit for clinical applications.
 
-%to applying machine learning techniques to solve this \textit{tractography segmentation} problem. We propose a framework: a)dMRI pre-processing, b)hypo generation of tractography with supervised learning, and c)applying clustering/unsupervised learning techniques to refine the segmentation. The dMRI pre-processing stage is capable of generating a continuous, smooth representation of the whole tractography from the dMRI data. The hypo generation step uses the manual segmentation examples from experts to create the candidate of segmentation based on supervised learning. This candidate of segmentation will be refined, in the next step, by medical practitioners with the help from the interaction visualization tool integrated the fast clustering technique. %After that, the result of segmentation will be used in some clinical diagnosing applications.
-%Based on some preliminary results, we believe that using our interaction visualization tool for tractography segmentation would get high accuracy, less computational cost, and can be used for clinical applications.
-
-%+ segmentation tractography -> clinical diagnosis applications
-
-%+ focus on fast clustering for segmentation tractography online.
-% Our goal is to applying machine learning techniques to to solve this \textit{tractography segmentation} problem. We propose a framework for this processing, including three main steps: dMRI pre-processing, dissimilarity approximation presentation and applying learning techniques to segment tractography. The dMRI pre-processing stage is capable of generating a continuous, smooth representation and highly standard of the measured dMRI data. The dissimilarity representation is an Euclidean embedding technique defined by selecting a set of streamlines called prototypes and then mapping any new streamline to the vector of distances from prototypes. This presentation is very necessary because many of the current learning algorithms require the input to be from a vectorial space, which contrasts with the intrinsic nature of the tractography. After vectorizing the tractography data by using dissimilarity presentation, both \textit{unsupervised} and \textit{supervised} learning techniques are applied to segment the fibers into a specific groups. Preliminary results provide empirical evidence that the dissimilarity space representation is effective for the fiber tract segmentation. Basing on this representation, we believe that using machine learning techniques for tractography segmentation would get high accuracy and less computational cost.
  
 \end{abstract}
 
