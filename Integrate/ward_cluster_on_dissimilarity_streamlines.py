@@ -15,6 +15,12 @@ import matplotlib.pyplot as plt
 from hierarchical import Ward
 from sklearn.datasets.samples_generator import make_swiss_roll
 
+#for computing the CPU time, not elapsed time
+import resource
+def cpu_time():
+    return resource.getrusage(resource.RUSAGE_SELF)[0]
+    
+
 def R_function(parameters, x_range, x):
     i = 0
     while (i < x_range and x>=1.*i/x_range):        
@@ -22,20 +28,21 @@ def R_function(parameters, x_range, x):
     i = i -1
     #print 'x = ', x, 'i = ',i
     return parameters[i][0]* x * x + parameters[i][1]*x + parameters[i][2]
-    
+   
 
 
 ###############################################################################
 figure = 'big_dataset' # 'small_dataset' #     
+sub_id = 210#109#205#205
 if figure=='small_dataset':
-    filename = 'ALS_Data/210/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_10K.dpy'
+    filename = 'ALS_Data/'+ str(sub_id) + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_10K.dpy'
     prototype_policies = ['random', 'fft', 'sff']
     color_policies = ['ko--', 'kx:', 'k^-']
 elif figure=='big_dataset':
-    filename = 'ALS_Data/210/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy'
+    filename = 'ALS_Data/' + str(sub_id) + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy'
     prototype_policies = ['random', 'sff']
     color_policies = ['ko--', 'k^-']    
-num_trks = [0]#15000]#[0,15000,10000,5000,1000,500]
+num_trks = [15000]#15000]#15000] #5000]#[15000]#[0,15000,10000,5000,1000,500]
 num_clusters = [50]#[150,50,50,50,50,50]
 num_prototypes = 40
 
@@ -57,10 +64,14 @@ for i in range(len(num_trks)):
         tracks = tracks[:num_trk]
     print "tracks:", tracks.size
 
-    t0 = time.time()
+    #t0 = time.time()
+    t0 = time.clock()
+    #t0 = cpu_time()
     data_disimilarity = compute_disimilarity(tracks, bundles_distances_mam, prototype_policies[0], num_prototypes,tracks.size)
-    t_disi = time.time() - t0
-    print 'Time for dissimilarity: ', t_disi
+    #t_disi = time.time() - t0
+    t_disi = time.clock() - t0
+    #t_disi = cpu_time() - t0
+    print 'CPU time for dissimilarity: ', t_disi
     X = data_disimilarity
 
 
@@ -73,17 +84,20 @@ X, _ = make_swiss_roll(n_samples, noise)
 X[:, 1] *= .5
 '''
 
-'''
+
 ###############################################################################
 # Compute clustering
 print "Compute unstructured hierarchical clustering..."
-st = time.time()
-ward = Ward(compute_full_tree=True).fit(X)
+#st = time.time()
+st = time.clock()
+ward = Ward(n_clusters=num_cluster).fit(X)
 label = ward.labels_
-print "Elapsed time: ", time.time() - st
+#print "Elapsed time: ", time.time() - st
+print "CPU time: ", time.clock() - st
 print "Number of points: ", label.size
 
 
+'''
 ###############################################################################
 # Plot result
 fig = pl.figure()
@@ -95,32 +109,42 @@ for l in np.unique(label):
 pl.title('Without connectivity constraints')
 #stop
 '''
+
+'''
 ###############################################################################
 # Define the structure A of the data. Here a 10 nearest neighbors
 
 from sklearn.neighbors import kneighbors_graph
 connectivity = kneighbors_graph(X, n_neighbors=50)
 
+
 ###############################################################################
 # Compute clustering
 print "Compute structured hierarchical clustering..."
-st = time.time()
+#st = time.time()
+st = time.clock()
+#st = cpu_time()
 #ward = Ward(n_clusters=num_cluster, connectivity=connectivity).fit(X)
-ward = Ward(compute_full_tree=True, connectivity=connectivity).fit(X)
+#ward = Ward(compute_full_tree=True, connectivity=connectivity).fit(X)
+ward = Ward(n_clusters=num_cluster, compute_full_tree=False, connectivity=connectivity).fit(X)
 label = ward.labels_
-print "Elapsed time: ", time.time() - st
+#print "Elapsed time: ", time.time() - st
+print "CPU time: ", time.clock() - st
+#print "CPU time: ", cpu_time() - st
 print "Number of points: ", label.size
 #stop
 #-----------------------------------------------------------------------------
+'''
 
 # saving the result
-from dipy.io.pickles import save_pickle,load_pickle
+#from dipy.io.pickles import save_pickle,load_pickle
 #save_pickle('210_15000_tracks_first_trial.tree',ward)
 #save_pickle('210_full_tracks_first_trial.tree',ward)
 #print 'Saving tree: done'
 #ward = load_pickle('210_full_tracks_first_trial.tree')
 #-----------------------------------------------------------------------------
 
+'''
 ###############################################################################
 # Plot result
 fig = pl.figure()
@@ -142,7 +166,7 @@ ax.set_xlabel('scale: ' + str(1./ward.height_[len(ward.height_)-1]))
 ax.set_ylabel('R_alpha')
 plt.title('R_alpha fucntion')
 plt.show()
-
+'''
 
     
         
