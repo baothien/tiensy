@@ -97,15 +97,15 @@ if __name__ == '__main__':
         filename = 'ALS_Data/' + str(sub_id) + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy'
         
     
-    num_tracks = [500, 1000,5000]#,10000]#,20000]#,50000]#[50,100,150,0]##,15000]#[0,15000,10000,5000,1000,500]
+    num_tracks = [500, 1000,5000,10000]#,20000]#,50000]#[50,100,150,0]##,15000]#[0,15000,10000,5000,1000,500]
     num_cluster = 50
     num_prototype = 40
     num_neighbors = [25 ,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
     iterations = 1
     prototype_policies = ['random', 'fft', 'sff']
     #fit with num_tracks    
-    label_policies = ['500','1K','5K']#,'10K']#,'15K','All']
-    color_policies = ['ko--', 'kx:', 'k^-']#,'k*-' ]
+    label_policies = ['500','1K','5K','10K']#,'15K','All']
+    color_policies = ['ko--', 'kx:', 'k^-','k*-' ]
     verbose = True
     
     print "Loading tracks."
