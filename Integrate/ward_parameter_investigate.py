@@ -23,7 +23,11 @@ from hierarchical import Ward
 import resource
 def cpu_time():
     return resource.getrusage(resource.RUSAGE_SELF)[0]
-    
+  
+'''
+This function compute the silhouette score for the data with the order less than 40K
+It runs on the same data with many iterations, with different sub_sample size
+'''  
 #def compute_silhouette(data, distance,prototype_policies, num_prototypes, iterations, verbose=False, size_limit=1000):
 def compute_silhouette(data, prototype_policie, num_prototype, num_cluster, metric_measure, sub_data_sizes, num_neighbors, iterations, verbose=False):
     print "Computing silhouette score :"
@@ -97,15 +101,15 @@ if __name__ == '__main__':
         filename = 'ALS_Data/' + str(sub_id) + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy'
         
     
-    num_tracks = [500, 1000,5000,10000]#,20000]#,50000]#[50,100,150,0]##,15000]#[0,15000,10000,5000,1000,500]
+    num_tracks = [50000]#[500, 1000,5000,10000]#,20000]#,50000]#[50,100,150,0]##,15000]#[0,15000,10000,5000,1000,500]
     num_cluster = 50
     num_prototype = 40
-    num_neighbors = [25 ,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
+    num_neighbors = [25]# ,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
     iterations = 1
     prototype_policies = ['random', 'fft', 'sff']
     #fit with num_tracks    
-    label_policies = ['500','1K','5K','10K']#,'15K','All']
-    color_policies = ['ko--', 'kx:', 'k^-','k*-' ]
+    label_policies =['50k']# ['500','1K','5K','10K']#,'15K','All']
+    color_policies = ['ko--']#, 'kx:', 'k^-','k*-' ]
     verbose = True
     
     print "Loading tracks."
