@@ -52,21 +52,22 @@ if __name__ == '__main__':
 
     np.random.seed(0)     
     
-    data_ids = [101]#,201]#,202]
+    data_ids = [210]#,201]#,202]
     num_cluster = 50
     num_prototype = 40
-    num_neighbors = [25 ,50]#, 75, 100]#[10,20,30,40,50,60,70,80,90,100]      
+    num_neighbors = [100]#[25 ,50]#, 75, 100]#[10,20,30,40,50,60,70,80,90,100]      
 
     for data_id in data_ids:
         print 'Subject/Control: ', data_id
         
-        data = load_data('big_dataset',data_id)   
+        #data = load_data('big_dataset',data_id)   
 
-        X = compute_disimilarity(data, bundles_distances_mam, 'random', num_prototype,len(data))        
+        #X = compute_disimilarity(data, bundles_distances_mam, 'random', num_prototype,len(data))        
         
         file_name_dis = 'Results/'+str(data_id)+'/'+str(data_id)+'_data_disimilarity_full_tracks_' + str(num_prototype) + '_prototyes_random.dis'            
-        save_pickle(file_name_dis,X)        
-        print 'Saving data_disimilarity: ',file_name_dis,' - done'
+        #save_pickle(file_name_dis,X)        
+        #print 'Saving data_disimilarity: ',file_name_dis,' - done'
+        X = load_pickle(file_name_dis)
 
         for num_neigh in num_neighbors:                    
             print "\tGenerating at ", num_neigh, " neighbor"                
