@@ -9,9 +9,9 @@ This characteristic meets the requirement of creating multiple scales of one ori
 %the immediately responding to the changing level of abstraction of user 
 without re-running the clustering algorithm again. Another advantage is that hierarchical clustering does not require to pre-specify the number of clusters. It builds nested clusters by merging them successively, and this hierarchy of clusters represented as a tree (or dendrogram). The root of the tree is the unique cluster that gathers all the samples, the leaves being the clusters with only one sample. In another way, hierarchical clustering algorithm % (http://scikit-learn.org/stable/modules/clustering.html) 
 can clusters data firstly on $n$ centers and consequently until only one center. This main character leads to the capability of visualizing $\mathcal{X}$ in many levels of abstraction, and the users can browse the value of level from $1$ to $N$, to see the clusters immediately.
-%We refer \mathbb{H} as the whole hierarchical tree or dendogram of $\mathcal{X}$.
+%We refer \mathcal{H} as the whole hierarchical tree or dendogram of $\mathcal{X}$.
 
-\textbf{Definition 1} A \textit{\textbf{hierarchical tree}} $\mathcal{H}$ on objects $\mathcal{X}=\{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$ is a collection of $Q$ partitions on $\mathcal{X}$: $\mathcal{H}=\{\mathsf{P}_0,\ldots,\mathsf{P}_Q\}$, with $Q \leq N$, such that $\mathsf{P}_0=S$ and $C_{i} \in P_{m}, C_{j} \in P_{l}, m > l$ imply $C_{i} \subseteq C_{j}$ or $C_{i} \cap C_{j} = \emptyset$, for all $i,j \neq i, m, l = 1, \ldots, Q$.
+\textbf{Definition 1} A \textit{\textbf{hierarchical tree}} $\mathcal{H}$ on objects $\mathcal{X}=\{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$ is a collection of $Q$ partitions on $\mathcal{X}$: $\mathcal{H}=\{\mathsf{P}_0,\ldots,\mathsf{P}_Q\}$, with $Q \leq N$, such that $\mathsf{P}_0=\mathcal{X}$ and $C_{i} \in P_{m}, C_{j} \in P_{l}, m > l$ imply $C_{i} \subseteq C_{j}$ or $C_{i} \cap C_{j} = \emptyset$, for all $i,j \neq i, m, l = 1, \ldots, Q$.
 
 Every hierarchical tree $\mathcal{H}$ has a branch factor parameter $\gamma$ that quantifies how balanced the clusters are at any split.
 Formally, $\gamma \geq max_{intras{C_1, \ldots,C_k}} \frac{max_i |C_i|}{min_i |C_i|}$
@@ -50,22 +50,34 @@ d(A, B) = avg_{\mathsf{x}_A \in {A},\mathsf{x}_B \in {B}} d(\mathsf{x}_A,\mathsf
 \label{sec:multiscale}
 The hierarchical tree $\mathcal{H}$ structures and presents dataset $\mathcal{X}$ at different levels of abstraction. A non-leaf cluster is composed of all its child clusters, while a leaf cluster contains only a single data item. The collection of all leaf-clusters presents exactly every data items $\mathsf{x}_i$ of $\mathcal{X}$, while the root is a cluster containing whole dataset $\mathcal{X}$ as one single node of the tree.
 
-\textbf{Definition 2:} Each cluster $C_i$ (node) of the tree $\mathcal{H}$, let $s_i$ be the \textbf{\textit{level of detail}} of that cluster. This measure $s_i$ satisfies the following criteria: if $C_i$ is an ancestor of $C_j$, then $s_i \geq s_j$. 
+\textbf{Definition 2:} Each cluster $C_i$ (node) of the tree $\mathcal{H}$, let $s_i$ be the \textbf{\textit{level of detail}} of that cluster. This measurement $s_i$ satisfies the following criteria: if $C_i$ is an ancestor of $C_j$, then $s_i \geq s_j$. 
 
-There are many properties of a cluster which can be used to measure $s_i$. Among of them, two common use are the radius of a cluster (maximum distance between all the pair sample belonging to that cluster $r_i = max_{\forall \mathsf{x}_a, \mathsf{x}_b
- \in C_i, \mathsf{x}_a \neq \mathsf{x}_b} \{d(\mathsf{x}_a,\mathsf{x}_b)\}$); and the hierarchical level of $C_i$ in the tree $\mathcal{H}$ 
+There are many properties of a cluster which could be used to measure $s_i$. Among of them, two common use are the radius of a cluster (maximum distance between all the pair sample belonging to that cluster $r_i = max_{\forall \mathsf{x}_a, \mathsf{x}_b
+ \in C_i, \mathsf{x}_a \neq \mathsf{x}_b} \{d(\mathsf{x}_a,\mathsf{x}_b)\}$); and the hierarchical level of $C_i$ in the tree $\mathcal{H}$.
 
 \textbf{Definition 3:} The \textbf{\textit{range of scale}} of a hierarchical tree $\mathcal{H}$ is $[s_{min},s_{max}]$, where $s_{min} = min_{\forall C_i \in \mathcal{H}}\{s_i\}$, and $s_{max} = max_{\forall C_i \in \mathcal{H}}\{s_i\}$
 
-Depending on which property is used to measure the level of detail $s_i$, the value of  $s_{max}$ and  $s_{min}$ would be different. In the case of using the hierarchical level, let $h$ be the heigh of the tree $\mathcal{H}$, then the level of detail of cluster $C_i$: $s_i = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$. The scale range is $[0,1]$, where $s_{min} = 0$ corresponds to the leaf with zero heigh, and $s_{max} = 1$ is at the root of the tree $\mathcal{H}$. But in the case cluster radius, there is no guarantee that $s_{min} = 0$ and $s_{max} = 1$.
+Depending on which property is used to measure the level of detail $s_i$, the value of  $s_{max}$ and  $s_{min}$ would be different. In the case of using the hierarchical level, let $h$ be the heigh of the tree $\mathcal{H}$, then the level of detail of cluster $C_i$: $s_i = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$. The scale range is from $[0,1]$, where $s_{min} = 0$ corresponds to the leaf with zero heigh, to $s_{max} = 1$ is at the root of the tree $\mathcal{H}$. However, in the case of using cluster radius, there is no guarantee that $s_{min} = 0$ and $s_{max} = 1$.
 
 \textbf{Definition 4:} \textbf{\textit{A cut $\mathfrak{L}(w)$}} of a hierarchical tree $\mathcal{H}$ at a given scale $w \in [s_{min},s_{max}] $  is $\mathfrak{L}(w) = \{C_i | (s_i \leq w  \wedge s_{parent(C_i)} > w)\}$, where $parent(C_i)$ is the direct parent of cluster $C_i$
 
-Intuitively, the cut at $s_{min}$, $\mathfrak{L}(s_{max})$ is the set of all leaf clusters, while the $\mathfrak{L}(s_{max})$ is a single cluster representing the whole dataset $\mathcal{X}$. $\mathfrak{L}(w)$ is a partion of $\mathcal{X}$, denoting a subset of the tree $\mathcal{H}$. $\mathfrak{L}(w)$ change smoothly with the variance of the scale parameter $w$, which serves as the abstraction level of the dataset $\mathcal{X}$. It could be imagined that $\mathfrak{L}(w)$ is a cut across a vertically oriented hierarchical tree $\mathcal{H}$ that satisfies criteria: $\mathfrak{L}(w)$ intersecs each path of the tree $\mathcal{H}$, from the root to the leaf, only exactly at one point. The cutting point would depend on the value of parameter $w$. It should close to the root of the tree $\mathcal{H}$ when $w$ is high, and reversely. Beside, the cut can be horizontal or unhorizontal (like zigzag) as long as for each path from the root to the leaf of the tree $\mathcal{H}$, there is only one crossing with $\mathfrak{L}(w)$. It is an open approach for cutting the tree comparing with the traditional one which only accepts the horizontal cut. 
+Intuitively, the cut at $s_{min}$, $\mathfrak{L}(s_{min})$ is a set of all leaf clusters, while the $\mathfrak{L}(s_{max})$ is a single cluster representing the whole dataset $\mathcal{X}$. In general, $\mathfrak{L}(w)$ is a partion of $\mathcal{X}$, denoting a subset of the tree $\mathcal{H}$. $\mathfrak{L}(w)$ changes smoothly with the variance of the scale parameter $w$, which serves as the abstraction level of the dataset $\mathcal{X}$. It could be imagined that $\mathfrak{L}(w)$ is a cut across a vertically oriented hierarchical tree $\mathcal{H}$ that satisfies criteria: $\mathfrak{L}(w)$ intersecs each path of the tree $\mathcal{H}$, from the root to the leaf, only exactly at one point. The cutting point would depend on the value of parameter $w$. It should close to the root of the tree $\mathcal{H}$ when $w$ is high, and reversely. Moreover, the cut can be horizontal or unhorizontal (like zigzag) as long as for each path from the root to the leaf of the tree $\mathcal{H}$, there is only one crossing with $\mathfrak{L}(w)$. It is an open approach for cutting the tree comparing with the traditional one which only accepts the horizontal cut. 
 
-To visualize the dataset $\mathcal{X}$
-Scale s = [0,1], where 0 is the whole leaves (streamlines) and 1 is the only one root. Scale s can be defined based on the height of tree h: 0/h, 1/h, ..., (h-1)/h, h/h; or the maximum distance of each node of the tree \cite{yang2003interactive}
+\textbf{Choose multiple scales for visualization a large data}
+
+- the need of visualization the large dataset $\mathcal{X}$ at different scales, not display all the dataset \textbf{need to investigate}
+
+- how to choose the best scales 
+
+In this project, we use the height of the cluster $C_i$ within the hierarchical tree $\mathcal{H}$ to measure the level of detail of that cluster. Let $h$ be the height of hierarchical tree $\mathcal{H}$: $h = height(\mathcal{H})$. $s_{min} = 0$, corresponds to the leaf with zero heigh $s_{max} = 1$, and $\forall C_i $\mathcal{H}, $\in $
+
+ then the level of detail of cluster $C_i$: $s_i = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$. The scale range is from $[0,1]$, where $s_{min} = 0$ corresponds to the leaf with zero heigh, to $s_{max} = 1$ is at the root of the tree $\mathcal{H}$.
+
+s = [0,1], where 0 is the whole leaves (streamlines) and 1 is the only one root. Scale s can be defined based on the height of tree h: 0/h, 1/h, ..., (h-1)/h, h/h; or the maximum distance of each node of the tree \cite{yang2003interactive}
 How to choose the best scales to cut at, is driven from the paper pons2011postprocessing
+
+\subsection{Evaluation the cut}
+\label{sec:evaluation_cut}
 Evaluate the cut:
 + At each cutting scale alpha, the result is a partition $P_alpha$ of tractography
 + Measure the quality of a partition P:
