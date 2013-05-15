@@ -20,7 +20,8 @@ from sklearn.neighbors import kneighbors_graph
 from hierarchical import Ward
 from dipy.io.pickles import save_pickle,load_pickle
 
-from silhouette_score_modified import *
+#from silhouette_score_modified import *
+from silhouette_score_modified_parallel import *
 
 #for computing the CPU time, not elapsed time
 import resource
@@ -78,7 +79,7 @@ def compute_silhouette_sample_size(data_ids, prototype_policie, num_prototype, n
             for k in range(iterations): 
                 st = cpu_time()                   
                 #score = metrics.silhouette_score(X, label, metric = metric_measure,sample_size=20000)
-                score = silhouette_score_block(X, label, metric = metric_measure,sample_size=50000)
+                score = silhouette_score_block(X, label, metric = metric_measure,sample_size=50000,n_jobs=2)
                 t = cpu_time()-st                
                 sil[m,j,k] = score
                 time[m,j,k] = t
@@ -114,7 +115,7 @@ def compute_silhouette_block(data_ids, prototype_policie, num_prototype, num_clu
             print"\t Computing silhouette score"
             for k in range(iterations):                    
                 st = cpu_time()
-                score = silhouette_score_block(X, label, metric = metric_measure)
+                score = silhouette_score_block(X, label, metric = metric_measure,n_jobs=2)
                 t = cpu_time() - st
                 sil[m,j,k] = score
                 time[m,j,k] = t
@@ -147,18 +148,18 @@ if __name__ == '__main__':
 
     np.random.seed(0)      
     
-    data_ids = [101,102,201,202]
+    data_ids = [101]#,102,201,202]
     num_cluster = 50
     num_prototype = 40
-    num_neighbors = [25 ,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
+    num_neighbors = [25 ]#,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
     iterations = 1
     prototype_policies = ['random', 'fft', 'sff']
     #fit with num_tracks    
-    label_policies =['101', '102','201','202']#,'10K']#,'15K','All']
+    label_policies =['101']#, '102','201','202']#,'10K']#,'15K','All']
     color_policies = ['ko--']#, 'kx:', 'k^-','k*-' ]
     verbose = True    
        
-    '''
+    
     sil, time = compute_silhouette_sample_size(data_ids, prototype_policies[0], num_prototype, 
                                    num_cluster, 'euclidean', 
                                    num_neighbors, iterations, verbose)
@@ -166,6 +167,7 @@ if __name__ == '__main__':
     sil, time = compute_silhouette_block(data_ids, prototype_policies[0], num_prototype, 
                                    num_cluster, 'euclidean', 
                                    num_neighbors, iterations, verbose)
+    '''
     
     '''    
     filename = 'Results/all_subjects_silhouette_time_sub_sample_50K_iterations_8.txt.txt'       
@@ -174,8 +176,8 @@ if __name__ == '__main__':
     sil =load_pickle(filename)
     '''
 
-    save_pickle('all_subjects_silhouette_score_sub_sample_50K_iterations_8.txt',sil)
-    save_pickle('all_subjects_silhouette_time_sub_sample_50K_iterations_8.txt',time)
+    #save_pickle('all_subjects_silhouette_score_sub_sample_50K_iterations_8_140513.txt',sil)
+    #save_pickle('all_subjects_silhouette_time_sub_sample_50K_iterations_8_140513.txt',time)
         
     plot_results(sil, num_neighbors,label_policies,color_policies,"Silhouette score for whole tractography")
     plot_results(time, num_neighbors,label_policies,color_policies,"Time for calculating silhouette score with sub_sample 50K")
