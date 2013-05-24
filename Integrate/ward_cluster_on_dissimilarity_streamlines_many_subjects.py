@@ -11,8 +11,8 @@ import numpy as np
 import pylab as pl
 import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.pyplot as plt
-from sklearn.cluster import Ward
-#from hierarchical import Ward
+#from sklearn.cluster import Ward
+from hierarchical import Ward
 from sklearn.neighbors import kneighbors_graph
 from dipy.io.pickles import save_pickle,load_pickle 
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     data_ids = [210]#,201]#,202]
     num_cluster = 50
     num_prototype = 40
-    num_neighbors = [100]#[25 ,50]#, 75, 100]#[10,20,30,40,50,60,70,80,90,100]      
+    num_neighbors = [50]#100]#[25 ,50]#, 75, 100]#[10,20,30,40,50,60,70,80,90,100]      
 
     for data_id in data_ids:
         print 'Subject/Control: ', data_id
@@ -64,7 +64,8 @@ if __name__ == '__main__':
 
         #X = compute_disimilarity(data, bundles_distances_mam, 'random', num_prototype,len(data))        
         
-        file_name_dis = 'Results/'+str(data_id)+'/'+str(data_id)+'_data_disimilarity_full_tracks_' + str(num_prototype) + '_prototyes_random.dis'            
+        #file_name_dis = 'Results/'+str(data_id)+'/'+str(data_id)+'_data_disimilarity_full_tracks_' + str(num_prototype) + '_prototyes_random_modified_ward_full_tree_130524.dis'            
+        file_name_dis = 'Results/'+str(data_id)+'/'+str(data_id)+'_data_disimilarity_full_tracks_40_prototyes_random_130516.dis'        
         #save_pickle(file_name_dis,X)        
         #print 'Saving data_disimilarity: ',file_name_dis,' - done'
         X = load_pickle(file_name_dis)
@@ -72,11 +73,11 @@ if __name__ == '__main__':
         for num_neigh in num_neighbors:                    
             print "\tGenerating at ", num_neigh, " neighbor"                
             
-            file_name = str(data_id)+'_full_tracks_' + str(num_neigh) + '_neighbors_original_ward.tree'            
+            file_name = str(data_id)+'_full_tracks_' + str(num_neigh) + '_neighbors_modified_ward_full_tree_130516_new.tree'            
             connectivity = kneighbors_graph(X, n_neighbors=num_neigh)                          
             
             st = cpu_time()#time.clock()
-            ward = Ward(n_clusters=num_cluster, compute_full_tree=False, connectivity=connectivity).fit(X)
+            ward = Ward(n_clusters=num_cluster, compute_full_tree=True, connectivity=connectivity).fit(X)
             #t = time.clock() - st
             t = cpu_time() - st
             

@@ -35,10 +35,18 @@ import time as time
 #tree_name = 'Results/205/205_15000_tracks_first_trial.tree'
 #tree_name = 'Results/205/205_full_tracks_first_trial.tree'
 
-tree_name = 'Results/210/210_15000_tracks_first_trial.tree'
+#tree_name = 'Results/210/210_15000_tracks_first_trial.tree'
 #tree_name = 'Results/210/210_full_tracks_first_trial.tree'
 
-#tree_name = 'test.tree'
+#tree_name = 'Results/210/210_15000_tracks_50_neighbors_modified_ward_full_tree_first_trial.tree'
+tree_name = 'Results/101/101_full_tracks_50_neighbors_modified_ward_full_tree_fifth_trial.tree'
+
+'''
+compute the histogram of each node: how many node split to a given child nodes
+
+'''
+
+
 tree = load_pickle(tree_name)
 cut = tree.best_cut()
 cut.insert(len(cut),[tree.height_[len(tree.height_)-1],0.])
