@@ -138,6 +138,7 @@ for root, dirs, files in os.walk(dirname):
         new_zooms = (2., 2., 2.)        
         from dipy.align.aniso2iso import resample
         data2, affine2 = resample(data, affine, zooms, new_zooms)
+        
         mask = data2[..., 0] > 50
         from dipy.reconst.dti import TensorModel
         tenmodel = TensorModel(gtab)
@@ -149,6 +150,7 @@ for root, dirs, files in os.walk(dirname):
         nib.save(fa_img, base_dir+'DTI/tensor_fa.nii.gz')
         evecs_img = nib.Nifti1Image(tenfit.evecs, img.get_affine())
         nib.save(evecs_img, base_dir+'DTI/tensor_evecs.nii.gz')
+       
         fa_img = nib.load(base_dir+'DTI/tensor_fa.nii.gz')
         FA = fa_img.get_data()
         evecs_img = nib.load(base_dir+'DTI/tensor_evecs.nii.gz')
