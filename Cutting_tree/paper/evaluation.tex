@@ -22,7 +22,7 @@ Formally, $\gamma \geq \max_{intras C_i \in \{C_1, \ldots,C_k\}} \frac{max_i |C_
 Hierarchical clustering algorithms are either top-down or bottom-up. Bottom-up algorithms treat each streamline as a singleton cluster at the outset and then successively merge (or agglomerate) pairs of clusters until all clusters have been merged into a single cluster that contains all tracts. Bottom-up hierarchical clustering is therefore called Hierarchical Agglomerative Clustering (HAC). Top-down clustering requires a method for splitting a cluster. It proceeds by splitting clusters recursively until individual streamlines are reached \cite{johnson1967hierarchical}.
 The basic process of HAC clustering~\cite{johnson1967hierarchical} is this:
 \begin{enumerate}
-	\item Assign each object to one cluster. We now have $N$ clusters, each containing just one streamline.
+	\item Assign each object to one cluster, and get the result of $N$ clusters, each of them contains just one streamline.
 	%Let the distances (similarities) between the clusters the same as the distances (similarities) between the items they contain.
 	\item Find the closest (most similar) pair of clusters and merge them into a single cluster.
 	\item Compute distances (similarities) between the new cluster and each of the old clusters.
@@ -48,8 +48,10 @@ In \emph{average-linkage} clustering, the distance between two clusters $A$ and 
 d(A, B) = avg_{\mathsf{x}_A \in {A},\mathsf{x}_B \in {B}} d(\mathsf{x}_A,\mathsf{x}_B)
 \end{equation}
 
-\subsection{Multiple scale for visualization}
-\label{sec:multiscale}
+\subsection{Multiple scales for visualization}
+\label{subsec:multiple_scales}
+- the need of visualization the large dataset $\mathcal{X}$ at different scales, not display all the dataset \textbf{need to investigate}
+
 The hierarchical tree $\mathcal{H}$ structures and presents dataset $\mathcal{X}$ at different levels of abstraction. A non-leaf cluster is composed of all its child clusters, while a leaf cluster contains only a single data item. The collection of all leaf-clusters presents exactly every data items $\mathsf{x}_i$ of $\mathcal{X}$, while the root is a cluster containing whole dataset $\mathcal{X}$ as one single node of the tree.
 
 \textbf{Definition 2:} Each cluster $C_i$ (node) of the tree $\mathcal{H}$, let $s(C_i)$ be the \textbf{\textit{level of detail}} of that cluster. This measurement $s(C_i)$ satisfies the following criteria: if $C_i$ is an ancestor of $C_j$, then $s(C_i) \geq s(C_j)$. 
@@ -61,29 +63,27 @@ There are many properties of a cluster which could be used to measure $s(C_i)$. 
 
 Depending on which property is used to measure the level of detail $s_i$, the value of  $s_{max}$ and  $s_{min}$ would be different. In the case of using the hierarchical level, let $h$ be the heigh of the tree $\mathcal{H}$, then the level of detail of cluster $C_i$: $s(C_i) = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$. The scale range is from $[0,1]$, where $s_{min} = 0$ corresponds to the leaf with zero heigh, to $s_{max} = 1$ is at the root of the tree $\mathcal{H}$. However, in the case of using cluster radius, there is no guarantee that $s_{min} = 0$ and $s_{max} = 1$.
 
-\textbf{Definition 4:} \textbf{\textit{A cut $\mathfrak{L}(w)$}} of a hierarchical tree $\mathcal{H}$ at a given scale $w \in [s_{min},s_{max}] $  is $\mathfrak{L}(w)$
+\textbf{Definition 4:} \textbf{\textit{A cut $\mathfrak{L}$}} of a hierarchical tree $\mathcal{H}$ at a given scale $w \in [s_{min},s_{max}] $  is $\mathfrak{L}(w)$:
 \begin{equation}
 \label{equ:a_cut_l}
 \mathfrak{L}(w) = \{C_i | (s(C_i) \leq w  \wedge s(parent(C_i)) > w)\}
 \end{equation}
-where $parent(C_i)$ is the direct parent of cluster $C_i$
+where $parent(C_i)$ is the direct parent node of the cluster $C_i$
 
 Intuitively, the cut at $s_{min}$, $\mathfrak{L}(s_{min})$ is a set of all leaf clusters, while the $\mathfrak{L}(s_{max})$ is a single cluster representing the whole dataset $\mathcal{X}$. In general, $\mathfrak{L}(w)$ is a partion of $\mathcal{X}$, denoting a subset of the tree $\mathcal{H}$. $\mathfrak{L}(w)$ changes smoothly with the variance of the scale parameter $w$, which serves as the abstraction level of the dataset $\mathcal{X}$. It could be imagined that $\mathfrak{L}(w)$ is a cut across a vertically oriented hierarchical tree $\mathcal{H}$ that satisfies criteria: $\mathfrak{L}(w)$ intersecs each path of the tree $\mathcal{H}$, from the root to the leaf, only exactly at one point. The cutting point would depend on the value of parameter $w$. It should close to the root of the tree $\mathcal{H}$ when $w$ is high, and reversely. Moreover, the cut can be horizontal or unhorizontal (like zigzag) as long as for each path from the root to the leaf of the tree $\mathcal{H}$, there is only one crossing with $\mathfrak{L}(w)$. It is an open approach for cutting the tree comparing with the traditional one which only accepts the horizontal cut. 
 
-\textbf{Choose multiple scales for visualization a large data}
+\textbf{Definition 5:} Given the scale range $[s_{min},s_{max}]$ of a tree $\mathcal{H}$, the multiple scales representing for the tree $\mathcal{H}$ is a set of $k$ scale values from $[s_{min},s_{max}]$: $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}], \forall i \in [1,k]$, where $k$ is the order of set $\mathsf{\textit{B}}$.
 
-- the need of visualization the large dataset $\mathcal{X}$ at different scales, not display all the dataset \textbf{need to investigate}
+It is usually that $b_1 = s_{min}$ and $b_k = s_{max}$, where the whole elements of $\mathcal{X}$ are presented and only one virtual representation of $\mathcal{X}$ is showed. However, the value of $k$ is still an open question and totally depends on the application. In the next section, we will discuss about how to define this value and also how to select each $b_i$ from $[s_{min},s_{max}]$.
+
+\subsection{How to choose the best scales}
+\label{subsec:choosing_scales}
 
 - how to choose the best scales 
 
-In this project, we use the height of the cluster $C_i$ within the hierarchical tree $\mathcal{H}$ to measure the level of detail of that cluster. Let $h$ be the height of hierarchical tree $\mathcal{H}$: $h = height(\mathcal{H})$. $s_{min} = 0$, corresponds to the leaf with zero heigh, $s_{max} = 1$ is at the root of the tree $\mathcal{H}$, and $\forall C_i \in \mathcal{H}, s(C_i) = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$
-%s = [0,1], where 0 is the whole leaves (streamlines) and 1 is the only one root. Scale s can be defined based on the height of tree h: 0/h, 1/h, ..., (h-1)/h, h/h; or the maximum distance of each node of the tree \cite{yang2003interactive}
-
 How to choose the best scales to cut at, is driven from the paper~\cite{pons2011postprocessing}.
 
-Given the scale range $[s_{min},s_{max}]$ of a tree $\mathcal{H}$, choosing the best scalses for representation of $\mathcal{H}$ is to select a set of $k$ scale values from $[s_{min},s_{max}]$: $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}], \forall i \in [1,k]$. 
-
-
+ 
 + Measure the quality of a partition P:
 
 - Silhouette Coefficient score: measure of how tightly grouped all the data in the cluster are. The score is bounded between -1 for incorrect clustering and +1 for highly dense clustering. Scores around zero indicate overlapping clusters. The score is higher when clusters are dense and well separated, which relates to a standard concept of a cluster. code [6], paper rousseeuw1987silhouette and web [7]
@@ -91,37 +91,70 @@ Given the scale range $[s_{min},s_{max}]$ of a tree $\mathcal{H}$, choosing the 
 - Median partition: a good partition is the one which are most similar to all other partitions vega2011segmentation
 % HKM (hierarchical k-means objective) & HRC (hierarchical ratio cut): kauchak03iterative
 
-\subsection{Evaluation the best scales for cutting}
-\label{sec:evaluation_cut}
+\subsection{Evaluation the best scales}
+\label{subsec:evaluation_scales}
 
-Given a scale $w \in [s_{min},s_{max}]$, the cut hierarchical tree $\mathcal{H}$ at $w$,$\mathfrak{L}(w)$, is given by \ref{equ:a_cut_l} as: $\mathfrak{L}(w) = \{C_i | (s_i \leq w  \wedge s_{parent(C_i)} > w)\}$
-
+Given a hierarchical tree $\mathcal{H}$, and a multi-scale set representing for $\mathcal{H}$, $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$. In this part, we focus on how to evaluate the quality of $\mathsf{\textit{B}}$
+%scale $w \in [s_{min},s_{max}]$, the cut hierarchical tree $\mathcal{H}$ at $w$, $\mathfrak{L}(w)$, given by \ref{equ:a_cut_l} as: $\mathfrak{L}(w) = \{C_i | (s_i \leq w  \wedge s_{parent(C_i)} > w)\}$, and 
 
 \textbf{\textit{Define the target criteria of cutting}}
-Based on the real fact that, during the using of our software tool to do the segmentation of cortinal spinal tract, medical practitioners usually choose $~15 (\theta_1)$ clusters from $~50 (\theta_2)$representatives~\cite{prni2013-boi}, we propose a method to evaluate the choosing the best scales $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_l\}$ based on the \textit{split factor} as following.
+Based on the real fact that, during the using of our software tool to do the segmentation of cortinal spinal tract, medical practitioners usually choose $~15 (\lambda_1)$ clusters from $~50 (\lambda_2)$representatives~\cite{prni2013-boi}, we propose a method to evaluate the represented multi-scale set $\mathsf{\textit{B}}$ based on the \textit{split factor} as following.
 
-\textbf{Definition 5:} \textbf{\textit{Split factor $\xi$}} of \textit{a cluster} $C \in \mathcal{H}$ to a scale $w \in [s_{min},s_{max}]$ is $\xi(C,s)$
+\textbf{Definition 6:} \textbf{\textit{Split factor $\xi$}} of \textit{a cluster} $C \in \mathcal{H}$ to a scale $w \in [s_{min},s_{max}]$ is $\xi(C,s)$
 \begin{equation}
 \xi(C,s) = card(P(C,s))
 \end{equation}
 where $P(C,s) = \{ C_j | C_j \in \mathcal{H} \wedge s(C_j) = w \wedge C_j \subseteq C \}$ 
 
-\textbf{Definition 6:} \textbf{\textit{Split factor $\xi$}} of a \textit{set of cluster} $P=\{C_1, C_2,.., C_m\} \subseteq \mathcal{H}$ to a scale $s \in [s_{min},s_{max}]$ is $\xi(P,s)$
+\textbf{Definition 7:} \textbf{\textit{Split factor $\xi$}} of a \textit{set of cluster} $P=\{C_1, C_2,.., C_m\} \subseteq \mathcal{H}$ to a scale $s \in [s_{min},s_{max}]$ is $\xi(P,s)$
 \begin{equation}
 \xi(P,s) = \sum_{C_i \in P}\xi(C_i,s)
 \end{equation}
 
 Given a specific scale $w \in \mathsf{\textit{B}}$, draw uniformly at random $k_1$ clusters from the cut $\mathfrak{L}(w)$ of tree $\mathcal{H}$ at $w$, called $S_w$: $S_{w}=\{C_{s_1}, C_{s_2},.., C_{s_{k_1}}\}$, $C_{s_{i=1}^{k_1}} \in \mathfrak{L}(w)$.
 
-\textbf{Definition 7:} The set of scale $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$ is called the best scales for representation of the tree $\mathcal{H}$, if the following condition is satisfies
+\textbf{Definition 8:} The set of scale $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$ is called the best scales for representation of the tree $\mathcal{H}$, if the following condition satisfies
 \begin{equation}
 \forall b \in [b_2,b_k]: \theta_2 - \Delta \leq \xi(S_b,b-1) \leq \theta_2 + \Delta 
 \end{equation}
 
 %\begin{algorithm}
+
+\begin{algorithm}
+\caption{Evaluate the cuts based on split factor}
+\begin{algorithmic} 
+\REQUIRE Hierarchical tree \mathcal{H}, the best cut set $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$
+%\ENSURE $y = x^n$
+\STATE $i \leftarrow 1$
+\REPEAT 
+\STATE $w \leftarrow b_i$
+\STATE $l \leftarrow b_{i+1}$
+
+\STATE $P_l \leftarrow b_{i+1}$
+
+\STATE $i \leftarrow i + 1$
+\UNTIL{i+1 \geq k}
+\IF{$n < 0$}
+\STATE $X \leftarrow 1 / x$
+\STATE $N \leftarrow -n$
+\ELSE
+\STATE $X \leftarrow x$
+\STATE $N \leftarrow n$
+\ENDIF
+\WHILE{$N \neq 0$}
+\IF{$N$ is even}
+\STATE $X \leftarrow X \times X$
+\STATE $N \leftarrow N / 2$
+\ELSE[$N$ is odd]
+\STATE $y \leftarrow y \times X$
+\STATE $N \leftarrow N - 1$
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 + start from scale $l$, in current partition $P(l)$, draw $S=\{s_1,s_2,..,s_{k_1}\}$ of size $k_1$ uniformly at random
 
-+ calculate branch factor at scale $l$: $b(l) = card(P'(l+1))$, where $P'(l+1) = \{C_i, C_i \in P(l+1), \wedge C_i \in any s_j, with all j =1,..k1\}$
++ calculate split factor at scale $l$: $b(l) = card(P'(l+1))$, where $P'(l+1) = \{C_i, C_i \in P(l+1), \wedge C_i \in any s_j, with all j =1,..k1\}$
 
 + set current partition be $P'(l+1)$
 
