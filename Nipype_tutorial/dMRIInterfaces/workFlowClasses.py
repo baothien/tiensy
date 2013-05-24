@@ -8,6 +8,8 @@ Created on Thu May 16 20:39:00 2013
 import nipype.interfaces.utility as util
 import nipype.pipeline.engine as pe
 
+from workflows.dmri.fsl.dti import create_eddy_correct_pipeline
+
 from classInterfaces import BrainExtraction, EddyCorrection, ResampleVoxelSize, TensorModel, Tracking
  
 path = '/home/bao/tiensy/Nipype_tutorial/data/dmri/temp/'
@@ -20,7 +22,8 @@ wf.base_dir= path + 'results'
 
 ###### NODE DEFINITION #######
 brain_extraction_node = pe.Node(BrainExtraction(), name="brain_extraction_node")
-eddy_current_correction_node = pe.Node(EddyCorrection(), name="eddy_current_correction_node")
+#eddy_current_correction_node = pe.Node(EddyCorrection(), name="eddy_current_correction_node")
+eddy_current_correction_node = create_eddy_correct_pipeline("nipype_eddycorrect_wkf")
 resample_voxel_size_node = pe.Node(ResampleVoxelSize(), name='resample_voxel_size_node')
 tensor_model_node = pe.Node(TensorModel(), name='tensor_model_node')
 tracking_node = pe.Node(Tracking(), name='tracking_node')
