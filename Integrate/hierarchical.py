@@ -465,7 +465,7 @@ class Ward(BaseEstimator, ClusterMixin):
               height_cut: the height that to be cut the tree, start from 0
                           the maximum value of height is self.height_[n_leaves + len(self.children)-1]
        output:
-              the list of the node
+              the list of the node_index (1D_array)
     '''
     def cut(self, height_cut):    
         if  (height_cut < 0 or height_cut > self.height_[self.n_leaves_ + len(self.children_)-1]):
@@ -564,9 +564,21 @@ class Ward(BaseEstimator, ClusterMixin):
         input:  
                none
         output: 
-               the list of the scale        
+               the list of the best scales               
+               [[s1,R_value_1], 
+                [s2,R_value_2],
+                 ..,
+                [sk,R_value_k]] 
+                each si is the height(or sacle) of the best cut (not include the leaf: height = 0)
+                R_value_i : the value of the function R at the hiegh(or scale) i
+               
         R_alpha(C) = 1/2 * (alpha_max(C)-alpha_min(C)) + 2*(alpha_max(C) - alpha)(alpha-alpha_min(C))/(alpha_max(C)-alpha_min(C))
         R(alpha) = 1/n * sum(|C|R_alpha(C)) for all C in P_alpha 
+        R(alpha) = A*x^2 + B*x + C
+        derivation(R(alpha)) = 2A*x + B
+        alpha_maximum = -B/(2*A)
+        alpha_maximun is chosen as one of the best scales 
+                         if it is between scale_alpha and scale_alpha+1
         ref: Pascal Pon 2011, Post-processing hierarchial community structures: Quality improvements and multi-scale view
     '''
     def best_scale(self, thres_1=0., thres_2=1.):        
@@ -640,9 +652,16 @@ class Ward(BaseEstimator, ClusterMixin):
     '''
         estimate the best cut of the tree
         input:  
-               none
+               step: int - how many neighbors that a peak is heigher or smaller
+                     default is 1
         output: 
                the list of the best cuts (each cuts corresponding to a value of height)              
+               [[b1,R_value_1], 
+                [b2,R_value_2],
+                 ..,
+                [bk,R_value_k]] 
+                each bi is the height of the best cut (not include the leaf: height = 0)
+                R_value_i : the value of the function R at the hiegh i
        
     '''
     def best_cut(self,step=1):
