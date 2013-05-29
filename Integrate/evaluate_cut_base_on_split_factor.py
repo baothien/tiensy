@@ -234,9 +234,9 @@ def run_on_multi_subjects():
         tree = load_pickle(tree_name)
         
         cut = tree.best_cut()
-        #print 'origin cut', cut
+        print 'origin cut', cut
         remove_valley(cut)
-        #print 'after remove valley', cut
+        print 'after remove valley', cut
         
         cut_scales_ori = [s[0] for s in cut] 
         temp_scales = heuristic_modified_cuts(cut_scales_ori[:4],3)
@@ -245,6 +245,7 @@ def run_on_multi_subjects():
         #print cut_scales_ori
         #print cut_scales
         
+        #cut_scales = cut_scales_ori
         #cut_scales = heuristic_modified_cuts(cut_scales,4)
         
         split = np.zeros((len(cut_scales),iterations)) 
@@ -269,7 +270,7 @@ def run_on_multi_subjects():
         plot_results(plt, split, cut_scales, colors[m], sub_id) 
         print sub_id, ' : ', cut_scales
     
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper right')
     plt.xlabel("cut scales ")
     plt.ylabel("split factor ")
     plt.title = '\n Evaluating the cut based on split factor'
