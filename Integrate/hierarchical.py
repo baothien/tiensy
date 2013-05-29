@@ -680,12 +680,12 @@ class Ward(BaseEstimator, ClusterMixin):
                 result.append(best_scale[k])
             accept = True
             #check for the local minimum
-            for j in range(step):
-                i = j + 1
-                if ((best_scale[k][1]>best_scale[k-i][1]) or (best_scale[k][1]>best_scale[k+i][1])):
-                    accept = False
-            if accept == True:
-                result.append(best_scale[k])
+            #for j in range(step):
+            #    i = j + 1
+            #    if ((best_scale[k][1]>best_scale[k-i][1]) or (best_scale[k][1]>best_scale[k+i][1])):
+            #        accept = False
+            #if accept == True:
+            #    result.append(best_scale[k])
             k = k + 1       
             
         self.best_cut_ = result
