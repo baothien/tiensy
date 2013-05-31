@@ -1,26 +1,24 @@
 \section{Introduction}
 \label{sec:introduction}
+%the need of visualization data
+To support human in analyzing and exploring large data, it is an important task to graphically present the data~\cite{yang2003interactive}. Users, in one side, have a requirements of looking at complex and intricate data to find out some facts or trends that are not esy to find. On the other side, they want to explore data in details to examine each data points. In fact, the overall premise is that users have a deeper understanding about their data when they interact with the presented information and view it at different levels of abstraction~\cite{roberts2007state}. During the last two decades, many interactive visualization techniques and system have been emerged~\cite{yang2003interactive,stroe2000scalable,fua2000structure}.
+As large data sets become more and more common, with the oder over $1K$, it has been clear that most of the current visualization approaches lose their effectiness due to they have no ability to visualize and manage the large number of data points simultaneously. In this scenerio, clustering is considered a suitable method for understanding and to exploring large data~\cite{berkhin2006survey,bisson2012improving}. 
+However, clustering usually results in one partition of the data, and this leads to the drawback because the validation process is not straightforward due to the lack of grouth truth data~\cite{candillier2006casade}. One solution for this is hierarchical clustering~\cite{johnson1967hierarchical}, which organizes data in an intutive and interpretable way, namely dendrogram, not only one partion as the traditional clustering methods.
+%In such tructure, all the degree of generality are present 
+This character allows users to explore in a simple way the clusters and the relationships between instances, leading to many applications for visulization~\cite{heard2009novel,landesberger2011visual,mahe2009graph}.
+%what is the limitation of current visualization method to large data
+Nevertheless, when dealing practically with a large size dendrogram, it becomes difficult since the number of leaves grows exponentially with the depth of the tree and makes users lose the overview of the whole dataset. To deal with this prolbem, many sugguestion have been approached~\cite{bisson2012improving,landesberger2011visual,furnas2006fisheye}. However, these methods are either display at one time only a subpart of the structure~\cite{landesberger2011visual,furnas2006fisheye}, or display whole dendrogram but rely on other clustering technique~\cite{bisson2012improving}.
 
-the need of visualization large data
-
-what is the limitation of current visualization method
-
-- the need of visualization the large dataset $\mathcal{X}$ at different scales, not display all the dataset \textbf{need to investigate}
-
-Contents of the paper
-In this work we describe the algorithmic solutions we adopted in order
-to build the interactive visualization large data
+%Contents of the paper
+In this work, we propose a framework of offering a complete and interactive visualization of the large data. Our method allow users to apply his or her perceptual abilities to make sense of data. 
+%We describe the algorithmic solutions we adopted in order to build the interactive visualization large data.  
+The core of the problem is to obtain the multiple scales for representation large data in order to comply with the requirements of human interactive visualization. The proposed solution combines three steps. First, the dendrogram would be created by running the hierarchical clustering. Second, the \emph{goodness} function is used as a measurement to select the most relevant scales for representing the dendrogram. Lastly, we also evaluate the multipe scales based on a application deriven criteria, called \emph{split factor}. 
 
 % tractography segmentation tool. The core of the problem is to obtain fast clustering of a large number of streamlines in order to comply with the requirements of human interaction. The proposed solution combines two state-of-the-art elements: first a recently proposed Euclidean embedding algorithm for streamlines, i.e. the dissimilarity representation with the scalable \emph{subset farthest first} (SFF) prototype selection policy~\cite{olivetti2012approximation}. This embedding provides fast and accurate vectorial representation of streamlines, needed by most of the clustering algorithms. Second, a recently proposed improvement of the $k$-means clustering algorithm called \emph{mini-batch} $k$-means~\cite{sculley2010web} (MBKM). This algorithm drastically reduces the convergence time to the actual clusters in case of large and very-large sets of objects. We also tested a further potential improvement, i.e. a recently proposed initialisation algorithm for the $k$-means family, called $k-means++$~\cite{arthur2007kmeans}. But we excluded it from the final system due to poor performance as illustrated in Section~\ref{sec:experiments}.
 
 % Structure of the paper
-The paper is structured as follows. In Section~\ref{sec:methods} the
-algorithmic elements of the proposed method are formally described. In
-Section~\ref{sec:experiments} we describe details of the actual use of the proposed solution in the
-context of the CTS segmentation. 
+The paper is organized as follows. Section~\ref{sec:methods} introduces the
+algorithmic elements of the proposed method including hierarchical clustering, multiple scales choosing and quantitatively evaluating the goodness of the representation. In section~\ref{sec:experiments}, we describe details of the actual use of the proposed solution in the context of the tractgoraphy segmentation, provide figures to evaluate the viability of the proposed solution. We conclude with a summary of our contribution and open areas for future work in the last section~\ref{sec:conclusion}.
+%  and are formally described
 %We quantitatively describe the segmentation process and provide figures to evaluate the viability of the proposed solution. In Section~\ref{sec:discussion} we discuss the results and we show that the proposed solution is effective. We conclude by mentioning the future steps for the development of our software, called \emph{spaghetti}, and the open computational challenges that needs to be solved.
 
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "olivetti_boi"
-%%% End: 
