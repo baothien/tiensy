@@ -4,7 +4,7 @@ Created on Thu May 16 20:39:00 2013
 
 @author: bao
 """
-
+import os
 import nipype.interfaces.utility as util
 import nipype.pipeline.engine as pe
 
@@ -13,7 +13,7 @@ from nipype.workflows.dmri.fsl.dti import create_eddy_correct_pipeline
 
 from classInterfaces import BrainExtraction, EddyCorrection, ResampleVoxelSize, TensorModel, Tracking
  
-path = '/home/bao/tiensy/Nipype_tutorial/data/dmri/temp5/'
+path ='/home/bao/tiensy/Nipype_tutorial/data/dmri/temp5/'
 data = path+ 'raw.nii.gz'
                                         
 ###### WORKFLOW DEFINITION #######
