@@ -98,7 +98,7 @@ if __name__ == '__main__':
     w = Window(caption = title, 
                 width = 1200, 
                 height = 800, 
-                bgcolor = (.5, .5, 0.9), right_panel=True)
+                bgcolor = (.5, .5, 0.9), right_panel=False)
 
     scene = Scene(scenename = 'Main Scene', activate_aabb = False)
     
