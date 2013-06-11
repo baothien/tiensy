@@ -11,22 +11,26 @@ import numpy as np
 import nibabel as nib
 from dipy.io.dpy import Dpy
 #from dipy.io.pickles import load_pickle,save_pickle
-tracks_filename_arr=['tracks_dti_10K_linear.dpy','tracks_dti_1M_linear.dpy','tracks_dti_3M_linear.dpy',
-                     'tracks_dti_10K.dpy','tracks_dti_1M.dpy','tracks_dti_3M.dpy']
+tracks_filename_arr=['tracks_dti_10K_linear.dpy','tracks_dti_1M_linear.dpy','tracks_dti_3M_linear.dpy'] #use fa_warped
+                    #['tracks_dti_10K.dpy','tracks_dti_1M.dpy','tracks_dti_3M.dpy'] # use original fa
 
-trackvis_filename_arr=['tracks_dti_10K_linear.trk','tracks_dti_1M_linear.trk','tracks_dti_3M_linear.trk',
-                       'tracks_dti_10K.trk','tracks_dti_1M.trk','tracks_dti_3M.trk']
+trackvis_filename_arr=['tracks_dti_10K_linear.trk','tracks_dti_1M_linear.trk','tracks_dti_3M_linear.trk']
+                      #['tracks_dti_10K.trk','tracks_dti_1M.trk','tracks_dti_3M.trk']
       
 #dirname = "ALS/ALS_temp"
-dirname = "ALS/ALS_Data/202"
+dirname = "ALS/ALS_Data"
 for root, dirs, files in os.walk(dirname):
   if root.endswith('DTI'):
     #if root.endswith('101_32'):
     base_dir = root+'/'       
     basedir_recon = os.getcwd() + '/' + base_dir + '/'               
         
-        #loading fa_image
-    fa_file = basedir_recon + 'fa.nii.gz'            
+    #loading fa_image
+    #with tracks_linear
+    fa_file = basedir_recon + 'fa_warped.nii.gz'            
+    
+    #with track original 
+    #fa_file = basedir_recon + 'fa.nii.gz'
     fa_img = nib.load(fa_file)
     fa = fa_img.get_data()
     fa[np.isnan(fa)] = 0
