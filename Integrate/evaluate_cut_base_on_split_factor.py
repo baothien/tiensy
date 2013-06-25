@@ -224,8 +224,10 @@ def run_on_multi_subjects():
     iterations = 25    
     plt.figure()   
     
-    subjects =['101','109','201','205','210']
-    colors = ['ko--', 'kx:', 'k^-','k*-','v-.' ]
+    #subjects =['101','109','201','205','210']
+    #colors = ['ko--', 'kx:', 'k^-','k*-','v-.' ]
+    subjects =['109','205']
+    colors = [ 'kx:','ko-' ]
     
     for m, sub_id in enumerate(subjects):
         
@@ -247,6 +249,8 @@ def run_on_multi_subjects():
         
         #cut_scales = cut_scales_ori
         #cut_scales = heuristic_modified_cuts(cut_scales,4)
+        
+        cut_scales = cut_scales_ori
         
         split = np.zeros((len(cut_scales),iterations)) 
         
@@ -271,7 +275,7 @@ def run_on_multi_subjects():
         print sub_id, ' : ', cut_scales
     
     plt.legend(loc='upper right')
-    plt.xlabel("cut scales ")
+    plt.xlabel("cut scales with a base unit of 1/h")
     plt.ylabel("split factor ")
     plt.title = '\n Evaluating the cut based on split factor'
     plt.show()

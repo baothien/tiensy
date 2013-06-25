@@ -103,7 +103,8 @@ def warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_file
      
     
 #dirname = "Data/Nifti/Sub1"
-dirname = "Data/Nifti"
+#dirname = "Data/Nifti"
+dirname = "PBC2009"
 for root, dirs, files in os.walk(dirname):
     #if root.endswith('DIFF'):
    # print root
