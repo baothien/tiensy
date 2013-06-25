@@ -16,25 +16,27 @@ import os
 
 
 #dirname = "data/1891215"
-dirname = "ADHD"
+#dirname = "ADHD"
+dirname = "PBC2009"
 b0_threshold = 50
 #eudx_seeds = 1000
 #eudx_fa_stop = 0.2
 fsl_ref = '/usr/share/data/fsl-mni152-templates/FMRIB58_FA_1mm.nii.gz'
 
 for root, dirs, files in os.walk(dirname):    
-    if root.endswith('DTI64_1'):
+    if root.endswith('brain1_fr_raw'):
         
-        base_dir = root+'/'            
+        base_dir = root+'/DTI/'            
         
-        nii_filename = base_dir + 'DTI64.nii.gz'
-        bval_filename = base_dir + 'DTI64.bval'
-        bvec_filename = base_dir + 'DTI64.bvec'
+        nii_filename = base_dir + 'raw.nii.gz'
+        bval_filename = base_dir + 'raw.bval'
+        bvec_filename = base_dir + 'raw.bvec'
         
         nii_bet_ecc_filename = base_dir + 'raw_bet_ecc.nii.gz'
         
         basedir_reconstruction = os.path.join(root + '/DTI/')
         print basedir_reconstruction
+              
         # Silently build output directory if not present:
         try:
             os.makedirs(basedir_reconstruction)
@@ -91,7 +93,8 @@ for root, dirs, files in os.walk(dirname):
 #        dpw = Dpy(dpy_filename, 'w')
 #        dpw.write_tracks(tensor_tracks)
 #        dpw.close()
-
+        
+        fa_filename = basedir_reconstruction + 'fa_resample.nii.gz'
         print "Doing nonlinear (flirt/fnirt) registration of FA volume."
         flirt_affine = basedir_reconstruction + 'flirt.mat'
         flirt_displacements = basedir_reconstruction + 'displacements.nii.gz'
@@ -103,7 +106,7 @@ for root, dirs, files in os.walk(dirname):
         dispa_nii = basedir_reconstruction + 'dispa.nii.gz'
 
         print "Creating displacements...",
-        create_displacements(fa_filename, flirt_affine, nonlin_nii, invw_nii, disp_nii, dispa_nii)
+        create_displacements(fa_filename, flirt_affine, nonlin_nii, invw_nii, disp_nii, dispa_nii,fsl_ref)
         print "Done."
 
         print "Warping FA...",
