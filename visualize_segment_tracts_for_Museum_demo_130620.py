@@ -13,6 +13,7 @@ from dipy.segment.quickbundles import QuickBundles
 from streamshow_loadtrack_color import StreamlineLabeler
 from streamwindow_rendering import Window
 from dipy.viz.fos.guillotine import Guillotine
+#from guillotine_for_fading import Guillotine
 #from streamwindow import Window  # for remove Right Panel
 #from guillotine import Guillotine # for slice moving
 from dipy.io.dpy import Dpy
@@ -143,10 +144,9 @@ if __name__ == '__main__':
     w.refocus_camera()
 
     Run()
-    w.glWidget.world.camera.rotate_around_focal(48,"right")
-    #w.glWidget.world.camera.rotate_around_focal(-32,"right")
-    #w.glWidget.world.camera.rotate_around_focal(0.05,"yup")
-    stop
+    w.glWidget.world.camera.rotate_around_focal(90.* np.pi / 180.,"right")
+    w.glWidget.world.camera.rotate_around_focal(90.* np.pi / 180.,"yup")
+    
     #---------------------------------------------
     # rendering and save the file
     #---------------------------------------------
@@ -156,32 +156,72 @@ if __name__ == '__main__':
     # F3: previous frame
     # F4: start rotating
     # F5: save screen
-    #F6: render multiple frame
+    #F6: render multiple frame and save
     # F12: reset camera
     # Esc: close window
     
-    fr1 = 40
-    fr2 = 40
-    fr3 = 80
-    #first rotation
-    w.recording(n_frames=fr1, start_frame = 0, rotation = True, out_path='/home/bao/tiensy/temp1/')
     
-    #second hide/show tracts
-    tl.hide_virtuals = True #not self.hide_virtuals True
-    w.recording(n_frames=fr2/2, start_frame = fr1, rotation = False, out_path='/home/bao/tiensy/temp1/')
+    
+    #import time
+    
+    #time.sleep(5)                        
+    
+    #first rotation
+    
+    w.recording(n_frames=50, rotation = True)                           
+      
+    #second hide virtuals
+    tl.hide_virtuals = True
+    w.recording(n_frames=10, rotation = False)                         
+    w.recording(n_frames=40, rotation = True)                         
+    
+    
+    #show virtuals - hide anatomy
     tl.hide_virtuals = False
-    w.recording(n_frames=fr2/2, start_frame = fr1+fr2/2, rotation = True, out_path='/home/bao/tiensy/temp1/')
-
-    #third hide/show anatomy
     guil.show_i = False
-    w.recording(n_frames=fr3/4, start_frame = fr1+fr2, rotation = False, out_path='/home/bao/tiensy/temp1/')
+    w.recording(n_frames=7, rotation = False)                         
+    w.recording(n_frames=20, rotation = True)                         
     guil.show_j = False
-    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3/4, rotation = False, out_path='/home/bao/tiensy/temp1/')
-    guil.show_k = False
-    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*2/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
+    w.recording(n_frames=5, rotation = False)                         
+    w.recording(n_frames=20, rotation = True)                         
+    guil.show_k = False     
+    w.recording(n_frames=5, rotation = False)                         
+    w.recording(n_frames=20, rotation = True)                         
+    
     guil.show_i = True
     guil.show_j = True
-    guil.show_k = True    
-    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*3/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
+    guil.show_k = True  
     
-        
+    w.recording(n_frames=40, rotation = True)                         
+    
+    
+    
+                      
+
+    
+    
+    
+#    fr1 = 40
+#    fr2 = 40
+#    fr3 = 80
+#    w.recording(n_frames=fr1, start_frame = 0, rotation = True, out_path='/home/bao/tiensy/temp1/')
+#    
+#    #second hide/show tracts
+#    tl.hide_virtuals = True #not self.hide_virtuals True
+#    w.recording(n_frames=fr2/2, start_frame = fr1, rotation = False, out_path='/home/bao/tiensy/temp1/')
+#    tl.hide_virtuals = False
+#    w.recording(n_frames=fr2/2, start_frame = fr1+fr2/2, rotation = True, out_path='/home/bao/tiensy/temp1/')
+#
+#    #third hide/show anatomy
+#    guil.show_i = False
+#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2, rotation = False, out_path='/home/bao/tiensy/temp1/')
+#    guil.show_j = False
+#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3/4, rotation = False, out_path='/home/bao/tiensy/temp1/')
+#    guil.show_k = False
+#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*2/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
+#    guil.show_i = True
+#    guil.show_j = True
+#    guil.show_k = True    
+#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*3/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
+#    
+#        

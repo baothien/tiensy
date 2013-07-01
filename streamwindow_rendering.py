@@ -222,7 +222,7 @@ class Window(QtGui.QWidget):
         self.glWidget.updateGL()
         self.glWidget.grabFrameBuffer().save( out_filename )
         
-    def recording(self, n_frames=50, start_frame = 0, rotation = False, out_path='/home/bao/tiensy/temp/'):
+    def recording(self, n_frames=50, start_frame = 0, rotation = False, out_path='/home/bao/tiensy/temp/',save=False):
         """ Store current OpenGL context as image
         """                         
         #rotation
@@ -236,7 +236,8 @@ class Window(QtGui.QWidget):
                 else:
                     filename=out_path+str(1000000+start_frame + i)+'.png'                
                 self.glWidget.updateGL()
-                self.glWidget.grabFrameBuffer().save( filename )      
+                if (save==True):
+                    self.glWidget.grabFrameBuffer().save( filename )      
         else:
             for i in range(n_frames):                               
                 if out_path==None:
@@ -244,7 +245,8 @@ class Window(QtGui.QWidget):
                 else:
                     filename=out_path+str(1000000+start_frame + i)+'.png'                
                 self.glWidget.updateGL()
-                self.glWidget.grabFrameBuffer().save( filename )  
+                if (save==True):
+                    self.glWidget.grabFrameBuffer().save( filename )  
     
     def keyPressEvent(self, event):
         """ Handle all key press events
@@ -278,10 +280,10 @@ class Window(QtGui.QWidget):
             self.glWidget.updateGL()
         elif key == QtCore.Qt.Key_F4:
             if (event.modifiers() & QtCore.Qt.ShiftModifier):
-                self.initSpincamera( angle = -0.01 )
+                self.initSpincamera( angle = -0.005 )
                 self.spinCameraToggle()                
             else:
-                self.initSpincamera( angle = 0.01 )
+                self.initSpincamera( angle = 0.005 )
                 self.spinCameraToggle()                
         elif key == QtCore.Qt.Key_F5: #for saving the screen                        
             #dlg = QtGui.QInputDialog(self)            
