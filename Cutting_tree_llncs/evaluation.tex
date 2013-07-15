@@ -1,23 +1,18 @@
+\vspace{-2.5mm}
 \section{Evaluation}
-\label{sec:evaluation}
-Before proceeding with our main experiments, we first clarify condition to evaluate the best cuts deriven from real experiment of tracography segmentation 
-
-\subsection{Evaluation the multiple scales for representation}
-\label{subsec:evaluation_scales}
-Given a hierarchical tree $\mathcal{H}$, and a multi-scale set representing for $\mathcal{H}$, $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$, in this part, we focus on how to evaluate the quality of $\mathsf{\textit{B}}$.
-%scale $w \in [s_{min},s_{max}]$, the cut hierarchical tree $\mathcal{H}$ at $w$, $\mathfrak{L}(w)$, given by \ref{equ:a_cut_l} as: $\mathfrak{L}(w) = \{C_i | (s_i \leq w  \wedge s_{parent(C_i)} > w)\}$, and 
-%\textbf{\textit{Define the target criteria of cutting}}
-Based on the real fact that, while using our software tool to do the segmentation of cortinal spinal tract, medical practitioners usually choose $~15$ $(\lambda_1)$ clusters from $~50$ $(\lambda_2)$ representatives~\cite{prni2013-boi}, we propose a method to evaluate the represented multi-scale set $\mathsf{\textit{B}}$ based on the \textit{split factor} as following.
-
+\label{sec:evaluation_scales}
+\vspace{-1.85mm}
+In this part we describe criteria for evaluating the multiple scales representation $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$ for the dataset $\mathcal{X}$. It is the real fact that, at a certain time, users can only exam about the total of $~50$ $(\lambda_1)$ clusters which are currently displaying on the screen. Among of the visible clusters, users usually select around $~15$ $(\lambda_2)$ clusters to explore or exam the data~\cite{olivetti2013fast}. Driven from that, we propose a method to evaluate the represented multi-scale set $\mathsf{\textit{B}}$ based on the \textit{split factor} as following. 
+%using our software tool to do the segmentation of cortinal spinal tract, medical practitioners usually choose $~15$ $(\lambda_1)$ clusters from $~50$ $(\lambda_2)$ representatives~\cite{olivetti2013fast}, we propose a method to evaluate the represented multi-scale set $\mathsf{\textit{B}}$ based on the \textit{split factor} as following.
 \begin{definition}
-\label{def:split_factor} \textbf{\textit{Split factor $\xi$}} of \textit{a cluster} $C \in \mathcal{H}$ to a scale $w \in [s_{min},s_{max}]$ is $\xi(C,s)$
+\label{def:split_factor} \textbf{\textit{Split factor $\xi$}} of \textit{\textbf{a cluster}} $C \in \mathcal{H}$ to a scale $w \in [s_{min},s_{max}]$ is $\xi(C,s)$
 \begin{equation}
 \xi(C,s) = card(P(C,s))
 \end{equation}
 where $P(C,s) = \{ C_j | (C_j \in \mathcal{H}) \wedge (s(C_j) = w) \wedge (C_j \subseteq C) \}$ 
 \end{definition}
 \begin{definition}
-\label{def:split_factor_set} \textbf{\textit{Split factor $\xi$}} of a \textit{set of cluster} $P=\{C_1, C_2,.., C_m\} \subseteq \mathcal{H}$ to a scale $s \in [s_{min},s_{max}]$ is $\xi(P,s)$
+\label{def:split_factor_set} \textbf{\textit{Split factor $\xi$}} of a \textit{\textbf{set of clusters}} $P=\{C_1, C_2,.., C_m\} \subseteq \mathcal{H}$ to a scale $s \in [s_{min},s_{max}]$ is $\xi(P,s)$
 \begin{equation}
 \xi(P,s) = \sum_{C_i \in P}\xi(C_i,s)
 \end{equation}
@@ -27,14 +22,14 @@ where $P(C,s) = \{ C_j | (C_j \in \mathcal{H}) \wedge (s(C_j) = w) \wedge (C_j \
 \label{def:best_scales} The set of scales $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$ is called \textbf{\textit{the best scales for representation}} of the tree $\mathcal{H}$, given $\lambda_1$ and $\lambda_2$, if the following condition satisfies
 \begin{equation}
 \label{equ:best_scale}
-\forall b_i \in \mathsf{\textit{B}}: \lambda_2 - \Delta \leq \xi(S_{(b_i,\lambda_1)},b_{i-1}) \leq \lambda_2 + \Delta 
+\forall b_i \in \mathsf{\textit{B}}: \lambda_1 - \Delta \leq \xi(S_{(b_i,\lambda_2)},b_{i-1}) \leq \lambda_1 + \Delta 
 \end{equation}
-where $S_{(b_i,\lambda_1)}$ is a Gaussian distribution subset of the cut $\mathcal{H}$ at scale $b_i$, $\mathfrak{L(b_i)}$, with the order of $\lambda_1$:
+where $S_{(b_i,\lambda_2)}$ is a Gaussian distribution subset of the cut $\mathcal{H}$ at scale $b_i$, $\mathfrak{L(b_i)}$, with the order of $\lambda_2$:
 \begin{equation}
-S_{(b_i,\lambda_1)} = \{C_1, \ldots, C_{\lambda_1}\}, C_j \in \mathfrak{L(b_i)}, \forall j \in [1, \ldots, \lambda_1] 
+S_{(b_i,\lambda_2)} = \{C_1, \ldots, C_{\lambda_2}\}, C_j \in \mathfrak{L(b_i)}, \forall j \in [1, \ldots, \lambda_2] 
 \end{equation}
 \end{definition}
-In the case of $b_1$, the split factor is computed to the leaf: $\xi(S_{(b_1,\lambda_1)},0)$. The pseudo code of it is presented in algorithm~\ref{alg:evaluate}
+In the case of $b_1$, the split factor is computed to the leaf: $\xi(S_{(b_1,\lambda_2)},0)$. The pseudo code of evaluation procedure is presented in algorithm~\ref{alg:evaluate}
 %the best cut scale set \mathsf{B}% = {b_1, b_2, \ldots, b_k}}
 %\mathcal{H}
 %\IncMargin{1em}
@@ -77,7 +72,8 @@ In the case of $b_1$, the split factor is computed to the leaf: $\xi(S_{(b_1,\la
 %\caption{Evaluate the set of cut scales, based on split factor}\label{algo_evaluate}
 %\end{algorithm}
 %\DecMargin{1em}
-\algsetup{indent=2.5em}
+\vspace{-4mm}
+\algsetup{indent=2.75em}
 \begin{algorithm}[h!]
 \caption{Evaluate the set of cut scales, based on split factor}\label{alg:evaluate}
 \begin{algorithmic}[1]
@@ -88,39 +84,25 @@ In the case of $b_1$, the split factor is computed to the leaf: $\xi(S_{(b_1,\la
 	\STATE $accept \leftarrow \TRUE$ \COMMENT{initialization}
 	\STATE $i \leftarrow 1$
 	\WHILE {$(i \leq k-1)$ \AND $(accept)$ }
-		\vspace{1.4mm}
+		\vspace{0.8mm}
 		\STATE $w \leftarrow b_i$
 
 		\STATE $l \leftarrow b_{i+1}$
-		\vspace{1.6mm}
-		\STATE $ S \leftarrow$ choose $\lambda_1$ clusters uniformly at random \\
+		\vspace{1.mm}
+		\STATE $ S \leftarrow$ choose $\lambda_2$ clusters uniformly at random \\
 								\hspace{8mm} from $\mathfrak{L}$$(w)$
-		\vspace{1.6mm}
+		\vspace{1.mm}
 		\STATE $t \leftarrow \xi(S,l)$ \COMMENT{split factor of $S$ to scale $l$}\\
-		\vspace{1.6mm}
+		\vspace{1.mm}
 		\COMMENT{check quality of the cut $b_i$ based on equation~\ref{equ:best_scale}}
-		\IF{$(t \geq \lambda_2 + \Delta )$ \AND $(t \leq \lambda_2 - \Delta) $}
-			\vspace{1.3mm}	
+		\IF{$(t \geq \lambda_1 + \Delta )$ \AND $(t \leq \lambda_1 - \Delta) $}
+			\vspace{0.8mm}	
 			\STATE $accept \leftarrow \FALSE$ \COMMENT{update the result}
 		\ENDIF
-		\vspace{1.5mm}
+		\vspace{0.9mm}
 		\STATE $i \leftarrow i+1$\;	
 	\ENDWHILE
-	\vspace{1.5mm}
+	\vspace{0.9mm}
 	\RETURN $accept$
 \end{algorithmic}
 \end{algorithm}
-%+ start from scale $l$, in current partition $P(l)$, draw $S=\{s_1,s_2,..,s_{k_1}\}$ of size $k_1$ uniformly at random
-%+ calculate split factor at scale $l$: $b(l) = card(P'(l+1))$, where $P'(l+1) = \{C_i, C_i \in P(l+1), \wedge C_i \in any s_j, with all j =1,..k1\}$
-%+ set current partition be $P'(l+1)$
-%+ recursively applying this procedure until we meet the last scale
-%+ the cut scales are good when all the branch factor $b(l)$ must be around $k_2$: $(k_2 - \theta) < b(l)< (k_2 + \theta)$, for all scale $l$
-%\end{algorithm}
-%Let $P_i$ and $P_j$ represent for the level of abstraction $i$th and $j$th respectively. Then the relationship between clusters $C_{l}^{i} \in P_i$ and $C_{k}^{j} \in P_j$ can be presented as: 
-%\begin{equation}
-%\label{eq:parttition_ij}
-%%	\forall  P_i, P_j, i \geq j \longmapsto \exists C_{k}^{i}:  C_{k}^{i} \in P_j, k \in [1, \ldots, d_i]   
-%	\forall  P_i, P_j, i \geq j \mapsto [(C_{k}^{j} \subset C_{l}^{i}) \vee (C_{k}^{j} \cap  C_{l}^{i} = \emptyset)]    
-%\end{equation}
-%with $l \in [1, \ldots, d_i],k \in [1, \ldots, d_j]$. The most challenge is to design a clustering algorithm, based on a specific distance function, which is able to create a set of $m$-partition $\mathbb{P}$ of $\mathcal{T}$, which satisfies condition~\ref{eq:parttition_ij}. 
-%This character would be effective in real time adapting to the responding of users. 

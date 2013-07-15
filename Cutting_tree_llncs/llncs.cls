@@ -52,8 +52,10 @@
 \RequirePackage{multicol} % needed for the list of participants, index
 \RequirePackage{aliascnt}
 
-\setlength{\textwidth}{12.2cm}
-\setlength{\textheight}{19.3cm}
+%\setlength{\textwidth}{12.2cm}
+%\setlength{\textheight}{19.3cm}
+\setlength{\textwidth}{13.3cm}
+\setlength{\textheight}{20.4cm}
 \renewcommand\@pnumwidth{2em}
 \renewcommand\@tocrmarg{3.5em}
 %
@@ -214,10 +216,16 @@
 \widowpenalty=10000
 \clubpenalty=10000
 
-\setlength\oddsidemargin   {63\p@}
-\setlength\evensidemargin  {63\p@}
-\setlength\marginparwidth  {90\p@}
+%\setlength\oddsidemargin   {63\p@}
+%\setlength\evensidemargin  {63\p@}
+%\setlength\marginparwidth  {90\p@}
 
+\setlength\oddsidemargin   {46\p@}
+\setlength\evensidemargin  {46\p@}
+\setlength\marginparwidth  {60\p@}
+
+
+%\setlength\headsep   {16\p@}
 \setlength\headsep   {16\p@}
 
 \setlength\footnotesep{7.7\p@}
@@ -581,7 +589,8 @@ to0pt{\kern0.55\wd0\vrule height0.45\ht0\hss}\box0}}}}
  \penalty\@highpenalty \endgroup}
 
 \def\l@title#1#2{\addpenalty{-\@highpenalty}
- \addvspace{8pt plus 1pt}
+ %\addvspace{4pt plus 1pt}
+ \addvspace{6pt plus 1pt}
  \@tempdima \z@
  \begingroup
  \parindent \z@ \rightskip \@tocrmarg

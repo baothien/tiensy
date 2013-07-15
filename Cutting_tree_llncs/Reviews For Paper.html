@@ -1,0 +1,411 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head><title>
+	Reviews For Paper
+</title>
+<style>
+body
+{
+	font-family:verdana,arial,helvetica;
+}
+#header
+{
+    width: 100%;
+    font-size: small;
+    background-color:#F7F7F7;
+}
+.headerSeparator
+{
+    background-color: #105586;
+}
+.printThemeText
+{
+    font-size:small;
+}
+.printThemeTable td
+{
+    vertical-align:top;
+}
+.printThemeGrid th
+{
+    color:white;
+    background:#5D7B9D;
+    font-weight:bold;
+}
+.printThemeGrid
+{
+    border-collapse:collapse;
+}
+.printThemeGrid td, .printThemeGrid th
+{
+    border:solid 1px #D6D3CE;
+    padding:4px 4px 4px 4px;
+}
+.printThemeGrid .row
+{ 
+    background-color:#F7F6F3;
+    color:#333333;
+    vertical-align:top;
+}
+.printThemeGrid .altrow
+{ 
+    background-color:White;
+    color:#284775;
+    vertical-align:top;
+}
+.cellprompt
+{
+	font-weight:bold;
+	white-space:nowrap;
+    width:100px;	
+}
+.paperHeader
+{
+    background-color:#dee3e7;
+    margin:5px 5px 15px 0px;
+    width:99%;
+    font-family:Verdana;
+    font-size:medium;
+    font-weight:bold;
+}
+.sectionHeader
+{
+    background-color:#dee3e7;
+    padding:5px 5px 5px 0px;
+    width:99%;
+    text-decoration:underline;
+    font-family:Verdana;
+    font-size:small;
+    font-weight:bold;
+}
+.underlineheader
+{
+    text-decoration:underline;
+    font-weight:bold;
+    padding:5px 0px;
+}
+.response
+{
+    padding:5px 0px;
+}
+.reviewerlabel
+{
+    padding-right:20px;
+}
+.pageTitle
+{
+    background-color:#dee3e7;
+    padding:5px 5px 5px 5px;
+    margin-top:10px;
+    width:99%;
+    font-family:Verdana;
+    font-size:medium;
+    font-weight:bold;
+}
+.submissionDetailsView
+{
+}
+.submissionDetailsView tr
+{
+    vertical-align:top;
+}
+.submissionDetailsView td.prompt
+{
+    font-weight:bold;
+}
+.submissionDetailsView tr.sectionSeparator
+{
+
+}
+.submissionDetailsView tr.sectionSeparator td
+{
+    background-color:#dee3e7;
+    padding:5px 5px 5px 5px;
+    font-family:Verdana;
+    font-size:small;
+    font-weight:bold;
+    color:Navy;
+}
+/*CSS Grid View General Definitions*/
+.CssGridView
+{
+    font-size:small; 
+}
+
+.CssGridView td, .CssGridView th
+{
+    padding:4px 4px 4px 4px;
+}
+
+/*CSS Compact Grid View General Definitions*/
+.CssGridViewCompact img
+{
+    border-style:none;
+    border-width:0px;
+}
+
+.CssGridViewCompact
+{
+    font-size:1em;
+    border-style:solid;
+    border-color:#D6D3CE;
+    border-width:1px;
+}
+
+.CssGridViewCompact .hrow a
+{
+    font-size:1em;
+}
+
+.CssGridViewCompact .row a, .CssGridViewCompact .altrow a
+{
+    font-size:0.8em;
+}
+
+.CssGridViewCompact .row .normal a, .CssGridViewCompact .row .normal, .CssGridViewCompact .altrow .normal a, .CssGridViewCompact .altrow .normal
+{
+    font-size:1em;
+}
+
+/*CSS Grid View Header Styles*/
+.CssGridView .hrow, .CssGridViewCompact .hrow
+{ 
+    background-color:#5D7B9D;
+    font-weight:bold;
+    color:White;
+}
+
+
+.CssGridViewCompact .hrow td
+{ 
+    border-bottom-width:0px;
+}
+
+.CssGridViewCompact .hrow th
+{ 
+    border-top-width:0px;
+    font-size:0.8em;
+    vertical-align:top;
+    border-left-width:0px;
+    border-right-width:0px;
+}
+
+.CssGridViewCompact .smaller
+{
+    font-size:0.8em;
+}
+
+/*CSS Grid View Row Styles*/
+.CssGridViewCompact .row, .CssGridViewCompact .altrow
+{
+    border-top-style:solid;
+    border-top-color:#D6D3CE;
+    border-top-width:1px;
+    border-bottom-style:solid;
+    border-bottom-color:#D6D3CE;
+    border-bottom-width:1px;
+}
+
+/*CSS Grid View Header Styles*/
+.CssGridViewCompact .hrow .leftborder, .CssGridViewCompact .row .leftborder, .CssGridViewCompact .altrow .leftborder
+{
+    border-left-width:1px;
+    border-left-color:#D6D3CE;
+    border-left-style:solid;
+}
+
+.CssGridViewCompact .hrow .rightborder, .CssGridViewCompact .row .rightborder, .CssGridViewCompact .altrow .rightborder
+{
+    border-right-width:1px;
+    border-right-color:#D6D3CE;
+    border-right-style:solid;
+}
+
+.CssGridView .hrow a, .CssGridViewCompact .hrow a
+{ 
+    color:White;
+}
+ 
+.CssGridView .row, .CssGridViewCompact .row
+{ 
+    background-color:#F7F6F3;
+    color:#333333;
+    vertical-align:top;
+}
+
+.CssGridView .altrow, .CssGridViewCompact .altrow
+{ 
+    vertical-align:top;
+}
+
+.CssGridViewCompact .row td
+{ 
+    border-left-width:0px;
+    border-right-width:0px;
+}
+ 
+.CssGridViewCompact .altrow
+{ 
+    background-color:White;
+    color:#284775;
+    vertical-align:top;
+}
+
+.CssGridView .altrow tr, .CssGridViewCompact .altrow tr, .CssGridView .row tr, .CssGridViewCompact .row tr
+{ 
+    vertical-align:top;
+}
+</style>
+</head>
+<body>
+<form name="aspnetForm" method="post" action="ViewReviewsForPaper.aspx?paperId=21" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTAxNDM4ODU3Ng9kFgJmD2QWAgIDD2QWAmYPZBYCAgUPDxYCHgdWaXNpYmxlZ2QWBgIBD2QWAmYPZBYEAgMPDxYCHgRUZXh0BQIyMWRkAgUPDxYCHwEFLE11bHRpcGxlIHNjYWxlcyBmb3IgdmlzdWFsaXphdGlvbiBsYXJnZSBkYXRhZGQCAw8PFgIfAGhkZAIFDxYCHgtfIUl0ZW1Db3VudAIDFgZmD2QWBgIDD2QWAmYPFQETQXNzaWduZWRfUmV2aWV3ZXJfMmQCBw88KwANAQAPFgQeC18hRGF0YUJvdW5kZx8CAgJkFgJmD2QWBgIBD2QWBGYPDxYCHwEFDk92ZXJhbGwgUmF0aW5nZGQCAQ9kFgJmDxUBBlJlamVjdGQCAg9kFgRmDw8WAh8BBRFEZXRhaWxlZCBDb21tZW50c2RkAgEPZBYCZg8VAb0NVGhpcyBwYXBlciBhZGRyZXNzZXMgdGhlIHByb2JsZW0gb2YgdmlzdWFsaXppbmcgdmVyeSBsYXJnZSBkYXRhc2V0cy4gVGhlIGF1dGhvcnMgcHJvcG9zZSB0byB1c2UgYSB0aHJlZS1zdGVwIHByb2NlZHVyZSwgaW4gd2hpY2ggKDEpIGEgaGllcmFyY2hpY2FsIGRhdGEgY2x1c3RlcmluZyBpcyBwZXJmb3JtZWQ7ICgyKSBhIG51bWJlciBvZiBkaXNjcmV0ZSBzY2FsZXMgd2l0aGluIHRoZSBoaWVyYXJjaHkgaXMgY29tcHV0ZWQgdGhhdCBhcmUgYWltZWQgdG8gYmUgcmVsZXZhbnQgZm9yIHZpc3VhbGl6YXRpb24gcHVycG9zZXM7IGFuZCAoMykgYSB0ZXN0IGlzIHBlcmZvcm1lZCB0byBldmFsdWF0ZSB3aGV0aGVyIHRoZSBjb21wdXRlZCBzY2FsZXMgYXJlIGFjY2VwdGFibGUuIFRoZSBvcmlnaW5hbCBjb250cmlidXRpb24gb2YgdGhlIHBhcGVyIGlzIGluICgzKS4gVGhlIG1ldGhvZCBpcyBhcHBsaWVkIHRvIHRoZSB2aXN1YWxpemF0aW9uIG9mIHByZWNvbXB1dGVkIHdoaXRlIG1hdHRlciB0cmFjdHMgaW4gRFRJIGRhdGEuPGJyIC8+PGJyIC8+QWx0aG91Z2ggdGhlIHByb2JsZW0gYWRkcmVzc2VkIGluIHRoaXMgcGFwZXIgaXMgaGlnaGx5IHJlbGV2YW50IGZvciB0aGUgTUNWIHdvcmtzaG9wLCBJIGRvIG5vdCByZWNvbW1lbmQgdG8gYWNjZXB0IHRoaXMgcGFwZXIgZm9yIHRoZSBmb2xsb3dpbmcgcmVhc29uczo8YnIgLz48YnIgLz4qIEFsdGhvdWdoIGEgYmluYXJ5IHRlc3QgKGFjY2VwdC9yZWplY3QpIGlzIHByb3Bvc2VkIHRvIGV2YWx1YXRlIHdoZXRoZXIgYSBzZXQgb2Ygc2NhbGVzIGlzIGFjY2VwdGFibGUsIGl0IGlzIG5vdCBleHBsYWluZWQgaG93IHRoaXMgdGVzdCBpcyBhY3R1YWxseSB1c2VkIHdpdGhpbiB0aGUgdmlzdWFsaXphdGlvbiBmcmFtZXdvcmsuIFdoYXQgaGFwcGVucyBpZiB0aGUgdGVzdCBkZXRlcm1pbmVzIHRoYXQgdGhlIHNldCBvZiBzY2FsZXMgc2hvdWxkIGJlIHJlamVjdGVkPzxiciAvPjxiciAvPiogQ29uc2lkZXJpbmcgdGhhdCBzdGVwcyAoMSkgYW5kICgyKSAtLSB3aGljaCBvY2N1cHkgbW9zdCBvZiB0aGUgdGVjaG5pY2FsIHNlY3Rpb25zIGluIHRoZSBwYXBlciAtLSBhcmUgZGlyZWN0bHkgdGFrZW4gZnJvbSBleGlzdGluZyB3b3JrLCB0aGUgbm92ZWx0eSBvZiB0aGlzIHBhcGVyIGlzIG5vdCBzbyBoaWdoLjxiciAvPjxiciAvPiogVGhlIHBhcGVyIGxhY2tzIGEgY2xlYXIgdmFsaWRhdGlvbiBvZiB0aGUgcHJvcG9zZWQgYmluYXJ5IHRlc3QuIEluIGZpZ3VyZSAyIHRoZSBhdXRob3JzIHNob3cgbnVtZXJpY2FsIHZhbHVlcyBmb3IgdGhlIHF1YW50aXR5IHRoYXQgc2hvdWxkIGJlIGNsb3NlIHRvIDUwIGluIG9yZGVyIHRvIHBhc3MgdGhlIHRlc3QsIGJ1dCBpdCBpcyBub3QgY2xlYXIgd2hhdCB0aGUgY29uY2x1c2lvbnMgb2YgdGhpcyBleHBlcmltZW50IG1heSBiZS48YnIgLz48YnIgLz4qIFRoZSBwcm9wb3NlZCBtZXRob2QgY29udGFpbnMgcXVpdGUgYSBmZXcgcGFyYW1ldGVycyBmb3Igd2hpY2ggYXBwcm9wcmlhdGUgdmFsdWVzIG5lZWQgdG8gYmUgY2hvc2VuLCBidXQgdGhlcmUgaXMgbm8gZXZhbHVhdGlvbiBvZiB0aGVpciBpbmZsdWVuY2Ugb24gdGhlIG9idGFpbmVkIHJlc3VsdHMuPGJyIC8+PGJyIC8+KiBUaGUgcGFwZXIgbmVlZHMgdG8gYmUgY29ycmVjdGVkIGJ5IGEgbmF0aXZlIHNwZWFrZXIuIEV2ZW4gdGhlIHRpdGxlIGNvbnRhaW5zIGEgZ3JhbW1hdGljYWwgZXJyb3IuPGJyIC8+ZAIDDw8WAh8AaGRkAggPFQEAZAIBD2QWBgIDD2QWAmYPFQETQXNzaWduZWRfUmV2aWV3ZXJfNGQCBw88KwANAQAPFgQfA2cfAgICZBYCZg9kFgYCAQ9kFgRmDw8WAh8BBQ5PdmVyYWxsIFJhdGluZ2RkAgEPZBYCZg8VAQdOZXV0cmFsZAICD2QWBGYPDxYCHwEFEURldGFpbGVkIENvbW1lbnRzZGQCAQ9kFgJmDxUBjwVUaGUgcGFwZXIgcHJlc2VudHMgYSBtZXRob2QgZm9yIHRoZSB2aXN1YWxpemF0aW9uIG9mIG11bHRpcGxlIHNjYWxlcyBvZiBpbWFnZSBkYXRhIHdpdGggYW4gYXBwbGljYXRpb24gZm9jdXMgb24gZE1SSS4gVGhlIG1haW4gcHJvYmxlbSBpcyB0aGF0IHRoZSB0b3BpYyBvZiB0aGUgcGFwZXIgaXMgdmlzdWFsaXphdGlvbiBidXQgbm8gc2luZ2xlIHZpc3VhbGl6YXRpb24gaXMgc2hvd24uIEl0IGlzIHJhdGhlciBkaWZmaWN1bHQgZm9yIHRoZSByZWFkZXIgdG8ganVkZ2UgdGhlIGF1dGhvcnMnIHdvcmsuIFRoZSB3b3JrIGhhcyBjZXJ0YWlubHkgbWVyaXRzLCBidXQgaXQgaXMgZGlmZmljdWx0IHRvICdyZWFsbHkgc2VlJyB0aGVtLiBGdXJ0aGVybW9yZSwgcmVhZGluZyB0aGUgbWV0aG9kcyBwYXJ0IHdpdGggYWx0b2dldGhlciB0d2VsdmUgZGVmaW5pdGlvbnMgaXMgaGFyZCBhbmQgZG9lcyBub3QgcmVhbGx5IGhlbHAgdG8gZmluZCB0aGUgY29yZSBub3ZlbHR5IG9mIHRoZSBhcHByb2FjaC4gPGJyIC8+SW4gY2FzZSBvZiBhY2NlcHRhbmNlLCB0aGlzIG5lZWRzIHRvIGJlIGltcHJvdmVkIHN1YnN0YW50aWFsbHkhIEFkZGl0aW9uYWxseSwgdGhlIHRleHQgc2hvdWxkIGJlIHJldmlzZWQgYnkgYSBuYXRpdmUgRW5nbGlzaCBzcGVha2luZyBwZXJzb24uZAIDDw8WAh8AaGRkAggPFQEAZAICD2QWBgIDD2QWAmYPFQETQXNzaWduZWRfUmV2aWV3ZXJfNmQCBw88KwANAQAPFgQfA2cfAgICZBYCZg9kFgYCAQ9kFgRmDw8WAh8BBQ5PdmVyYWxsIFJhdGluZ2RkAgEPZBYCZg8VAQZSZWplY3RkAgIPZBYEZg8PFgIfAQURRGV0YWlsZWQgQ29tbWVudHNkZAIBD2QWAmYPFQHMDFRoaXMgd29yayBwcm9wb3NlcyBhIG1ldGhvZCBmb3IgdmlzdWFsaXphdGlvbiBvZiBsYXJnZSBkYXRhIHNldHMuIEEgaGllcmFyY2hpY2FsIHRyZWUgb2YgY2x1c3RlcnMgaXMgYnVpbHQgdGhhdCBwYXJ0aXRpb25zIHRoZSBkYXRhIGludG8gc3Vic2V0cyB0aGF0IGFyZSBzdWJzZXF1ZW50bHkgdXNlZCBmb3IgdmlzdWFsaXphdGlvbiBpbiBhIHNjYWxlL2xldmVsIG9mIGRldGFpbCBtYW5uZXIuIEZ1cnRoZXJtb3JlLCBhIG1ldGhvZCBmb3IgYXNzZXNzaW5nIHRoZSBxdWFsaXR5IG9mIGEgYnVpbHQgY2x1c3RlciBpcyBwcm9wb3NlZCB3aGljaCBjb25zaWRlcnMgdGhlIGRlc2lyZWQgYW1vdW50IG9mIHRvdGFsIGNsdXN0ZXJzIGFzIHdlbGwgYXMgdGhlIGFtb3VudCBvZiBjbHVzdGVycyBhIHVzZXIgdXN1YWxseSBzZWxlY3RzIGZvciBleHBsb3JpbmcgdGhlIGRhdGEuIFRoZSBtZXRob2QgaXMgYXBwbGllZCB0byBkTVJJIGRhdGEgc2V0cy48YnIgLz48YnIgLz5TdHJlbmd0aHM6PGJyIC8+VGhlIG1ldGhvZCBpcyB3ZWxsIGRlc2NyaWJlZCBhbmQgdGhlIHZpc3VhbGl6YXRpb24gb2YgbGFyZ2UgZGF0YSBzZXRzIGxpa2UgZE1SSSBpcyBhbiBpbXBvcnRhbnQgdGFzayBmb3Igc2V2ZXJhbCBjbGluaWNhbCBhcHBsaWNhdGlvbnMuPGJyIC8+PGJyIC8+Q3JpdGljaXNtOjxiciAvPkdlbmVyYWxseSwgSSBtaXNzIGFuIGV4cGxhbmF0aW9uIG9mIHNldmVyYWwgZGVjaXNpb25zIG9mIHRoZSBhdXRob3JzLiBGb3IgZXhhbXBsZSwgd2h5IHdhcyB0aGUgZ29vZG5lc3MgZnVuY3Rpb24gKERlZmluaXRpb24gOCkgZnJvbSBQYXNjYWwgZXQgYWwuIGNob3NlbiBhcyBhIGJhc2UgdG8gZGV0ZXJtaW5lIGNsdXN0ZXJzIGFuZCBub3QgYW55IG90aGVyPyBXaHkgaXMgdGhlIHNwbGl0IGZhY3RvciAoRGVmaW5pdGlvbiAxMCwxMSkgYSBnb29kIG1lYXN1cmUgdG8gYXNzZXNzIHRoZSBxdWFsaXR5IG9mIGEgc2NhbGUgKERlZmluaXRpb24gMTIpPyBUaGVyZSBpcyBhbHNvIG5vIGNvbXBhcmlzb24gdG8gb3RoZXIgbWV0aG9kcywgc28gaXQgaXMgaGFyZCB0byBqdWRnZSB3aGV0aGVyIHRoZSBtZXRob2QgaXMgYW4gaW1wcm92ZW1lbnQgb3ZlciBvdGhlciBhcHByb2FjaGVzLiBUaGUgZXZhbHVhdGlvbiBhbHNvIGRvZXMgbm90IHNob3cgd2hldGhlciB0aGUgbWV0aG9kIHJlYWxseSB3b3JrcyBpbiB0ZXJtcyBvZiBwcmVzZW50aW5nIGEgc3VpdGFibGUgdmlzdWFsaXphdGlvbiB0byB0aGUgdXNlci4gSW4gZmFjdCwgdGhlIHByb3Bvc2VkIGhldXJpc3RpYyBjb25zdHJhaW50IGlzIHVzZWQgdG8gY29ycmVjdCB0aGUgYmVoYXZpb3Igb2YgdGhlIG1ldGhvZCBpbiBvcmRlciB0byBwcm92aWRlIGEgYmV0dGVyIHZpc3VhbGl6YXRpb24uIFNvIEkgd29uZGVyIHdoeSB0aGlzIGlzIG5lY2Vzc2FyeSBhbmQgd2hldGhlciBvdGhlciBtZXRob2RzIGZvciBjbHVzdGVyIGJ1aWxkaW5nIGV0Yy4gd291bGQgYmUgYmV0dGVyLiBUaGVyZSBhcmUgYWxzbyBubyBmaWd1cmVzIHRoYXQgYWN0dWFsbHkgc2hvdyBhIHZpc3VhbGl6YXRpb24gZXhhbXBsZS48YnIgLz48YnIgLz5NaW5vciBjb21tZW50czo8YnIgLz4tIHRoZSBwYXBlciBuZWVkcyBzb21lIHByb29mIHJlYWRpbmdkAgMPDxYCHwBoZGQCCA8VAQBkGAMFH2N0bDAwJGNwaCRndlJldmlld3MkY3RsMDIkY3RsMDAPPCsACgEIAgFkBR9jdGwwMCRjcGgkZ3ZSZXZpZXdzJGN0bDAxJGN0bDAwDzwrAAoBCAIBZAUfY3RsMDAkY3BoJGd2UmV2aWV3cyRjdGwwMCRjdGwwMA88KwAKAQgCAWRUn4CNmovY2D4lWgX2jdgSpwvpug==" />
+</div>
+
+<table id="header">
+<tr>
+<td width="100%"><a href='https&#58;&#47;&#47;sites.google.com&#47;site&#47;miccaimcv2013&#47;' target='_blank'>MICCAI-MCV 2013</a><br /><b>Workshop on Medical Computer Vision 2013 - Large Data in Medical Imaging</b><br />26 Sept 2013, Nagoya, Japan</td>
+</tr>
+<tr class='headerSeparator'>
+    <td style='height:5px'></td>
+</tr>
+</table>
+<table id="content"><tr><td class='contentBorder'>&nbsp;</td><td class="contentContainer">
+<span id="ctl00_cph_Label4" style="font-size:Small;font-weight:bold;">Reviews For Paper</span>
+<span id="ctl00_cph_lblErrorMessage" class="error" style="font-size:Small;"></span>
+<div id="ctl00_cph_pnlReviews">
+	
+    <span style="font-size:Small;">
+<table class="nicetable2" style="text-align:left; width: 100%;">
+    
+    <tr>
+        <td width="100px"><b>Paper ID</b></td>
+        <td><span id="ctl00_cph_infoSubmission_lblPaperId" style="font-size:Small;">21</span></td>
+    </tr>
+    <tr>
+        <td><b>Title</b></td>
+        <td><span id="ctl00_cph_infoSubmission_lblPaperTitle" style="font-size:Small;">Multiple scales for visualization large data</span></td>
+    </tr>
+    
+    
+    
+    
+    
+</table></span>
+    
+    
+            <hr />
+            <table>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl00_Label2" style="font-size:Small;font-weight:bold;">Masked Reviewer ID:</span>
+                    </td>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl00_Label1" style="font-size:Small;">Assigned_Reviewer_2</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl00_Label3" style="font-size:Small;font-weight:bold;">Review:</span>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+            <div>
+		<table cellspacing="0" cellpadding="4" rules="all" border="1" style="color:#333333;border-width:1px;border-style:None;font-family:Verdana;font-size:Small;border-collapse:collapse;">
+			<tr style="color:White;background-color:#5D7B9D;font-weight:bold;">
+				<th scope="col">Question</th><th scope="col">&nbsp;</th>
+			</tr><tr style="color:#333333;background-color:#F7F6F3;">
+				<td style="width:20%;">Overall Rating</td><td style="width:80%;">
+                            Reject
+                        </td>
+			</tr><tr style="color:#284775;background-color:White;">
+				<td style="width:20%;">Detailed Comments</td><td style="width:80%;">
+                            This paper addresses the problem of visualizing very large datasets. The authors propose to use a three-step procedure, in which (1) a hierarchical data clustering is performed; (2) a number of discrete scales within the hierarchy is computed that are aimed to be relevant for visualization purposes; and (3) a test is performed to evaluate whether the computed scales are acceptable. The original contribution of the paper is in (3). The method is applied to the visualization of precomputed white matter tracts in DTI data.<br /><br />Although the problem addressed in this paper is highly relevant for the MCV workshop, I do not recommend to accept this paper for the following reasons:<br /><br />* Although a binary test (accept/reject) is proposed to evaluate whether a set of scales is acceptable, it is not explained how this test is actually used within the visualization framework. What happens if the test determines that the set of scales should be rejected?<br /><br />* Considering that steps (1) and (2) -- which occupy most of the technical sections in the paper -- are directly taken from existing work, the novelty of this paper is not so high.<br /><br />* The paper lacks a clear validation of the proposed binary test. In figure 2 the authors show numerical values for the quantity that should be close to 50 in order to pass the test, but it is not clear what the conclusions of this experiment may be.<br /><br />* The proposed method contains quite a few parameters for which appropriate values need to be chosen, but there is no evaluation of their influence on the obtained results.<br /><br />* The paper needs to be corrected by a native speaker. Even the title contains a grammatical error.<br />
+                        </td>
+			</tr>
+		</table>
+	</div>
+            
+        
+            <hr />
+            <table>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl01_Label2" style="font-size:Small;font-weight:bold;">Masked Reviewer ID:</span>
+                    </td>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl01_Label1" style="font-size:Small;">Assigned_Reviewer_4</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl01_Label3" style="font-size:Small;font-weight:bold;">Review:</span>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+            <div>
+		<table cellspacing="0" cellpadding="4" rules="all" border="1" style="color:#333333;border-width:1px;border-style:None;font-family:Verdana;font-size:Small;border-collapse:collapse;">
+			<tr style="color:White;background-color:#5D7B9D;font-weight:bold;">
+				<th scope="col">Question</th><th scope="col">&nbsp;</th>
+			</tr><tr style="color:#333333;background-color:#F7F6F3;">
+				<td style="width:20%;">Overall Rating</td><td style="width:80%;">
+                            Neutral
+                        </td>
+			</tr><tr style="color:#284775;background-color:White;">
+				<td style="width:20%;">Detailed Comments</td><td style="width:80%;">
+                            The paper presents a method for the visualization of multiple scales of image data with an application focus on dMRI. The main problem is that the topic of the paper is visualization but no single visualization is shown. It is rather difficult for the reader to judge the authors' work. The work has certainly merits, but it is difficult to 'really see' them. Furthermore, reading the methods part with altogether twelve definitions is hard and does not really help to find the core novelty of the approach. <br />In case of acceptance, this needs to be improved substantially! Additionally, the text should be revised by a native English speaking person.
+                        </td>
+			</tr>
+		</table>
+	</div>
+            
+        
+            <hr />
+            <table>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl02_Label2" style="font-size:Small;font-weight:bold;">Masked Reviewer ID:</span>
+                    </td>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl02_Label1" style="font-size:Small;">Assigned_Reviewer_6</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="ctl00_cph_gvReviews_ctl02_Label3" style="font-size:Small;font-weight:bold;">Review:</span>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+            <div>
+		<table cellspacing="0" cellpadding="4" rules="all" border="1" style="color:#333333;border-width:1px;border-style:None;font-family:Verdana;font-size:Small;border-collapse:collapse;">
+			<tr style="color:White;background-color:#5D7B9D;font-weight:bold;">
+				<th scope="col">Question</th><th scope="col">&nbsp;</th>
+			</tr><tr style="color:#333333;background-color:#F7F6F3;">
+				<td style="width:20%;">Overall Rating</td><td style="width:80%;">
+                            Reject
+                        </td>
+			</tr><tr style="color:#284775;background-color:White;">
+				<td style="width:20%;">Detailed Comments</td><td style="width:80%;">
+                            This work proposes a method for visualization of large data sets. A hierarchical tree of clusters is built that partitions the data into subsets that are subsequently used for visualization in a scale/level of detail manner. Furthermore, a method for assessing the quality of a built cluster is proposed which considers the desired amount of total clusters as well as the amount of clusters a user usually selects for exploring the data. The method is applied to dMRI data sets.<br /><br />Strengths:<br />The method is well described and the visualization of large data sets like dMRI is an important task for several clinical applications.<br /><br />Criticism:<br />Generally, I miss an explanation of several decisions of the authors. For example, why was the goodness function (Definition 8) from Pascal et al. chosen as a base to determine clusters and not any other? Why is the split factor (Definition 10,11) a good measure to assess the quality of a scale (Definition 12)? There is also no comparison to other methods, so it is hard to judge whether the method is an improvement over other approaches. The evaluation also does not show whether the method really works in terms of presenting a suitable visualization to the user. In fact, the proposed heuristic constraint is used to correct the behavior of the method in order to provide a better visualization. So I wonder why this is necessary and whether other methods for cluster building etc. would be better. There are also no figures that actually show a visualization example.<br /><br />Minor comments:<br />- the paper needs some proof reading
+                        </td>
+			</tr>
+		</table>
+	</div>
+            
+        
+    <br />
+    <br />
+
+</div>
+</td><td class='contentBorder'>&nbsp;</td></tr></table>
+</form>
+</body>
+</html>

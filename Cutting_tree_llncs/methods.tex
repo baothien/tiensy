@@ -1,135 +1,23 @@
+\vspace{-2mm}
 \section{Methods}
 \label{sec:methods}
-In the following we describe the elements that characterise our
-proposed method. After introducing the notation we formally describe
-the multiple scale representation and propose the method to choose these scales.
+\vspace{-2mm}
+In this part, we present a simple and efficient method to determine the multiple scales $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}]$, $\forall i \in [1,k]$, where $[s_{min},s_{max}]$ is the range scale of the hierarchical tree $\mathcal{H}$, constructed from dataset $\mathcal{X}$. The multiple scales $\mathsf{\textit{B}}$, moreover, have to satisfy the condition in Definition~\ref{def:multi_scales_representation}.
 
-\subsection{Hierarchical clustering}
-\label{subsec:hierarchical}
-Given a set of input patterns denoted as $\mathcal{X} = \{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$ where $\mathsf{x_j} = (x_{j1},x_{j2}, \ldots,x_{jd})^T \in \mathfrak{R}^d$ and each measure $x_{ji}$ is said to be a feature (attribute, dimension, or variable). Hierarchical clustering~\cite{johnson1967hierarchical} produces a structure of clusters of $\mathcal{X}$ that is more informative than the unstructured set of clusters returned by flat clustering. 
-This characteristic meets the requirement of creating multiple scales of one original dataset $\mathcal{X}=\{x_1, \ldots, x_n\}$ 
-%$\mathbb{P}$ of $\mathcal{T}$ 
-%the immediately responding to the changing level of abstraction of user 
-without re-running the clustering algorithm again. Another advantage is that hierarchical clustering does not require to pre-specify the number of clusters. It builds nested clusters by merging them successively, and this hierarchy of clusters represented as a tree (or dendrogram). The root of the tree is the unique cluster that gathers all the samples, the leaves being the clusters with only one sample. In another way, hierarchical clustering algorithm % (http://scikit-learn.org/stable/modules/clustering.html) 
-can clusters data firstly on $n$ centers and consequently until only one center. This main character leads to the capability of visualizing $\mathcal{X}$ in many levels of abstraction, and the users can browse the value of level from $1$ to $N$, to see the clusters immediately.
-%We refer \mathcal{H} as the whole hierarchical tree or dendogram of $\mathcal{X}$.
-
+%Given a hierarchical tree $\mathcal{H}$, constructed from dataset $\mathcal{X}$, with the range scale $[s_{min},s_{max}]$, the problem is how to choose $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}]$, $\forall i \in [1,k]$. 
+With each cluster $C_i \in \mathcal{H}$, let $(\alpha_{min}^{C_i},\alpha_{max}^{C_i})$ be two scale factors at which the cluster $C$ appears and disappears from the tree $\mathcal{H}$. 
 \begin{definition}
-\label{def:hierarchical_tree}
-A \textit{\textbf{hierarchical tree}} $\mathcal{H}$ of a N-object set $\mathcal{X}=\{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$ is a collection of $Q$ partitions on $\mathcal{X}$: $\mathcal{H}=\{\mathsf{P}_0,\ldots,\mathsf{P}_Q\}$, with $Q \leq N$, such that $\mathsf{P}_0=\mathcal{X}$ and $C_{i} \in P_{m}, C_{j} \in P_{l}, m > l$ imply $C_{i} \subseteq C_{j}$ or $C_{i} \cap C_{j} = \emptyset$, for all $i,j \neq i, m, l = 1, \ldots, Q$.
-\end{definition}
-Every hierarchical tree $\mathcal{H}$ has a branch factor parameter $\gamma$ that quantifies how balanced the clusters are at any split.
-Formally, $\gamma \geq \max_{intras C_i \in \{C_1, \ldots,C_k\}} \frac{max_i |C_i|}{min_i |C_i|}$
- where each intra $C-i$ is a non-leaf cluster
- %, partitioned into clusters ${C_1, \ldots, C_k}$. 
- $\gamma$ upper bounds the ratio between the largest and smallest clusters sizes across all intras in cluster $C$. This branch factor has been used in numerous analyses of clustering algorithms~\cite{eriksson2011active,balakrishnan2011noise}, and it is common to assume that the clustering is not too unbalanced.
-
-Hierarchical clustering algorithms are either top down or bottom up. Bottom-up algorithms treat each streamline as a singleton cluster at the outset and then successively merge (or agglomerate) pairs of clusters until all clusters have been merged into a single cluster that contains all tracts. Bottom-up hierarchical clustering is therefore called Hierarchical Agglomerative Clustering (HAC). Top-down clustering requires a method for splitting a cluster. It proceeds by splitting clusters recursively until individual streamlines are reached \cite{johnson1967hierarchical}.
-The basic process of HAC clustering~\cite{johnson1967hierarchical} is this:
-\begin{enumerate}
-	\item Assign each object to one cluster, and get the result of $N$ clusters, each of them contains just one streamline.
-	%Let the distances (similarities) between the clusters the same as the distances (similarities) between the items they contain.
-	\item Find the closest (most similar) pair of clusters and merge them into a single cluster.
-	\item Compute distances (similarities) between the new cluster and each of the old clusters.
-	\item Repeat steps $2$ and $3$ until all objects are clustered into a single cluster of size $n$.
-\end{enumerate}
-
-Step $3$ can be done in different ways, which distinguishes single-linkage, complete-linkage and average-linkage.
-In \emph{single-linkage} clustering (also called the connectedness or minimum method), the distance between a pair of clusters $A$ and $B$ is the shortest distance from any streamline of one cluster to any streamline of the other cluster. 
-%If the data consist of similarities, we consider the similarity between one cluster and another cluster to be equal to the greatest similarity from any member of one cluster to any member of the other cluster.
-%${d}_sg(A,B) = \min_{i=1,\ldots,n_{s_A}} d({x}_i^A, s_B)$
+\label{def:pairwise_scales} Given a cluster $C_i$ in a hierarchical tree $\mathcal{H}$, with range scale $[s_{min},s_{max}]$, the pairwise $(\alpha_{min}^{C_i},\alpha_{max}^{C_i})$ is defined as:
 \begin{equation}
-\label{eq:distance_single_linkage}
-d(A, B) = \min_{\mathsf{x}_A \in {A},\mathsf{x}_B \in {B}} d(\mathsf{x}_A,\mathsf{x}_B)
-\end{equation}
-where $d(\mathsf{x}_A,\mathsf{x}_B)$ is the distance between two objects
-In \emph{complete-linkage} clustering (also called the diameter or maximum method), we consider the distance between cluster $A$ and cluster $B$ to be equal to the greatest distance from any member of one cluster to any member of the other cluster.
-\begin{equation}
-\label{eq:distance_complete_linkage}
-d(A, B) = \max_{\mathsf{x}_A \in {A},\mathsf{x}_B \in {B}} d(\mathsf{x}_A,\mathsf{x}_B)
-\end{equation}
-In \emph{average-linkage} clustering, the distance between two clusters $A$ and $B$ is defined as the average distance from any streamline of cluster $A$ to any streamline of cluster $B$.
-\begin{equation}
-\label{eq:distance_average_linkage}
-d(A, B) = avg_{\mathsf{x}_A \in {A},\mathsf{x}_B \in {B}} d(\mathsf{x}_A,\mathsf{x}_B)
-\end{equation}
-%\algsetup{indent=2em}
-%%\newcommand{\factorial}{\ensuremath{\mbox{\sc Factorial}}}
-%\begin{algorithm}[h!]
-%\caption{Hierarchical clustering}\label{alg:hierarchical}
-%\begin{algorithmic}[1]
-%	\REQUIRE $\mathcal{X}=\{\mathsf{x_1}, \ldots, \mathsf{x_j}, \ldots, \mathsf{x_N}\}$
-%	\ENSURE \textit{\textbf{hierarchical tree}} $\mathcal{H}$
-%	%\REQUIRE An integer $n \geq 0$.
-%	%\ENSURE The value of $n!$.
-%	\medskip
-%	\STATE $C_i \leftarrow \mathsf{x_i}, \forall i \in [1,\ldots, N]$
-%	\vspace{1.5mm}
-%	\STATE $\mathcal{H} \leftarrow \bigcup_{i=1}^{N}C_i$
-%	\vspace{1.3mm}
-%	\WHILE {$N > 1$}
-%		\vspace{1.2mm}
-%		\STATE $(C_a, C_b) \leftarrow agrmin(d(C_i,C_j)),$\\
-%		\hspace{19mm} $ \forall C_i \in \mathcal{H},C_j \in \mathcal{H}, C_i \neq C_j$
-%		\vspace{1.2mm}
-%		\STATE $\mathcal{H} \leftarrow (C_a \cup C_b)$
-%		\vspace{1.2mm}
-%		\STATE $N \leftarrow N - 1$	
-%	\ENDWHILE
-%	\vspace{1.3mm}
-%	\RETURN $\mathcal{H}$
-%\end{algorithmic}
-%\end{algorithm}
-%After defining the distance measure between two clusters, the hieararchical procedure can easily done as the pseudo code in the algorithm~\ref{alg:hierarchical}.
-\subsection{Multiple scales for visualization}
-\label{subsec:multiple_scales}
-The hierarchical tree $\mathcal{H}$ structures and presents dataset $\mathcal{X}$ at different levels of abstraction. A non-leaf cluster is composed of all its child clusters, while a leaf cluster contains only a single data item. The collection of all leaf-clusters presents exactly every data items $\mathsf{x}_i$ of $\mathcal{X}$, while the root is a cluster containing whole dataset $\mathcal{X}$ as one single node of the tree.
-\begin{definition}
-\label{def:level_detail}
-Each cluster $C_i$ (node) of the tree $\mathcal{H}$, let $s(C_i)$ be the \textbf{\textit{level of detail}} of that cluster. This measurement $s(C_i)$ satisfies the following criteria: if $C_i$ is an ancestor of $C_j$, then $s(C_i) \geq s(C_j)$. 
-\end{definition}
-There are many properties of a cluster which could be used to measure $s(C_i)$. Among of them, two common use are the radius of a cluster (maximum distance between all pair samples of cluster $C_i$: $r_i = max_{\forall \mathsf{x}_a, \mathsf{x}_b
- \in C_i, \mathsf{x}_a \neq \mathsf{x}_b} \{d(\mathsf{x}_a,\mathsf{x}_b)\}$); and the hierarchical level of $C_i$ in the tree $\mathcal{H}$~\cite{yang2003interactive}.
+\label{equ:pairwise_scales}
+\begin{array}{c}
+\alpha_{min}^{C_i}= \min \{w_j | w_j \in [s_{min},s_{max}] \wedge C_i \in \mathfrak{L}(w_j) \} \vspace{1.5mm}\\
+\alpha_{max}^{C_i}= \max \{w_j | w_j \in [s_{min},s_{max}] \wedge C_i \in \mathfrak{L}(w_j) \} 
 
-\begin{definition}
-\label{def:range_scale}
- The \textbf{\textit{range of scale}} of a hierarchical tree $\mathcal{H}$ is $[s_{min},s_{max}]$, where $s_{min} = \min_{\forall C_i \in \mathcal{H}}\{s(C_i)\}$, and $s_{max} = \max_{\forall C_i \in \mathcal{H}}\{s(C_i)\}$
-\end{definition}
-Depending on which property is used to measure the level of detail $s_i$, the value of  $s_{max}$ and  $s_{min}$ would be different. In the case of using the hierarchical level, let $h$ be the heigh of the tree $\mathcal{H}$, then the level of detail of cluster $C_i$: $s(C_i) = \frac{height(C_i)}{h}$, where $heigh(C_i)$ is the heigh of the cluster $C_i$. The scale range is from $[0,1]$, where $s_{min} = 0$ corresponds to the leaf with zero heigh, to $s_{max} = 1$ is at the root of the tree $\mathcal{H}$. However, in the case of using cluster radius, there is no guarantee that $s_{min} = 0$ and $s_{max} = 1$.
-
-\begin{definition}
-\label{def:cut}
- \textbf{\textit{A cut $\mathfrak{L}$}} of a hierarchical tree $\mathcal{H}$ at a given scale $w \in [s_{min},s_{max}] $  is $\mathfrak{L}(w)$:
-\begin{equation}
-\label{equ:a_cut_l}
-\mathfrak{L}(w) = \{C_i | (s(C_i) \leq w  \wedge s(parent(C_i)) > w)\}
-\end{equation}
-where $parent(C_i)$ is the direct parent node of the cluster $C_i$
-\end{definition}
-Intuitively, the cut at $s_{min}$, $\mathfrak{L}(s_{min})$ is a set of all leaf clusters, while the $\mathfrak{L}(s_{max})$ is a single cluster representing the whole dataset $\mathcal{X}$. In general, $\mathfrak{L}(w)$ is a partion of $\mathcal{X}$, denoting a subset of the tree $\mathcal{H}$. $\mathfrak{L}(w)$ changes smoothly with the variance of the scale parameter $w$, which serves as the abstraction level of the dataset $\mathcal{X}$. It could be imagined that $\mathfrak{L}(w)$ is a cut across a vertically oriented hierarchical tree $\mathcal{H}$ that satisfies criteria: $\mathfrak{L}(w)$ intersecs each path of the tree $\mathcal{H}$, from the root to the leaf, only exactly at one point. The cutting point would depend on the value of parameter $w$. It should close to the root of the tree $\mathcal{H}$ when $w$ is high, and reversely. Moreover, the cut can be horizontal or unhorizontal (like zigzag) as long as for each path from the root to the leaf of the tree $\mathcal{H}$, there is only one crossing with $\mathfrak{L}(w)$. It is an open approach for cutting the tree comparing with the traditional one which only accepts the horizontal cut. 
-
-\begin{definition}
-\label{def:nested_in} 
-Let $P$ and $Q$ be two partitions of dataset $\mathcal{X}$, $P = \{C_{1}^{P}, \ldots, C_{1}^{P}\}$ and $Q = \{C_{1}^{Q}, \ldots, C_{1}^{Q}\}$. Partition $P$ is \textbf{\textit{nested in}} partition $Q$, denoted as $P \preceq Q$, if and only if
-\begin{equation}
-\label{equ:nested_in}
-P \preceq Q  \leftrightarrow \forall C_i^{Q} \in Q, \exists C^{P}_{i_{1}},\ldots, C^{P}_{i_{k}} \in P: C_i^Q = \cup_{t=1}^{k} C^{P}_{i_{t}}
+\end{array}
 \end{equation}
 \end{definition}
-\begin{definition}
-\label{def:multi_scales_representation} Given the scale range $[s_{min},s_{max}]$ of a tree $\mathcal{H}$, the \textbf{\textit{multiple scales representing}} for the tree $\mathcal{H}$ is an \emph{ordered set} of $k$ scale values from $[s_{min},s_{max}]$: $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}], \forall i \in [1,k]$, where $k$ is the order of set $\mathsf{\textit{B}}$, which satisfies the following condition:
-\begin{equation}
-\label{equ:multi_scales_represent}
-\forall i \in [1, \ldots, k-1] : \mathfrak{L}(b_i)  \preceq \mathfrak{L}(b_{i+1})
-\end{equation}
-\end{definition}
-It is usually that $b_1 = s_{min}$, where the whole elements of $\mathcal{X}$ are presented, and $b_k = s_{max}$, which coresponds to only one virtual representation of $\mathcal{X}$. However, the value of $k$ is still an open question and totally depends on the application. In the next section, we will discuss about how to define this value and also how to select each $b_i$ from $[s_{min},s_{max}]$.
-
-\subsection{Choosing multiple scales for representation}
-\label{subsec:choosing_multiple_scales}
-In this part, we propose a simple and efficient a method to determine the good scales, highlighting meaning full clusters to represent for a hieararchical tree $\mathcal{H}$, which satisfies the condition in definition~\ref{def:multi_scales_representation}
-
-Given a hierarchical tree $\mathcal{H}$, constructed from dataset $\mathcal{X}$, with the range scale $[s_{min},s_{max}]$, the problem is how to choose $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}]$, $\forall i \in [1,k]$. With each cluster $C \in \mathcal{H}$, let $(\alpha_{min}^C,\alpha_{max}^C)$ be two scale factors which the cluster $C$ appears and disappears from the tree $\mathcal{H}$. Pascal et. al.~\cite{pons2011postprocessing} proposed a method to compute $\mathsf{\textit{B}}$ from a pairwise $(\alpha_{min}^C,\alpha_{max}^C)$. However, the procedure in~\cite{pons2011postprocessing} to calculate $(\alpha_{min}^C,\alpha_{max}^C)$ for each cluster $C \in \mathcal{H}$ is hightly complexity cost, while the hierarchical order of the tree $\mathcal{H}$ provides a good hint. By exploring this information, we susgest a more easy and efficient way: $\alpha_{min}^C = s(C)$ and $\alpha_{max}^C = s(parent(C))$, which is intuitively, as the definition of the level of detail in~\ref{def:level_detail}. Beside, it may consider that the good clusters would be present for a wide range of scale factors. Thus, the goodness of a cluster could be measured as $\alpha_{min}^C - \alpha_{max}^C)$ and the best scale representing $C$ as $\alpha = \frac{\alpha_{max}^C-\alpha_{min}^C}{2}$~\cite{pons2011postprocessing}.
+Pascal et. al.~\cite{pons2011postprocessing} proposed a method to compute $\mathsf{\textit{B}}$ from pairwise $(\alpha_{min}^C,\alpha_{max}^C)$. It is considered that the good clusters would be presented for a wide range of scale factors. Thus, the goodness of a cluster could be measured as $\alpha_{min}^C - \alpha_{max}^C)$ and the best scale representing $C_i$ as $\alpha = \frac{\alpha_{max}^C-\alpha_{min}^C}{2}$.
 \begin{definition}
 \label{def:goodness_cluster} The \textbf{goodness function $R(C)$ of a cluster $C$} at a scale $w$ is:
 \begin{equation}
@@ -144,110 +32,10 @@ R_{w}(C) = \frac{\alpha_{max}^C-\alpha_{min}^C}{2} + \frac{2(\alpha_{max}^C- w)(
 R(w) = \frac{1}{N}\sum_{C \in \mathfrak{L}(w)} |C|R_{w}(C)
 \end{equation}
 \end{definition}
-Obviously, $R(w)$ is a quadratic function of $w$, and ca be used for determining the scale factors corresponding to the good clusters. By focussing on the local maxima of $R(w)$, we can estimate good scales for representing the tree $\mathcal{H}$, and thus getting the $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}], \forall i \in [1,k]$. Example of the $R(w)$ function can be found in the figure~\ref{fig:goodness_score}
+A plot line of the $R(w)$ function can be found in the Figure~\ref{fig:goodness_score}. Obviously, $R(w)$ is a quadratic function of $w$, and can be used for determining the scale factors corresponding to the good clusters. By focussing on the local maxima of $R(w)$, we can estimate good scales for representing the tree $\mathcal{H}$, and thus getting the $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}, b_i \in [s_{min},s_{max}], \forall i \in [1,k]$. In another way, the first derivative of $R(w)$ is set to zero, and we arrive a set of multiple scales $\mathsf{\textit{B}}$.
+\begin{equation}
+\label{equ:derivation_R}
+\mathsf{\textit{B}} = \{b_i \vert b_i \in [s_{min},s_{max}]  \wedge R'(b_i) = 0\}
+\end{equation}
 
-\subsection{Evaluation the multiple scales for representation}
-\label{subsec:evaluation_scales}
-Based on the real fact that, while using our software tool to do the segmentation of cortinal spinal tract, medical practitioners usually choose $~15$ $(\lambda_1)$ clusters from $~50$ $(\lambda_2)$ representatives~\cite{olivetti2013fast}, we propose a method to evaluate the represented multi-scale set $\mathsf{\textit{B}}$ based on the \textit{split factor} as following.
-
-\begin{definition}
-\label{def:split_factor} \textbf{\textit{Split factor $\xi$}} of \textit{a cluster} $C \in \mathcal{H}$ to a scale $w \in [s_{min},s_{max}]$ is $\xi(C,s)$
-\begin{equation}
-\xi(C,s) = card(P(C,s))
-\end{equation}
-where $P(C,s) = \{ C_j | (C_j \in \mathcal{H}) \wedge (s(C_j) = w) \wedge (C_j \subseteq C) \}$ 
-\end{definition}
-\begin{definition}
-\label{def:split_factor_set} \textbf{\textit{Split factor $\xi$}} of a \textit{set of cluster} $P=\{C_1, C_2,.., C_m\} \subseteq \mathcal{H}$ to a scale $s \in [s_{min},s_{max}]$ is $\xi(P,s)$
-\begin{equation}
-\xi(P,s) = \sum_{C_i \in P}\xi(C_i,s)
-\end{equation}
-\end{definition}
-%Given a specific scale $w \in \mathsf{\textit{B}}$, draw uniformly at random $k_1$ clusters from the cut $\mathfrak{L}(w)$ of tree $\mathcal{H}$ at $w$, called $S_w$: $S_{w}=\{C_{s_1}, C_{s_2},.., C_{s_{k_1}}\}$, $C_{s_{i=1}^{k_1}} \in \mathfrak{L}(w)$.
-\begin{definition}
-\label{def:best_scales} The set of scales $\mathsf{\textit{B}} = \{b_1, b_2, \ldots, b_k\}$ is called \textbf{\textit{the best scales for representation}} of the tree $\mathcal{H}$, given $\lambda_1$ and $\lambda_2$, if the following condition satisfies
-\begin{equation}
-\label{equ:best_scale}
-\forall b_i \in \mathsf{\textit{B}}: \lambda_2 - \Delta \leq \xi(S_{(b_i,\lambda_1)},b_{i-1}) \leq \lambda_2 + \Delta 
-\end{equation}
-where $S_{(b_i,\lambda_1)}$ is a Gaussian distribution subset of the cut $\mathcal{H}$ at scale $b_i$, $\mathfrak{L(b_i)}$, with the order of $\lambda_1$:
-\begin{equation}
-S_{(b_i,\lambda_1)} = \{C_1, \ldots, C_{\lambda_1}\}, C_j \in \mathfrak{L(b_i)}, \forall j \in [1, \ldots, \lambda_1] 
-\end{equation}
-\end{definition}
-In the case of $b_1$, the split factor is computed to the leaf: $\xi(S_{(b_1,\lambda_1)},0)$. The pseudo code of it is presented in algorithm~\ref{alg:evaluate}
-%the best cut scale set \mathsf{B}% = {b_1, b_2, \ldots, b_k}}
-%\mathcal{H}
-%\IncMargin{1em}
-%\begin{algorithm}
-	%\SetAlgoLined
-%	\AlgoDisplayBlockMarkers\SetAlgoNoLine%
-%	\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
-%	\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
-%	\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-%	\Input{a hierarchical tree $\mathcal{H}$\\
-%	a set of cut scales $\textit{$\mathsf{B}$} = \{b_1, b_2, \ldots, b_k\}$}
-%	\Output{accept \textit{$\mathsf{B}$} as a good represent for $\mathcal{H}$ or not}
-%	\BlankLine
-%	\tcc{initialization}
-%	$accept \leftarrow True$\;
-%	$i \leftarrow 1$\;
-%	\While {$(i \leq k-1) \wedge (accept)$ }
-%	{
-%		$w \leftarrow b_i$\;
-%
-%		$l \leftarrow b_{i+1}$\;
-%
-%		%\tcc{draw $S=\{s_1,s_2,..,s_{k_1}\}$ of size $k_1$ uniformly at random}
-%
-%		$ S \leftarrow$ choose $\lambda_1$ clusters uniformly at random from $\mathfrak{L}$$(w)$\;
-%
-%		\tcc{calculate the split factor of $S$ to scale $l$}
-%
-%		$t \leftarrow \xi(S,l)$\;
-%
-%		\tcc{check the quality of the cut $b_i$ based on equation~\ref{equ:best_scale}}
-%		\If{$(t \geq \lambda_2 + \Delta ) \vee (t \leq \lambda_2 - \Delta) $}
-%		{
-%			\tcc{update the result}
-%			$accept \leftarrow False$\;
-%		}		
-%		$i \leftarrow i+1$\;
-%	}
-%	return $accept$\;
-%\caption{Evaluate the set of cut scales, based on split factor}\label{algo_evaluate}
-%\end{algorithm}
-%\DecMargin{1em}
-\algsetup{indent=2.5em}
-\begin{algorithm}[h!]
-\caption{Evaluate the set of cut scales, based on split factor}\label{alg:evaluate}
-\begin{algorithmic}[1]
-	\REQUIRE a hierarchical tree $\mathcal{H}$ \AND \\
-             \hspace{8 mm} a set of cut scales $\textit{$\mathsf{B}$} = \{b_1, b_2, \ldots, b_k\}$
-	\ENSURE accept \textit{$\mathsf{B}$} as a good represent for $\mathcal{H}$ or not
-	\medskip
-	\STATE $accept \leftarrow \TRUE$ \COMMENT{initialization}
-	\STATE $i \leftarrow 1$
-	\WHILE {$(i \leq k-1)$ \AND $(accept)$ }
-		\vspace{1.4mm}
-		\STATE $w \leftarrow b_i$
-
-		\STATE $l \leftarrow b_{i+1}$
-		\vspace{1.6mm}
-		\STATE $ S \leftarrow$ choose $\lambda_1$ clusters uniformly at random \\
-								\hspace{8mm} from $\mathfrak{L}$$(w)$
-		\vspace{1.6mm}
-		\STATE $t \leftarrow \xi(S,l)$ \COMMENT{split factor of $S$ to scale $l$}\\
-		\vspace{1.6mm}
-		\COMMENT{check quality of the cut $b_i$ based on equation~\ref{equ:best_scale}}
-		\IF{$(t \geq \lambda_2 + \Delta )$ \AND $(t \leq \lambda_2 - \Delta) $}
-			\vspace{1.3mm}	
-			\STATE $accept \leftarrow \FALSE$ \COMMENT{update the result}
-		\ENDIF
-		\vspace{1.5mm}
-		\STATE $i \leftarrow i+1$\;	
-	\ENDWHILE
-	\vspace{1.5mm}
-	\RETURN $accept$
-\end{algorithmic}
-\end{algorithm}
+The most difficult task is to compute the pairwise $(\alpha_{min}^{C_i},\alpha_{max}^{C_i})$ for each cluster $C_i \in \mathcal{H}$. Pascal et. al in ~\cite{pons2011postprocessing} proposed a method to calculate $(\alpha_{min}^C,\alpha_{max}^C)$ based on the concept of \emph{relevant community}. However, the proposed procedure is computational cost, and the complexity is between $O(n\log n)$ and $O(n^2)$ with an average value in $O(n \sqrt{n})$. As the meanwhile, the hierarchical order of the tree $\mathcal{H}$ provides a good hint about the scales where each cluster appears or disappears. By exploring this information, we suggest a more easy and efficient way with the complexity $O(1)$: $\alpha_{min}^{C_i} = s(C_i)$ and $\alpha_{max}^{C_i} = s(parent(C_i))$, where $s(C_k)$ is the level of detail of cluster $C_k$. Obviously, the suggested computing $(\alpha_{min}^{C_i},\alpha_{max}^{C_i})$ is intuitively, as the Definition~\ref{def:level_detail}. %of the level of detail in
