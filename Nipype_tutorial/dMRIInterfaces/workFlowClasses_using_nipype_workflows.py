@@ -19,7 +19,8 @@ data = path+ 'raw.nii.gz'
 ###### WORKFLOW DEFINITION #######
 wf=pe.Workflow(name="reconstructing_tractography")
 wf.base_dir= path + 'results'
-wf.config['execution'] = {'remove_unnecessary_outputs': 'False'}
+wf.config['execution'] = {'remove_unnecessary_outputs': 'False',
+                            }
 
 
 ###### NODE DEFINITION #######
@@ -34,6 +35,9 @@ tracking_node = pe.Node(Tracking(), name='tracking_node')
 #inputs: brain_extraction_node
 brain_extraction_node.inputs.in_file=data
 brain_extraction_node.inputs.frac = 0.2
+brain_extraction_node.inputs.functional = True
+#brain_extraction_node.inputs.robust = True
+brain_extraction_node.inputs.vertical_gradient = 0
 brain_extraction_node.inputs.out_file = path + 'raw_bet.nii.gz'
 
 
