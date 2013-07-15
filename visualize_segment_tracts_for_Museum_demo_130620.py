@@ -71,9 +71,9 @@ if __name__ == '__main__':
     print len(data)       
     
     #id-tracks filenames
-    id_tracts_filenames = ['ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_corticospinal_L_3M.pkl']##,
-                           #'ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_corticospinal_R_3M.pkl',
-                           # 'ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_test_colors_1.pkl']     
+    id_tracts_filenames = ['ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_corticospinal_L_3M.pkl',
+                           'ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_corticospinal_R_3M.pkl',
+                           'ALS/ALS_Segmentation/BOI/index_pkl/'+str(subsel.value)+'_test_colors_1.pkl']     
      
     tracts_colors = [np.array([255.0, 0.0, 0.0], dtype='f4'),
                      np.array([0.0, 0.0, 255.0], dtype='f4'),
@@ -168,31 +168,31 @@ if __name__ == '__main__':
     
     #first rotation
     
-    w.recording(n_frames=50, rotation = True)                           
-      
-    #second hide virtuals
-    tl.hide_virtuals = True
-    w.recording(n_frames=10, rotation = False)                         
-    w.recording(n_frames=40, rotation = True)                         
-    
-    
-    #show virtuals - hide anatomy
-    tl.hide_virtuals = False
-    guil.show_i = False
-    w.recording(n_frames=7, rotation = False)                         
-    w.recording(n_frames=20, rotation = True)                         
-    guil.show_j = False
-    w.recording(n_frames=5, rotation = False)                         
-    w.recording(n_frames=20, rotation = True)                         
-    guil.show_k = False     
-    w.recording(n_frames=5, rotation = False)                         
-    w.recording(n_frames=20, rotation = True)                         
-    
-    guil.show_i = True
-    guil.show_j = True
-    guil.show_k = True  
-    
-    w.recording(n_frames=40, rotation = True)                         
+#    w.recording(n_frames=50, rotation = True)                           
+#      
+#    #second hide virtuals
+#    tl.hide_virtuals = True
+#    w.recording(n_frames=10, rotation = False)                         
+#    w.recording(n_frames=40, rotation = True)                         
+#    
+#    
+#    #show virtuals - hide anatomy
+#    tl.hide_virtuals = False
+#    guil.show_i = False
+#    w.recording(n_frames=7, rotation = False)                         
+#    w.recording(n_frames=20, rotation = True)                         
+#    guil.show_j = False
+#    w.recording(n_frames=5, rotation = False)                         
+#    w.recording(n_frames=20, rotation = True)                         
+#    guil.show_k = False     
+#    w.recording(n_frames=5, rotation = False)                         
+#    w.recording(n_frames=20, rotation = True)                         
+#    
+#    guil.show_i = True
+#    guil.show_j = True
+#    guil.show_k = True  
+#    
+#    w.recording(n_frames=40, rotation = True)                         
     
     
     
@@ -201,27 +201,27 @@ if __name__ == '__main__':
     
     
     
-#    fr1 = 40
-#    fr2 = 40
-#    fr3 = 80
-#    w.recording(n_frames=fr1, start_frame = 0, rotation = True, out_path='/home/bao/tiensy/temp1/')
-#    
-#    #second hide/show tracts
-#    tl.hide_virtuals = True #not self.hide_virtuals True
-#    w.recording(n_frames=fr2/2, start_frame = fr1, rotation = False, out_path='/home/bao/tiensy/temp1/')
-#    tl.hide_virtuals = False
-#    w.recording(n_frames=fr2/2, start_frame = fr1+fr2/2, rotation = True, out_path='/home/bao/tiensy/temp1/')
-#
-#    #third hide/show anatomy
-#    guil.show_i = False
-#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2, rotation = False, out_path='/home/bao/tiensy/temp1/')
-#    guil.show_j = False
-#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3/4, rotation = False, out_path='/home/bao/tiensy/temp1/')
-#    guil.show_k = False
-#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*2/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
-#    guil.show_i = True
-#    guil.show_j = True
-#    guil.show_k = True    
-#    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*3/4, rotation = True, out_path='/home/bao/tiensy/temp1/')
-#    
-#        
+    fr1 = 80
+    fr2 = 80
+    fr3 = 160
+    w.recording(n_frames=fr1, start_frame = 0, rotation = True, save=True, out_path='/home/bao/tiensy/temp/')
+    
+    #second hide/show tracts
+    tl.hide_virtuals = True #not self.hide_virtuals True
+    w.recording(n_frames=fr2/2, start_frame = fr1, rotation = False, save=True, out_path='/home/bao/tiensy/temp/')
+    tl.hide_virtuals = False
+    w.recording(n_frames=fr2/2, start_frame = fr1+fr2/2, rotation = True, save=True, out_path='/home/bao/tiensy/temp/')
+
+    #third hide/show anatomy
+    guil.show_i = False
+    w.recording(n_frames=fr3/4, start_frame = fr1+fr2, rotation = False, save=True, out_path='/home/bao/tiensy/temp/')
+    guil.show_j = False
+    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3/4, rotation = False, save=True, out_path='/home/bao/tiensy/temp/')
+    guil.show_k = False
+    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*2/4, rotation = True, save=True, out_path='/home/bao/tiensy/temp/')
+    guil.show_i = True
+    guil.show_j = True
+    guil.show_k = True    
+    w.recording(n_frames=fr3/4, start_frame = fr1+fr2+fr3*3/4, rotation = True, save=True, out_path='/home/bao/tiensy/temp/')
+    
+        
