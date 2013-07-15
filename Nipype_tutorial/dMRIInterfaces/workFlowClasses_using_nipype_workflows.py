@@ -13,31 +13,32 @@ from nipype.workflows.dmri.fsl.dti import create_eddy_correct_pipeline
 
 from classInterfaces import BrainExtraction, EddyCorrection, ResampleVoxelSize, TensorModel, Tracking
  
-path ='/home/bao/tiensy/Nipype_tutorial/data/dmri/temp5/'
+path ='/home/bao/tiensy/Nipype_tutorial/data/dmri/temp6/'
 data = path+ 'raw.nii.gz'
                                         
 ###### WORKFLOW DEFINITION #######
 wf=pe.Workflow(name="reconstructing_tractography")
 wf.base_dir= path + 'results'
+wf.config['execution'] = {'remove_unnecessary_outputs': 'False'}
 
 
 ###### NODE DEFINITION #######
-#brain_extraction_node = pe.Node(fsl.BET(), name="brain_extraction_node")
+brain_extraction_node = pe.Node(fsl.BET(), name="brain_extraction_node")
 eddy_current_correction_node = create_eddy_correct_pipeline("nipype_eddycorrect_wkf")
 resample_voxel_size_node = pe.Node(ResampleVoxelSize(), name='resample_voxel_size_node')
 tensor_model_node = pe.Node(TensorModel(), name='tensor_model_node')
 tracking_node = pe.Node(Tracking(), name='tracking_node')
 
-'''
+
 ###### INPUT NODE DEFINITION #######
 #inputs: brain_extraction_node
 brain_extraction_node.inputs.in_file=data
 brain_extraction_node.inputs.frac = 0.2
 brain_extraction_node.inputs.out_file = path + 'raw_bet.nii.gz'
-'''
+
 
 #inputs: eddy_current_correction_node
-eddy_current_correction_node.inputs.inputnode.in_file = path + 'raw_bet.nii.gz'
+#eddy_current_correction_node.inputs.inputnode.in_file = path + 'raw_bet.nii.gz'
 eddy_current_correction_node.inputs.inputnode.ref_num = 0
 
 #inputs: resample_voxel_size_node
@@ -57,7 +58,7 @@ tracking_node.inputs.low_thresh = 0.2
 tracking_node.inputs.output_filename = path + 'dti_tracks.dpy'
 
 ###### NODE CONNECTIONS #######
-#wf.connect(brain_extraction_node,'out_file', eddy_current_correction_node, 'inputnode.in_file')
+wf.connect(brain_extraction_node,'out_file', eddy_current_correction_node, 'inputnode.in_file')
 wf.connect(eddy_current_correction_node,'outputnode.eddy_corrected', resample_voxel_size_node ,'input_filename')
 wf.connect(resample_voxel_size_node,'resample_file',tensor_model_node ,'input_filename_data')
 wf.connect(tensor_model_node, 'tensor_fa_file', tracking_node,'input_filename_fa')
