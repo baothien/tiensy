@@ -227,7 +227,7 @@ class Window(QtGui.QWidget):
         """                         
         #rotation
         if rotation == True:
-            angle = 0.006        
+            angle = 0.008        
             for i in range(n_frames):               
                 self.glWidget.world.camera.rotate_around_focal( angle, "yup" )
                 self.glWidget.updateGL()
