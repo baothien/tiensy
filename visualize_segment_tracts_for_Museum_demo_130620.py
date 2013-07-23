@@ -67,6 +67,7 @@ if __name__ == '__main__':
     #load the volume
     img = nib.load('ALS/ALS_Data/'+str(subj)+'/MP_Rage_1x1x1_ND_3/T1_flirt_out.nii.gz') 
     data = img.get_data()
+    data = np.interp(data, [data.min(), data.max()], [0, 255])
     affine = img.get_affine()
     print len(data)       
     
@@ -193,12 +194,6 @@ if __name__ == '__main__':
 #    guil.show_k = True  
 #    
 #    w.recording(n_frames=40, rotation = True)                         
-    
-    
-    
-                      
-
-    
     
     
     fr1 = 80
