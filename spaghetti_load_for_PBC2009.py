@@ -92,6 +92,7 @@ if __name__ == '__main__':
     
     
     data = img.get_data()
+    data = np.interp(data, [data.min(), data.max()], [0, 255])
     affine = img.get_affine()
     print len(data)
     

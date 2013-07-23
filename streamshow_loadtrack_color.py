@@ -181,7 +181,7 @@ class StreamlineLabeler(Actor):
             if (colors==None):
                 color[counter:counter+len(curve),:3] = track2rgb(curve).astype('f4')
             else:
-                color[counter:counter+len(curve),:3] = colors[j]                                
+                color[counter:counter+len(curve),:3] = colors[j].astype('f4')                               
             j = j + 1
             counter += len(curve)
         color[:,3] = alpha
