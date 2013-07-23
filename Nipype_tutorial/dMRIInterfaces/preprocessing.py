@@ -33,7 +33,7 @@ def brain_extraction(input_filename, output_filename=None):
     
 def eddy_correction(input_filename, output_filename=None): 
     
-    print 'Eddy current correction ...'
+    #print 'Eddy current correction ...'
     
     if output_filename == None:
         filename_save = input_filename.split('.')[0]+'_ecc.nii.gz'
@@ -42,13 +42,13 @@ def eddy_correction(input_filename, output_filename=None):
         
     eddy_correct(input_filename,filename_save)
     
-    print "Saving to:", filename_save    
+    #print "Saving to:", filename_save    
     
     return filename_save
     
 def resample_voxel_size(input_filename, output_filename=None): 
     
-    print("Loading data: %s" % input_filename)
+    #print("Loading data: %s" % input_filename)
     img = nib.load(input_filename)
 
     old_data = img.get_data()
@@ -59,7 +59,7 @@ def resample_voxel_size(input_filename, output_filename=None):
     new_zooms=(2.,2.,2.)
     print 'New zoom', new_zooms  
     
-    print 'Resample data and affine ...'      
+    #print 'Resample data and affine ...'      
     data,affine=resample(old_data,old_affine,zooms,new_zooms)
     
     if output_filename == None:
@@ -67,7 +67,7 @@ def resample_voxel_size(input_filename, output_filename=None):
     else:
         filename_save = os.path.abspath(output_filename)       
 
-    print "Saving data after resapling to ", filename_save
+    #print "Saving data after resapling to ", filename_save
     data_img = nib.Nifti1Image(data=data, affine=affine)
     nib.save(data_img, filename_save)
     

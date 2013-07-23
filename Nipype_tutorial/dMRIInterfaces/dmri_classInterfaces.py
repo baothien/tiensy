@@ -8,39 +8,14 @@ Created on Thu May 16 18:43:39 2013
 from nipype.interfaces.base import BaseInterface, BaseInterfaceInputSpec, traits, File, TraitedSpec
 from nipype.utils.filemanip import split_filename
 
-from preprocessing import brain_extraction, eddy_correction, resample_voxel_size
+from preprocessing import eddy_correction, resample_voxel_size
 from tracking import tensor_model, tracking
 
 from nipype import logging
 iflogger = logging.getLogger('interface')
 
-import nibabel as nb
-import numpy as np
 from sys import stdout
 import os
-
-class BrainExtractionInputSpec(BaseInterfaceInputSpec):                                                     
-    input_filename = File(exists=True,desc="Nifti file to be processed",mandatory=True)
-    output_filename = File(exists=False,desc="Output file name",mandatory=False)
-  
-class BrainExtractionOutputSpec(TraitedSpec):
-    bet_file = File(exists=True ,desc="Output file name")
-    
-
-class BrainExtraction(BaseInterface):
-    input_spec = BrainExtractionInputSpec
-    output_spec = BrainExtractionOutputSpec
-    
-    def _run_interface(self, runtime):
-        self._out_file = brain_extraction(self.inputs.input_filename,self.inputs.output_filename)
-        return runtime
-    
-    def _list_outputs(self):
-        outputs = self._outputs().get()
-        outputs["bet_file"] = os.path.abspath(self._out_file)
-        return outputs
-
-###
 
 class EddyCorrectionInputSpec(BaseInterfaceInputSpec):                                                     
     input_filename = File(exists=True,desc="Nifti file to be processed",mandatory=True)
@@ -155,3 +130,4 @@ class Tracking(BaseInterface):
         return outputs
 
 ###
+

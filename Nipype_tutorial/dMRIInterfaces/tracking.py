@@ -20,8 +20,6 @@ from dipy.reconst.dti import fractional_anisotropy
 from dipy.core.gradients import gradient_table
 from dipy.tracking.eudx import EuDX
 
-
-
 '''
 Create the Tensor Model for data
 input:  data file name, bvecs file name and bvals file name
@@ -29,9 +27,9 @@ output: tensor_fa and tensor_evecs
 '''
 def tensor_model(input_filename_data, input_filename_bvecs, input_filename_bvals, output_filename_fa=None, output_filename_evecs=None):
     
-    print 'Tensor model ...'
+    #print 'Tensor model ...'
     
-    print 'Loading data ...'    
+    #print 'Loading data ...'    
     img = nib.load(input_filename_data)
     data = img.get_data()
     affine = img.get_affine()
@@ -88,9 +86,9 @@ output: tractography file name
 '''
 def tracking(input_filename_fa, input_filename_evecs, num_seeds=10000, low_thresh = .2, output_filename=None):
     
-    print 'Tracking ...'
+    #print 'Tracking ...'
     
-    print 'Loading data ...'    
+    #print 'Loading data ...'    
     
     fa_img = nib.load(input_filename_fa)
     FA = fa_img.get_data()
@@ -116,7 +114,7 @@ def tracking(input_filename_fa, input_filename_evecs, num_seeds=10000, low_thres
     else:
         filename_save = os.path.abspath(output_filename) 
        
-    print 'Saving tracks to:', filename_save 
+    #print 'Saving tracks to:', filename_save 
     dpw = Dpy(filename_save, 'w')
     dpw.write_tracks(tracks)
     dpw.close()
