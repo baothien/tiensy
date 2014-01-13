@@ -16,8 +16,9 @@ import pylab as pl
 import matplotlib.pyplot as plt
 from sklearn import metrics
 from sklearn.neighbors import kneighbors_graph
-#from sklearn.cluster import Ward
-from hierarchical import Ward
+from sklearn.cluster import Ward
+from sklearn.cluster.hierarchical import _hc_cut
+#from hierarchical import Ward
 from dipy.io.pickles import save_pickle,load_pickle
 
 #from silhouette_score_modified import *
@@ -35,7 +36,7 @@ return: disimilarity of tractography with 40 prototyes
 '''
 def load_data_dis(data_id,num_prototype=40):       
     
-    filename = 'Results/' + str(data_id) + '/' + str(data_id)+'_data_disimilarity_full_tracks_' + str(num_prototype) + '_prototyes_random.dis'   
+    filename = 'Results/' + str(data_id) + '/' + str(data_id)+'_data_disimilarity_full_tracks_' + str(num_prototype) + '_prototyes_random.dis'       
     print "Loading tracks dissimilarity"
     dis = load_pickle(filename)
     return dis
@@ -47,7 +48,8 @@ return: disimilarity of tractography with 40 prototyes
 '''
 def load_ward_tree(data_id,num_neigh=50):       
     
-    file_name = 'Results/' + str(data_id) + '/' + str(data_id)+'_full_tracks_' + str(num_neigh) + '_neighbors_original_ward_stop_50_clusters.tree'            
+    #file_name = 'Results/' + str(data_id) + '/' + str(data_id)+'_full_tracks_' + str(num_neigh) + '_neighbors_original_ward_stop_50_clusters.tree'            
+    file_name = 'Results/' + str(data_id) + '/' + str(data_id)+'_full_tracks_' + str(num_neigh) + '_neighbors_original_ward.tree'            
     print "Loading ward tree "
     ward = load_pickle(file_name)
     return ward
@@ -72,9 +74,16 @@ def compute_silhouette_sample_size(data_ids, prototype_policie, num_prototype, n
         for j, num_neigh in enumerate(num_neighbors):  
             
             print "\tGenerating at ", num_neigh, " neighbors"                     
-                        
-            ward = load_ward_tree(data_id,num_neigh)            
+
+            #if ward is stop at 50 clusters                        
+            ward = load_ward_tree(data_id,num_neigh)              
             label = ward.labels_            
+            
+            #if ward is full tree
+            #ward = load_ward_tree(data_id,num_neigh)              
+            
+            #label = _hc_cut(num_cluster, ward.children_,ward.n_leaves_)            
+            
             print"\t Computing silhouette score"
             for k in range(iterations): 
                 st = cpu_time()                   
@@ -148,15 +157,15 @@ if __name__ == '__main__':
 
     np.random.seed(0)      
     
-    data_ids = [101]#,102,201,202]
+    data_ids = [101,201,109,210]
     num_cluster = 50
     num_prototype = 40
-    num_neighbors = [25 ]#,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
+    num_neighbors = [25 ,50, 75, 100]#[10,20,30,40,50,60,70,80,90,100]
     iterations = 1
     prototype_policies = ['random', 'fft', 'sff']
     #fit with num_tracks    
-    label_policies =['101']#, '102','201','202']#,'10K']#,'15K','All']
-    color_policies = ['ko--']#, 'kx:', 'k^-','k*-' ]
+    label_policies =['101', '201','109','210']#,'10K']#,'15K','All']
+    color_policies = ['ko--', 'kx:', 'k^-','k*-' ]
     verbose = True    
        
     

@@ -104,9 +104,10 @@ def plot_result(split, num_cuts, color_policy, label, title=None):
                  np.concatenate([mean - errorbar, (mean + errorbar)[::-1]]),
                  alpha=.25,fc='black',  ec='None')
     plt.legend(loc='lower right')
-    plt.xlabel("cut scales ")
-    plt.ylabel("split factor ")
-    plt.title = title
+    plt.xlabel("cut scales ", fontsize=60)
+    plt.ylabel("split factor ", fontsize=60)
+    #plt.title = title 
+    plt.title(title, fontsize=60)
     plt.show()
     
 def plot_results(plt, split, num_cuts, color_policy, label):
@@ -115,7 +116,7 @@ def plot_results(plt, split, num_cuts, color_policy, label):
     std = split[:,:].std(1)
     errorbar = std #3.0 * std / np.sqrt(split.shape[1]) #std
         
-    plt.plot(num_cuts, mean, color_policy, label=label, markersize=8.0)
+    plt.plot(num_cuts, mean, color_policy, label=label, markersize=8.0,linewidth=2.0)
     plt.fill(np.concatenate([num_cuts, num_cuts[::-1]]),
                  np.concatenate([mean - errorbar, (mean + errorbar)[::-1]]),
                  alpha=.25,fc='black',  ec='None')
@@ -222,12 +223,12 @@ def run_one_subject(subject_id):
 def run_on_multi_subjects():
     k1 = 15    
     iterations = 25    
-    plt.figure()   
+    fig = plt.figure()   
     
     #subjects =['101','109','201','205','210']
     #colors = ['ko--', 'kx:', 'k^-','k*-','v-.' ]
     subjects =['109','205']
-    colors = [ 'kx:','ko-' ]
+    colors = [ 'k^:','ko-' ]
     
     for m, sub_id in enumerate(subjects):
         
@@ -275,14 +276,15 @@ def run_on_multi_subjects():
         print sub_id, ' : ', cut_scales
     
     plt.legend(loc='upper right')
-    plt.xlabel("cut scales with a base unit of 1/h")
-    plt.ylabel("split factor ")
-    plt.title = '\n Evaluating the cut based on split factor'
+    plt.xlabel("cut scales with a base unit of 1/h", fontsize=17)
+    plt.ylabel("split factor ", fontsize=17)
+    #fig.suptitle ("\n Evaluating the cut based on split factor", fontsize=20)
     plt.show()
-    
-run_on_multi_subjects()
-#run_one_subject()
-#s = [5,7,10,16]
-#print 's = ', s
-#t = heuristic_modified_cuts(s,3)
-#print 't = ', t
+
+if __name__ == '__main__':    
+    run_on_multi_subjects()
+    #run_one_subject()
+    #s = [5,7,10,16]
+    #print 's = ', s
+    #t = heuristic_modified_cuts(s,3)
+    #print 't = ', t

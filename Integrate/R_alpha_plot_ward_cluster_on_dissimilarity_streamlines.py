@@ -62,14 +62,14 @@ if __name__ == '__main__':
                             
             #plt.plot(x, y, 'g-', label = '201', markersize = 1.2)            
             #plt.plot(x, y,linestyle='-','rD', label = str(data_id), markersize = 1.8)            
-            plt.plot(x, y, marker[mk],color ='black', label = str(data_id), markersize = 8)            
+            plt.plot(x, y, marker[mk],color ='black', label = str(data_id), markersize = 8,linewidth=2.)            
     #       plt.xlabel('scale: ' + str(1./ward.height_[len(ward.height_)-1]))
             #markers_on = np.linspace(0, 1, ward.height_[len(ward.height_)-1])+0.5/ ward.height_[len(ward.height_)-1]
             #y_markers_on = [R_function(ward.R_alpha_,ward.height_[len(ward.height_)-1],x_i+0.5/ ward.height_[len(ward.height_)-1]) for x_i in markers_on]
             #plt.plot(markers_on, y_markers_on, 'rD')
     plt.legend(loc='lower right')    
-    plt.xlabel('scale')
-    plt.ylabel('goodness')
+    plt.xlabel('scale', fontsize=17)
+    plt.ylabel('goodness score', fontsize=17)
     #plt.title('Choosing scale based on goodness of a cut')            
     plt.show()
 
