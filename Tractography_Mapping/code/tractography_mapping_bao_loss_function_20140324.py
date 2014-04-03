@@ -61,7 +61,7 @@ def Pyramid_KN(set1, set2, weight=1., num_bins = 128):
     #print nl_set2
     #print his_set1
     #print his_set2    
-    loss_patt = max(len(set1),len(set2))/2. - si_patt
+    loss_patt = min(len(set1),len(set2))/2. - si_patt
     loss = weight * loss_patt + (1.0 - weight)* loss_scale
 
     return loss
