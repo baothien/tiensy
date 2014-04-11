@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Apr  9 19:27:20 2014
+
+@author: bao
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Apr  3 15:15:38 2014
 
 @author: bao
@@ -21,71 +28,10 @@ from dipy.viz import fvtk
 from dipy.tracking.distances import mam_distances, bundles_distances_mam
 from dipy.tracking.metrics import length
 from simulated_annealing import anneal, transition_probability, temperature_boltzmann, temperature_cauchy
-
 #from prototypes import furthest_first_traversal as fft
-
-from common_functions import save_id_tract_plus_sff
+from common_functions import *
 import argparse
   
-def load_cst(tracks_filename, cst_index_file, ext):
-    from dipy.io.dpy import Dpy
-    from dipy.io.pickles import load_pickle
-    dpr_tracks = Dpy(tracks_filename, 'r')
-    all_tracks=dpr_tracks.read_tracks()
-    dpr_tracks.close()
-    tracks_id = load_pickle(cst_index_file)
-    	
-    cst = [all_tracks[i] for i  in tracks_id]    
-    
-    cst_ext = [all_tracks[i] for i  in tracks_id]
-    medoid_cst = []
-    #len_dis = 250
-    if ext:
-        k = np.round(len(cst)*1.2)
-        not_cst_fil = []
-        min_len = min(len(i) for i in cst)
-        #print 'min_len of cst', min_len
-        min_len = min_len*2.2/3#2./3.2# - 20
-        for i in np.arange(len(all_tracks)):
-            if (i not in tracks_id) and (length(all_tracks[i]) > min_len):
-                not_cst_fil.append(all_tracks[i])
-        
-        #for st in all_tracks:
-        #    if (length(st)>=min_len) and (st not in cst):
-        #        not_cst_fil.append(st)
-                
-        from dipy.segment.quickbundles import QuickBundles
-        
-        qb = QuickBundles(cst,200,18)
-        
-        medoid_cst = qb.centroids[0]
-        
-        med_notcst_dm = bundles_distances_mam([medoid_cst], not_cst_fil)
-        med_cst_dm = bundles_distances_mam([medoid_cst], cst)
-        
-        cst_rad = med_cst_dm[0][np.argmax(med_cst_dm[0])]
-        len_dis = cst_rad * 2.8/2.
-        #print med_cst_dm
-        #print cst_rad
-        #print len_dis
-        #k_indices which close to the medoid
-        sort = np.argsort(med_notcst_dm,axis = 1)[0]
-        #print sort[:k+1]
-        while (k>0 and med_notcst_dm[0][sort[k]]>=len_dis):
-            k = k - 1
-            
-        #print med_notcst_dm[0][sort[0:k]]    
-        #print k
-        #close_indices = np.argsort(cst_dm,axis = 1)[:,0:k][0]
-        close_indices = sort[0:k]
-        
-        for idx in close_indices:
-            cst_ext.append(not_cst_fil[idx])            
-        
-        return cst, cst_ext, medoid_cst
-
-    return cst
-
 def random_mapping(size1, size2):
     """Generate a random mapping from from 1 to 2.
     """
@@ -131,24 +77,11 @@ def random_choice(values, size=1):
     values_normalized_with0[1:] = values_normalized
     choice = np.where(values_normalized_with0.cumsum() > np.random.rand())[0][0] - 1
     return choice
-
-def visualize_tract(ren, tract,color=fvtk.red):    
    
-    for i in np.arange(len(tract)):
-        fvtk.add(ren, fvtk.line(tract[i], color, opacity=1.0))       
-     
-    return ren
-
-def visualize_mapped(ren, tract2, mapping, color = fvtk.blue):
-    for i in np.arange(len(mapping)):        
-        fvtk.add(ren, fvtk.line(tract2[mapping[i]], color, opacity=1.0))     
-    return ren
-    
 def visualize_source_mappedsource(ren, tract1, tract2, mapping, color1=fvtk.red, color2=fvtk.blue): 
     for i in np.arange(len(tract1)):
         fvtk.add(ren, fvtk.line(tract1[i], color1, opacity=1.0))
-        fvtk.add(ren, fvtk.line(tract2[mapping[i]], color2, opacity=1.0))
-     
+        fvtk.add(ren, fvtk.line(tract2[mapping[i]], color2, opacity=1.0))     
     return ren
       
 def visualize_diff_color(ren, tract1, tract2, mapping):
@@ -212,8 +145,8 @@ parser.add_argument(
                     'inputSourceTractography',
                     help='The file name of source whole-brain tractography as .dpy format.')
 parser.add_argument(
-                    'inputSourceCSTIndex',
-                    help='The file name of source CST index')
+                    'inputSourceCSTSFFIndex',
+                    help='The file name of source CST plus SFF index')
 
 parser.add_argument(
                     'inputTargetTractography',
@@ -221,7 +154,14 @@ parser.add_argument(
 parser.add_argument(
                     'inputTargetCSTIndex',
                     help='The file name of target CST index')
-   
+parser.add_argument(
+                    'inputTargetCSTExtSFFIndex',
+                    help='The file name of target CST extension plus SFF index')
+
+parser.add_argument(
+                    '-pr', action='store', dest='inputNumPrototypes', type=int,
+                    help='The number of prototypes') 
+                    
 parser.add_argument(
                     '-an', action='store', dest='inputAnneal_iterations', type=int,
                     help='The number of interation for annealing')  
@@ -233,19 +173,17 @@ parser.add_argument(
                     'outputMap_1nn',
                     help='The output file name of the 1-NN mapping')
                     
-parser.add_argument(
-                    '-ext', dest="flag_ext",
-                    help='Extend the target cst or not (True/False')
                     
 args = parser.parse_args()
 
 print "=========================="
 print "Source tractography:       ", args.inputSourceTractography
-print "Source CST index:       ", args.inputSourceCSTIndex
+print "Source CST plus SFF index:       ", args.inputSourceCSTSFFIndex
 print "Target tractography:       ", args.inputTargetTractography
 print "Target CST index:       ", args.inputTargetCSTIndex
+print "Target CST extension plus SFF index:       ", args.inputTargetCSTExtSFFIndex
+print "Number of prototypes:      ", args.inputNumPrototypes 
 print "Anneal iterations:      ", args.inputAnneal_iterations 
-print "Extend the target CST:   ", args.flag_ext
 
 print "=========================="
 
@@ -255,31 +193,28 @@ print "=========================="
 
 
 s_file = args.inputSourceTractography
-s_ind = args.inputSourceCSTIndex
+s_ind = args.inputSourceCSTSFFIndex
 
 t_file = args.inputTargetTractography
-t_ind = args.inputTargetCSTIndex
+t_ind = args.inputTargetCSTExtSFFIndex
+t_cst = args.inputTargetCSTIndex
+
+num_pro = args.inputNumPrototypes 
 
 map_best_fn = args.outputMap_best
 map_1nn_fn = args.outputMap_1nn
 
 iterations_anneal = args.inputAnneal_iterations 
 
-ext_flag = args.flag_ext
+source_cst = load_tract(s_file,s_ind)
 
-source_cst = load_cst(s_file,s_ind,False)
+#target_cst, target_cst_ext, medoid_target_cst = load_cst(t_file,t_ind,True)
+target_cst = load_tract(t_file,t_ind)
 
-target_cst, target_cst_ext, medoid_target_cst = load_cst(t_file,t_ind,True)
-
-print len(source_cst), len(target_cst), len(target_cst_ext)
+print len(source_cst), len(target_cst)
 
 tractography1 = source_cst
-
-if ext_flag=='True':
-    tractography2 = target_cst_ext
-else:
-    tractography2 = target_cst
-
+tractography2 = target_cst
 
 print "Source", len(tractography1)
 print "Target", len(tractography2)
@@ -325,138 +260,21 @@ save_pickle(map_best_fn,mapping12_best)
 save_pickle(map_1nn_fn,mapping12_coregistration_1nn)
 print 'Saved ', map_best_fn
 print 'Saved ', map_1nn_fn
-#save_pickle('/home/bao/tiensy/Tractography_Mapping/code/result/map_best_201_202_cst_ext_ann_100.txt',mapping12_best)
-#save_pickle('/home/bao/tiensy/Tractography_Mapping/code/result/map_1nn_201_202_cst_ext_ann_100.txt',mapping12_coregistration_1nn)
-
-#ren = fvtk.ren() 
-#ren = visualize(ren,tractography1[:6],tractography2,mapping12_best)
-#fvtk.show(ren)
-
-#ren1 = fvtk.ren() 
-#ren1 = visualize(ren1,tractography1[6:12],tractography2,mapping12_best[6:])
-#fvtk.show(ren1)
-
+'''
 #visualize source and mapped source - red and blue
 ren3 = fvtk.ren()
-ren3 = visualize_source_mappedsource(ren3, tractography1, tractography2, mapping12_best)
+ren3 = visualize_source_mappedsource(ren3, tractography1[:- num_pro], tractography2, mapping12_best[:-num_pro])
 fvtk.show(ren3)
 
 #visualize target cst and mapped source cst - yellow and blue
 ren4 = fvtk.ren()
-ren4 = visualize_tract(ren4, target_cst, fvtk.yellow)
-ren4 = visualize_mapped(ren4, tractography2, mapping12_best, fvtk.blue)
+target_cst_only = load_tract(t_file,t_cst)
+ren4 = visualize_tract(ren4, target_cst_only, fvtk.yellow)
+ren4 = visualize_mapped(ren4, tractography2, mapping12_best[:- num_pro], fvtk.blue)
 fvtk.show(ren4)
-
-
-
-
-
 '''
-if __name__ == '__main__':
-
-    do_random_search = False#True
-    do_simulated_annealing = True
-
-    iterations_anneal = 100
-      
-    #begin of working with two tractography
-    
-    filename_1 = 'data/101_tracks_dti_10K_linear.dpy'    
-    filename_2 = 'data/104_tracks_dti_10K_linear.dpy'    
-    
-    #prototype_policies = ['random', 'fft', 'sff']
-    #num_prototypes = 200
-    
-    size1 = 150#100
-    size2 = 400#100
-
-    print "Loading tracks."
-    dpr_1 = Dpy(filename_1, 'r')
-    tracks_1_all = dpr_1.read_tracks()
-    dpr_1.close()
-    
-    tracks_1 = filter(lambda x: len(x) > 20, tracks_1_all)
-    
-    #tracks_1 = []
-    #for st in tracks_1_all:
-    #    if (length(st)>25):
-    #        tracks_1.append(st)
-    
-    tracks_1 = np.array(tracks_1, dtype=np.object)
-    
-    
-    dpr_2 = Dpy(filename_2, 'r')
-    tracks_2_all = dpr_2.read_tracks()
-    dpr_2.close()
-
-    tracks_2 = filter(lambda x: len(x) > 20, tracks_2_all)
-            
-    #tracks_2 = []
-    #for st in tracks_2_all:
-    #    if (length(st)>25):
-    #        tracks_2.append(st)
-    
-    tracks_2 = np.array(tracks_2, dtype=np.object) 
-    
-    
-    print len(tracks_1), len(tracks_2)   
-    
-    "mapping from prototypes of one tractography to the whole second tractography"        
-    
-    print "Creating two simulated tractographies of sizes", size1, "and", size2
-    np.random.seed(1) # this is the random seed to create tractography1 and tractography2
-    ids1 = np.random.permutation(len(tracks_1))[:size1]
-    # ids1 = sff(tractography, k=size1, distance=bundles_distances_mam)
-    # ids1 = fft(tractography, k=size1, distance=bundles_distances_mam)
-    tractography1 = tracks_1[ids1]        
-    
-    ids2 = np.random.permutation(len(tracks_2))[:size2]
-    # ids1 = sff(tractography, k=size1, distance=bundles_distances_mam)
-    # ids1 = fft(tractography, k=size1, distance=bundles_distances_mam)
-    tractography2 = tracks_2[ids2]
-    print "Done."
 
 
 
 
-    
-    print "Computing the distance matrices for each tractography."
-    dm1 = bundles_distances_mam(tractography1, tractography1)
-    dm2 = bundles_distances_mam(tractography2, tractography2)
-    
-    def neighbour4(mapping12):
-        """Computes the next state given the current state.
 
-        Change the mapping of one random streamline in a greedy way.
-        """
-        global size1, size2
-        source = np.random.randint(0, size1)
-        loss = np.zeros(size2)
-        for i, destination in enumerate(range(size2)):
-            mapping12[source] = destination
-            loss[i] = loss_function(mapping12)
-
-        mapping12[source] = np.argmin(loss) # greedy! (WORKS WELL!)
-        # mapping12[source] = random_choice(loss.max() - loss + loss.min()) # stochastic greedy (WORKS BAD!)
-        return mapping12
-        
-    def loss_function(mapping12):
-        """Computes the loss function of a given mapping.
-
-        This is the 'energy_function' of simulated annealing.
-        """
-        global dm1, dm2
-        loss = np.linalg.norm(dm1[np.triu_indices(size1)] - dm2[mapping12[:,None], mapping12][np.triu_indices(size1)])
-        return loss
-        
-    mapping12_coregistration_1nn, loss_coregistration_1nn, mapping12_best, energy_best = tracts_mapping(tractography1, tractography2, loss_function,neighbour4)
-    
-    ren = fvtk.ren() 
-    ren = visualize(ren,tractography1[:6],tractography2,mapping12_best)
-    fvtk.show(ren)
-    
-    ren1 = fvtk.ren() 
-    ren1 = visualize(ren1,tractography1[6:12],tractography2,mapping12_best[6:])
-    fvtk.show(ren1)
-'''
-    
