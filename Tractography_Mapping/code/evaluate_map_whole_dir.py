@@ -15,7 +15,7 @@ Local: cst to cst
 Global:- cst to cst_ext
        - cst_sff to cst_ext_sff
 """
-from common_functions import minus
+from common_functions import minus, overlap
 from dipy.io.pickles import load_pickle
 import numpy as np
 import argparse
@@ -58,9 +58,9 @@ print "=========================="
 
 import numpy as np
 
-source_ids = [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 212]
+source_ids =[212]#03]# [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 212]
 
-target_ids = [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212]
+target_ids = [201, 202, 203, 204, 206, 207,208, 209,210]#203, 204, 205, 206, 207, 208, 209, 210, 212]
 
 for s_id in np.arange(len(source_ids)):
     print source_ids[s_id]
@@ -71,11 +71,41 @@ for s_id in np.arange(len(source_ids)):
             target = str(target_ids[t_id])
             s_ind    = '/home/bao/tiensy/Tractography_Mapping/code/data/' + source + '_corticospinal_L_3M.pkl'
             t_ind    = '/home/bao/tiensy/Tractography_Mapping/code/data/' + target + '_corticospinal_L_3M.pkl'
-            map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF/map_best_' + source + '_'+ target + '_cst_L_ann_100.txt'
+            '''
+            native space CST_2_CST
+            '''            
+            #map_file_nn = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_2_cst_ext/map_1nn_' + source + '_'+ target + '_cst_L_ext_ann_100.txt'           
+            #map_all = load_pickle(map_file_nn)            
+            #map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_2_cst_ext/map_best_' + source + '_'+ target + '_cst_L_ext_ann_100.txt'
+            #map_all = load_pickle(map_file)  
+            
+            '''
+            native space CST_SFF_2_CST_EXT_SFF
+            '''            
+            #map_file_nn = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF/map_1nn_' + source + '_'+ target + '_cst_L_ann_100.txt'           
+            #map_all = load_pickle(map_file_nn)            
+            #map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF/map_best_' + source + '_'+ target + '_cst_L_ann_100.txt'
+            #map_all = load_pickle(map_file)            
+            
+            '''
+            MNI space with 100 annealing iterations
+            '''         
+            #map_file_nn_MNI = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF_MNI/map_1nn_' + source + '_'+ target + '_cst_L_ann_100.txt'
+            #map_all = load_pickle(map_file_nn_MNI)                                    
+            #map_file_MNI = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF_MNI/map_best_' + source + '_'+ target + '_cst_L_ann_100.txt'
+            #map_all = load_pickle(map_file_MNI)
+            
+            '''
+            MNI space with 1000 annealing iterations
+            ''' 
+            #map_file_nn_MNI = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF_MNI/map_1nn_' + source + '_'+ target + '_cst_L_ann_1000.txt'
+            #map_all = load_pickle(map_file_nn_MNI)                                    
+            map_file_MNI = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF_MNI/map_best_' + source + '_'+ target + '_cst_L_ann_1000.txt'
+            map_all = load_pickle(map_file_MNI)
             
             s_cst = load_pickle(s_ind)
             t_cst = load_pickle(t_ind)
-            map_all = load_pickle(map_file)
+            
             
             cst_len = len(s_cst)
             mapp = map_all[:cst_len]
@@ -86,11 +116,13 @@ for s_id in np.arange(len(source_ids)):
             t_cst_minus_map = minus(t_id_ar, mapp)
             num_in = len(t_cst) - len(t_cst_minus_map)
             
+            num_in_1 = quantity_in(t_id_ar, mapp)#, t_id_ar)
+            
             map_minus_t_cst = minus(mapp,t_id_ar)
             num_out = len(map_minus_t_cst)
             num_replicate = cst_len - num_out
             
-            print '\t',target, '\t', cst_len, '\t', len(t_cst), '\t', num_out , '\t', num_replicate
+            print '\t',target, '\t', cst_len, '\t', len(t_cst), '\t', num_replicate, '\t', num_out #,'\t', num_in_1
             #print 'Len of cst - source and target, and mapping', cst_len, len(t_cst), len(map_all), len(mapp)
             #print 'Number of fiber inside target', num_in
             #print 'Number of fiber replicating outside target', num_out

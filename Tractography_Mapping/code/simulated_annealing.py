@@ -49,7 +49,8 @@ def anneal(initial_state, energy_function, neighbour, transition_probability, te
     energy_best = energy
     energy_old = energy
     k = 0
-    print "Step) Energy \t Prob. \t Temp. \t (E'-E) \t BEST"
+    iteration_step = k
+    #print "Step) Energy \t Prob. \t Temp. \t (E'-E) \t BEST"
     while k < max_steps and energy > energy_max:
         T = temperature(k, T0)
         state_new = neighbour(state)
@@ -63,12 +64,14 @@ def anneal(initial_state, energy_function, neighbour, transition_probability, te
         if energy_new < energy_best:
             state_best = state_new
             energy_best = energy_new
-            print "* %s) %s \t %s \t %s \t %s \t %s" % (k, energy_best, p, T, energy_old, energy_new)
+            iteration_step = k
+            #print "* %s) %s \t %s \t %s \t %s \t %s" % (k, energy_best, p, T, energy_old, energy_new)
+            
 
         if (k % log_every) == 0:
-            print "%s) %s \t %s \t %s \t %s \t %s" % (k, energy, p, T, energy_new - energy_old, energy_best)
+            #print "%s) %s \t %s \t %s \t %s \t %s" % (k, energy, p, T, energy_new - energy_old, energy_best)
             stdout.flush()
             
         k += 1
-
+    print "The minimize of energy:  ", energy_best, "  at iteration : ", iteration_step
     return state_best, energy_best

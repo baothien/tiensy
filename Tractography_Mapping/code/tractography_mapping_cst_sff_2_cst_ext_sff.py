@@ -254,6 +254,7 @@ def loss_function(mapping12):
     return loss
     
 mapping12_coregistration_1nn, loss_coregistration_1nn, mapping12_best, energy_best = tracts_mapping(tractography1, tractography2, loss_function,neighbour4, iterations_anneal)
+print "Best enegery of annealing: ", energy_best
 
 from dipy.io.pickles import save_pickle
 save_pickle(map_best_fn,mapping12_best)
