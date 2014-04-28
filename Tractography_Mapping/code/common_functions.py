@@ -58,7 +58,34 @@ def load_tract(tracks_filename, id_file):
     	
     tract = [all_tracks[i] for i  in tracks_id]
     
+    tract = np.array(tract,dtype=np.object)
     return tract
+    
+def load_tract_trk(tracks_filename, id_file):
+    '''
+    load tract from trackvis format
+    '''
+    import nibabel as nib
+    streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
+    all_tracks = np.array([s[0] for s in streams], dtype=np.object)
+    
+    from dipy.io.pickles import load_pickle
+    tracks_id = load_pickle(id_file)
+    tract = [all_tracks[i] for i  in tracks_id]
+    
+    tract = np.array(tract,dtype=np.object)  
+    
+    return tract
+    
+def load_trk_file(tracks_filename):
+    '''
+    load tract from trackvis format
+    '''
+    import nibabel as nib
+    streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
+    all_tracks = np.array([s[0] for s in streams], dtype=np.object)
+     
+    return all_tracks
     
 def save_id_tract_plus_sff(tracks_filename, id_file, num_proto, distance, out_fname):
    
