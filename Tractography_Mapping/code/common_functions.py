@@ -11,7 +11,43 @@ from dipy.viz import fvtk
 from dipy.tracking.metrics import length
 from dipy.io.pickles import load_pickle, save_pickle
 from dissimilarity_common_20130925 import subset_furthest_first as sff
+   
+
+ 
+def spheres_intersection(point1, radius1, point2, radius2):
+    '''
+    calculate the volume of two spheres' intersection
+    http://mathworld.wolfram.com/Sphere-SphereIntersection.html
+    '''
+    #distance between two center points
+    import math 
+    d = sqrt((point1[0]-point2[0])^2 + (point1[1]-point2[1])^2 + (point1[2]-point2[2])^2)
+    volume = math.pi * ((radius1 + radius2 - d)^2) * (d^2 + 2*d*radius1 - 3*(radius1^2) + 2*d*radius2 +6*radius1*radius2 - 3*(radius2^2)) / (12*d)
     
+    return volume
+
+def nativevoxel2MNImm(point, anatomy, flirt_T1_mat ):
+    import os
+    cmd = 'echo "' + str(point[0]) + ' ' + str(point[1]) + ' ' + str(point[2]) + '" | img2stdcoord '
+    arg1 = '-img ' + anatomy + ' '#/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/anatomy.nii.gz '
+    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -xfm '
+    arg3 = flirt_T1_mat + ' -vox'#'/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/flirt_T1.mat -vox'
+    full_cmd = cmd + arg1 + arg2 + arg3    
+    #os.system('echo "156 111 145" | img2stdcoord -img /home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/anatomy.nii.gz -std $FSLDIR/data/standard/MNI152_T1_1mm -xfm /home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/flirt_T1.mat -vox')
+    #print full_cmd    
+    #print point    
+    os.system(full_cmd)
+
+def MNImm2MNIvoxel(point):
+    import os
+    #echo "-36.18 -21.52 41.28" | std2imgcoord -img $FSLDIR/data/standard/MNI152_T1_1mm -std $FSLDIR/data/standard/MNI152_T1_1mm -vox -
+    cmd = 'echo "' + str(point[0]) + ' ' + str(point[1]) + ' ' + str(point[2]) + '" | std2imgcoord '
+    arg1 = '-img $FSLDIR/data/standard/MNI152_T1_1mm '
+    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -vox -'  
+    full_cmd = cmd + arg1 + arg2    
+    #print point    
+    os.system(full_cmd)    
+
 def concat(tract1, tract2):
     
     res = []
@@ -22,7 +58,7 @@ def concat(tract1, tract2):
         res.append(tract2[j])
     
     return res
- 
+    
 def overlap(A1, A2):
     '''
     Return the overlap array between two arrays: A1 and A2
