@@ -12,26 +12,51 @@ from dipy.tracking.metrics import length
 from dipy.io.pickles import load_pickle, save_pickle
 from dissimilarity_common_20130925 import subset_furthest_first as sff
    
-
- 
+def mklink():
+    import os
+    ids = [201, 202, 203, 204,205, 206, 207,208, 209,210, 212, 213]
+    for i in np.arange(len(ids)):
+        sub = str(ids[i])
+        arg1 = 'ln -s '
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M_linear.dpy '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M_linear.dpy'
+        
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M_linear.trk '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M_linear.trk'
+        
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.dpy'
+        
+        arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.trk '
+        arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.trk'
+        
+        full_cmd = arg1 + arg2 + arg3        
+        os.system(full_cmd)
+    
 def spheres_intersection(point1, radius1, point2, radius2):
     '''
     calculate the volume of two spheres' intersection
     http://mathworld.wolfram.com/Sphere-SphereIntersection.html
     '''
     #distance between two center points
-    import math 
-    d = sqrt((point1[0]-point2[0])^2 + (point1[1]-point2[1])^2 + (point1[2]-point2[2])^2)
-    volume = math.pi * ((radius1 + radius2 - d)^2) * (d^2 + 2*d*radius1 - 3*(radius1^2) + 2*d*radius2 +6*radius1*radius2 - 3*(radius2^2)) / (12*d)
     
-    return volume
+    import math 
+    d = math.sqrt((point1[0]-point2[0])*(point1[0]-point2[0]) + (point1[1]-point2[1])*(point1[1]-point2[1]) + (point1[2]-point2[2])*(point1[2]-point2[2]))
+    
+    if (d>=(radius1 + radius2)):
+        return d, 0.
 
-def nativevoxel2MNImm(point, anatomy, flirt_T1_mat ):
+    volume = math.pi * ((radius1 + radius2 - d)*(radius1 + radius2 - d)) * (d*d + 2*d*radius1 - 3*(radius1*radius1) + 2*d*radius2 +6*radius1*radius2 - 3*(radius2*radius2)) / (12*d)
+    
+    return d, volume
+
+def nativevoxel2MNImm(point, anatomy, flirt_mat ):
     import os
     cmd = 'echo "' + str(point[0]) + ' ' + str(point[1]) + ' ' + str(point[2]) + '" | img2stdcoord '
     arg1 = '-img ' + anatomy + ' '#/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/anatomy.nii.gz '
-    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -xfm '
-    arg3 = flirt_T1_mat + ' -vox'#'/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/flirt_T1.mat -vox'
+    #arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -xfm '
+    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm_brain.nii.gz -xfm '
+    arg3 = flirt_mat + ' -vox'#'/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/flirt_T1.mat -vox'
     full_cmd = cmd + arg1 + arg2 + arg3    
     #os.system('echo "156 111 145" | img2stdcoord -img /home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/anatomy.nii.gz -std $FSLDIR/data/standard/MNI152_T1_1mm -xfm /home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/109/MP_Rage_1x1x1_ND_3/flirt_T1.mat -vox')
     #print full_cmd    
@@ -42,8 +67,11 @@ def MNImm2MNIvoxel(point):
     import os
     #echo "-36.18 -21.52 41.28" | std2imgcoord -img $FSLDIR/data/standard/MNI152_T1_1mm -std $FSLDIR/data/standard/MNI152_T1_1mm -vox -
     cmd = 'echo "' + str(point[0]) + ' ' + str(point[1]) + ' ' + str(point[2]) + '" | std2imgcoord '
-    arg1 = '-img $FSLDIR/data/standard/MNI152_T1_1mm '
-    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -vox -'  
+    #arg1 = '-img $FSLDIR/data/standard/MNI152_T1_1mm '
+    #arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm -vox -'  
+    arg1 = '-img $FSLDIR/data/standard/MNI152_T1_1mm_brain.nii.gz '
+    arg2 = '-std $FSLDIR/data/standard/MNI152_T1_1mm_brain.nii.gz -vox -'  
+    
     full_cmd = cmd + arg1 + arg2    
     #print point    
     os.system(full_cmd)    
@@ -83,6 +111,17 @@ def minus(A1, A2):
             minus.append(A1[i])
     return minus
             
+def load_whole_tract(tracks_filename):
+    
+    from dipy.io.dpy import Dpy
+    from dipy.io.pickles import load_pickle
+    dpr_tracks = Dpy(tracks_filename, 'r')
+    all_tracks=dpr_tracks.read_tracks()
+    dpr_tracks.close()
+    
+    all_tracks = np.array(all_tracks,dtype=np.object)
+    return all_tracks
+    
 def load_tract(tracks_filename, id_file):
     
     from dipy.io.dpy import Dpy
@@ -96,6 +135,16 @@ def load_tract(tracks_filename, id_file):
     
     tract = np.array(tract,dtype=np.object)
     return tract
+   
+def load_whole_tract_trk(tracks_filename):
+    '''
+    load tract from trackvis format
+    '''
+    import nibabel as nib
+    streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
+    all_tracks = np.array([s[0] for s in streams], dtype=np.object)
+    
+    return all_tracks
     
 def load_tract_trk(tracks_filename, id_file):
     '''

@@ -139,7 +139,7 @@ ROIs_subject_R = {'101': (np.array([61.5,66.5,20.5], dtype=np.float32), np.array
                   '204': (np.array([62.5,68.5,13.5], dtype=np.float32), np.array([54.5,68.5,35.5], dtype=np.float32)), 
                   '205': (np.array([63.5,61.5,16.5], dtype=np.float32), np.array([54.5,60.5,38.5], dtype=np.float32)), 
                   '206': (np.array([60.5,67.5,20.5], dtype=np.float32), np.array([54.5,68.5,39.5], dtype=np.float32)), 
-                  '207': (np.array([61.5,68.5,15.5], dtype=np.float32), np.array([53.5,67.5,35.5], dtype=np.float32)), 
+                  '207': (np.array([61.5,68.5,15.5], dtype=np.float32), np.array([53.5,67.5,34.5], dtype=np.float32)), 
                   '208': (np.array([60.5,65.5,21.5], dtype=np.float32), np.array([53.5,66.5,39.5], dtype=np.float32)), 
                   '209': (np.array([61.5,67.5,18.5], dtype=np.float32), np.array([53.5,70.5,38.5], dtype=np.float32)), 
                   '210': (np.array([63.5,64.5,20.5], dtype=np.float32), np.array([54.5,67.5,39.5], dtype=np.float32)), 
@@ -181,6 +181,7 @@ mapped_tract = extract_mapped_tract(s_idx, tractography2, mapping12_best)#[:-num
 
 
 ROIs = ROIs_subject[t_sub]
+ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
 
 common = intersec_ROIs(mapped_tract, ROIs, Rs, vis=True)
 
