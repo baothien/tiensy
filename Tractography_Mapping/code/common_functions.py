@@ -220,13 +220,14 @@ def save_id_tract_ext(tracks_filename, id_file,  distance, out_fname):
     min_len = min(len(i) for i in tract)
     #print 'min_len of cst', min_len
     min_len = min_len*2.2/3#2./3.2# - 20
+    #min_len = min_len*2./3.2#2./3.2# - 20
     for i in np.arange(len(all_tracks)):
         if (i not in tracks_id) and (length(all_tracks[i]) > min_len):
             not_tract_fil.append(all_tracks[i])
             id_not_tract_fil.append(i)
        
-   
-    k = np.round(len(tract)*1.2)   
+    #k = np.round(len(tract)*2.)#1.2)       
+    k = np.round(len(tract)*1.2)       
             
     from dipy.segment.quickbundles import QuickBundles
     

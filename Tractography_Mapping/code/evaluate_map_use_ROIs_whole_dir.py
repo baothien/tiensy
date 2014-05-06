@@ -13,11 +13,22 @@ def clearall():
     all = [var for var in globals() if (var[:2], var[-2:]) != ("__", "__") and var != "clearall" and var!="s_id" and var!="source_ids" and var!="t_id" and var!="target_ids"  and var!="np"]
     for var in all:
         del globals()[var]
+'''
+#for Left CST_ROI
+source_ids =[ 205, 201]#03]# [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 213]
+target_ids = [201, 202, 203, 204,205, 206, 207,208, 209,210,213]
+'''
 
+#for Right CST_ROI
+source_ids =[212, 213]#[201, 202, 203, 204, 205, 207,208, 210, 212, 213]
+target_ids = [202]#[201, 202, 203, 204, 205, 207,208, 210, 212, 213]
+
+'''
+#for CST_BOI
 source_ids =[202,203]# [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 212]
-
 target_ids = [201, 202, 203, 204,205, 206, 207,208, 209,210, 212]
-            
+'''
+
 for s_id in np.arange(len(source_ids)):
     print '-----------------------------------------------------------------------------------------'
     print 'Source: ', source_ids[s_id]
@@ -26,14 +37,15 @@ for s_id in np.arange(len(source_ids)):
             source = str(source_ids[s_id])
             target = str(target_ids[t_id])
             
-            #Native space            
+            '''            
+            #Native space for CST_BOI           
             print 
             print 'Target: ', target
             
             fname = 'evaluate_map_use_ROIs.py'
             arg1 = '/home/bao/tiensy/Tractography_Mapping/code/data/' + source + '_corticospinal_L_3M.pkl'
             arg2 = target            
-            arg3 = '/home/bao/tiensy/Tractography_Mapping/code/data/' + target + '_tracks_dti_3M.trk'
+            arg3 = '/home/bao/tiensy/Tractography_Mapping/code/data/' + target + '_tracks_dti_3M.dpy'
             arg4 = '/home/bao/tiensy/Tractography_Mapping/code/data/' + target + '_corticospinal_L_3M.pkl'
             arg5 = '/home/bao/tiensy/Tractography_Mapping/code/data/50_SFF/' + target + '_cst_L_3M_ext_plus_sff.pkl'
             arg6 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff/50_SFF/map_best_' + source + '_' + target + '_cst_L_ann_100.txt'
@@ -42,4 +54,47 @@ for s_id in np.arange(len(source_ids)):
             import sys
             sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8]
             execfile(fname)
-            clearall()     
+            clearall()  
+            '''
+            
+            
+            #------------------------------------------------------------------------------------------
+            #Native space for CST_ROI
+            '''
+            #Left
+            print 
+            print 'Target: ', target
+            
+            fname = 'evaluate_map_use_ROIs.py'
+            arg1 = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_L_control/' + source + '_CST_ROI_L_3M.pkl'
+            arg2 = target            
+            arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + target + '_tracks_dti_3M.dpy'
+            arg4 = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_L_control/' + target + '_CST_ROI_L_3M.pkl'
+            arg5 = '/home/bao/tiensy/Tractography_Mapping/data/50_SFF_plus_ext/ROI_seg/' + target + '_cst_L_3M_ext_plus_sff.pkl'
+            arg6 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_ROI/50_SFF_native/map_best_' + source + '_' + target + '_cst_L_ann_100.txt'
+            arg7 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_ROI/50_SFF_native/map_1nn_' + source + '_' + target + '_cst_L_ann_100.txt'
+            arg8 = '-vi=0'            
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8]
+            execfile(fname)
+            clearall() 
+            '''
+            
+            #Right
+            print 
+            print 'Target: ', target
+            
+            fname = 'evaluate_map_use_ROIs.py'
+            arg1 = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_R_control/' + source + '_CST_ROI_R_3M.pkl'
+            arg2 = target            
+            arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + target + '_tracks_dti_3M.dpy'
+            arg4 = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_R_control/' + target + '_CST_ROI_R_3M.pkl'
+            arg5 = '/home/bao/tiensy/Tractography_Mapping/data/50_SFF_plus_ext/ROI_seg/' + target + '_cst_R_3M_ext_plus_sff.pkl'
+            arg6 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_ROI/50_SFF_native/map_best_' + source + '_' + target + '_cst_R_ann_100.txt'
+            arg7 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_ROI/50_SFF_native/map_1nn_' + source + '_' + target + '_cst_R_ann_100.txt'
+            arg8 = '-vi=0'            
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8]
+            execfile(fname)
+            clearall() 
+            #------------------------------------------------------------------------------------------

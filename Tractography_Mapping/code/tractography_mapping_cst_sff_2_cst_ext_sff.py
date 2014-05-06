@@ -177,15 +177,14 @@ parser.add_argument(
 args = parser.parse_args()
 
 print "=========================="
-print "Source tractography:       ", args.inputSourceTractography
+#print "Source tractography:       ", args.inputSourceTractography
 print "Source CST plus SFF index:       ", args.inputSourceCSTSFFIndex
-print "Target tractography:       ", args.inputTargetTractography
-print "Target CST index:       ", args.inputTargetCSTIndex
+#print "Target tractography:       ", args.inputTargetTractography
+#print "Target CST index:       ", args.inputTargetCSTIndex
 print "Target CST extension plus SFF index:       ", args.inputTargetCSTExtSFFIndex
-print "Number of prototypes:      ", args.inputNumPrototypes 
-print "Anneal iterations:      ", args.inputAnneal_iterations 
-
-print "=========================="
+#print "Number of prototypes:      ", args.inputNumPrototypes 
+#print "Anneal iterations:      ", args.inputAnneal_iterations 
+#print "=========================="
 
 #if not os.path.isdir(args.inputDirectory):
 #    print "Error: Input directory", args.inputDirectory, "does not exist."
@@ -216,11 +215,11 @@ print len(source_cst), len(target_cst)
 tractography1 = source_cst
 tractography2 = target_cst
 
-print "Source", len(tractography1)
-print "Target", len(tractography2)
+#print "Source", len(tractography1)
+#print "Target", len(tractography2)
 
 
-print "Computing the distance matrices for each tractography."
+#print "Computing the distance matrices for each tractography."
 dm1 = bundles_distances_mam(tractography1, tractography1)
 dm2 = bundles_distances_mam(tractography2, tractography2)
 

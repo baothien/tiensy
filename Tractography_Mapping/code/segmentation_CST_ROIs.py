@@ -100,7 +100,7 @@ ROIs_MNI_voxel_R = { '201': (np.array([81.3713,  116.586  ,47.7394], dtype=np.fl
 ROIs_subject = ROIs_native_voxel_R
 Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
   
-source_ids =[202]#,202]#,203, 204, 205, 206, 207, 208, 209, 210, 212,213]
+source_ids =[202]#2]#,202]#,203, 204, 205, 206, 207, 208, 209, 210, 212,213]
 visualize = True# False
         
 for s_id in np.arange(len(source_ids)):
@@ -111,8 +111,8 @@ for s_id in np.arange(len(source_ids)):
     #Native space                    
     tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.dpy'        
     #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_saving_from_trackvis.trk'        
-    tracks_ind_file = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/Segmentation/ROI/index/'+ source + '_NILAB_bao_cst_right.pkl'
-    tracks = load_tract(tract_file,tracks_ind_file)
+    tracks_ind_file = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_R_control/'+ source + '_CST_ROI_R_3M.pkl'
+    #tracks = load_tract(tract_file,tracks_ind_file)
     
     '''
     tract_file1 = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_saving_from_trackvis.trk'            
@@ -122,8 +122,8 @@ for s_id in np.arange(len(source_ids)):
     ren = visualize_tract(ren, tracks1, fvtk.blue)
     '''
     #tract_file = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/Segmentation/ROI/'+ source + '/NILAB_bao_cst_left.trk'
-    #tracks = load_whole_tract(tract_file)
-    #print len(tracks)
+    tracks = load_whole_tract(tract_file)
+    print len(tracks)
 
     #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.trk'        
     #tracks = load_whole_tract_trk(tract_file)
@@ -132,11 +132,12 @@ for s_id in np.arange(len(source_ids)):
     from intersect_roi import *
 
     ROIs = ROIs_subject[source]
+    #convert from LPS in TrackVis software to LAS in dpy format
     ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
     print ROIs
 
-    common = intersec_ROIs_dpy(tracks, ROIs, Rs, vis = True)
-    #common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
+    #common = intersec_ROIs_dpy(tracks, ROIs, Rs, vis = True)
+    common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
 
     print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
     
