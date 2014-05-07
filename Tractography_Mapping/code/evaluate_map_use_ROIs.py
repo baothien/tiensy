@@ -270,8 +270,10 @@ ROIs_MNI_voxel_L_LAS = { '201': (np.array([100.341 , 104.394 , 47.7587], dtype=n
 		 }
 
 #ROIs_subject = ROIs_native_voxel_L_LAS
-ROIs_subject = ROIs_native_voxel_R_LAS
-Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
+#ROIs_subject = ROIs_native_voxel_R_LAS
+#Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
+ROIs_subject = ROIs_MNI_voxel_R_LAS
+Rs = [4.,4.]#np.array([2.,2.],dtype=np.float32)
    
 s_ind = args.inputSourceCSTIndex
 t_sub = args.inputTargetSubject
