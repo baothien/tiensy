@@ -90,13 +90,13 @@ for id_file in np.arange(len(sub)):
 	dpw = Dpy(cst_left_fname, 'w')
 	dpw.write_tracks(cst_left)    
 	dpw.close()
-    print len(cst_left)
+      print len(cst_left)
 	print '>>>> Done ', cst_left_fname
 
 	dpw = Dpy(cst_right_fname, 'w')
 	dpw.write_tracks(cst_right)    
 	dpw.close()
-    print len(sct_right)
+      print len(sct_right)
 	print '>>>> Done ', cst_right_fname
 	 
         

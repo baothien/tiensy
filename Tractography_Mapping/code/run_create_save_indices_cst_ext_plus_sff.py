@@ -76,6 +76,7 @@ for s_id in np.arange(len(source_ids)):
     execfile(fname)
     clearall()             
     '''
+    '''
     print 
     print '-----------------------------------------------------------------------------------------'
     fname = 'create_save_indices_cst_ext_plus_sff.py'
@@ -90,4 +91,21 @@ for s_id in np.arange(len(source_ids)):
     sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6]
     execfile(fname)
     clearall() 
+    '''
+    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_L_tvis.pkl'
+    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'        
     
+    print 
+    print '-----------------------------------------------------------------------------------------'
+    fname = 'create_save_indices_cst_ext_plus_sff.py'
+    arg1 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'
+    arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_R_tvis.pkl'
+    arg3 = '-pr=50'
+    arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_plus_ext/ROI_seg/' + source + '_cst_L_tvis_plus_sff.pkl'    
+    arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_plus_ext/ROI_seg/' + source + '_cst_L_tvis_ext.pkl'
+    arg6 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_plus_ext/ROI_seg/' + source + '_cst_L_tvis_ext_plus_sff.pkl'
+    
+    import sys
+    sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6]
+    execfile(fname)
+    clearall() 

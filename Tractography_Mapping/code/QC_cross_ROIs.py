@@ -186,9 +186,9 @@ ROIs_MNI_voxel_L_LAS = { '201': (np.array([100.341 , 104.394 , 47.7587], dtype=n
 		 }
 
 
-ROIs_subject = ROIs_native_voxel_R_LPS
+#ROIs_subject = ROIs_native_voxel_R_LPS
 
-#ROIs_subject = ROIs_native_voxel_R_LAS
+ROIs_subject = ROIs_native_voxel_R_LAS
 Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
   
 source_ids =[202]#[201,202,203, 204, 205, 206, 207, 208, 209, 210, 212,213]#[201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212]
@@ -209,7 +209,7 @@ for i in np.arange(len(source_ids)):
     #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.trk'        
     #tracks = load_tract_trk(tract_file,tracks_ind_file)
     '''
-    
+    '''
     tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_R_control/' + source + '_CST_ROI_R_3M.pkl'
     tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.dpy'        
     tracks = load_tract(tract_file,tracks_ind_file)
@@ -220,14 +220,14 @@ for i in np.arange(len(source_ids)):
     #from dipy.io.pickles import load_pickle
     #tracks_idx = load_pickle(tracks_ind_file)
 
-    from intersect_roi import *
+    #from intersect_roi import *
 
-    ROIs = ROIs_subject[source]
+    #ROIs = ROIs_subject[source]
     #convert from LPS in TrackVis software to LAS in dpy format
-    ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
-   
-   
+    #ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
     '''
+   
+    
     #MNI space  
     tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/BOI_seg/' + source + '_corticospinal_L_3M.pkl'
     tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_linear.dpy'        
@@ -236,11 +236,13 @@ for i in np.arange(len(source_ids)):
     
     from intersect_roi import *
     ROIs = ROIs_subject[source]
-    '''
+    
+    
+   
     
     
     common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
-
+    
     print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
     #print "Done evaluate using ROIs"
     

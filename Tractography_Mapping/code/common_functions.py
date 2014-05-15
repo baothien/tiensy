@@ -14,7 +14,7 @@ from dissimilarity_common_20130925 import subset_furthest_first as sff
    
 def mklink():
     import os
-    ids = [201, 202, 203, 204,205, 206, 207,208, 209,210, 212, 213]
+    ids = [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212, 213]
     for i in np.arange(len(ids)):
         sub = str(ids[i])
         arg1 = 'ln -s '
@@ -27,8 +27,11 @@ def mklink():
         #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.dpy '
         #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.dpy'
         
-        arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.trk '
-        arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.trk'
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.trk '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.trk'
+        
+        arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + sub + '/DTI/dti.trk '
+        arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + sub + '_tracks_dti_tvis.trk'
         
         full_cmd = arg1 + arg2 + arg3        
         os.system(full_cmd)
@@ -276,7 +279,70 @@ def save_id_tract_ext_plus_sff(tracks_filename, id_file, num_proto, distance, ou
     tract_ext_id = save_id_tract_ext(tracks_filename,id_file, distance, out_fname_ext)
     return save_id_tract_plus_sff(tracks_filename, out_fname_ext, num_proto,distance, out_fname_ext_sff)
     
+   
+def Shannon_entropy(tract):
+    '''
+    compute the Shannon Entropy of a set of tracks as defined by Lauren
+    H(A) = (-1/|A|) * sum{log(1/|A|)* sum[p(f_i|f_j)]} 
+    where p(f_i|f_j) = exp(-d(f_i,f_j)*d(f_i,f_j))
+    '''
+    from dipy.tracking.distances import bundles_distances_mam
+    import numpy as np
+    dm = bundles_distances_mam(tract, tract)
     
+    dm = np.array(dm, dtype =float)
+    
+    dm2 = dm**2
+    
+    A = len(tract)
+    theta = 10.
+    
+    pr_all = np.exp((-dm**2)/theta)
+    
+    pr_i = (1./A) * np.array([sum(pr_all[i]) for i in np.arange(A)])
+    
+    #sum_all = np.sum(pr_i)
+    #print pr_i
+    #print sum_all
+    #pr_i = (1./sum_all) * pr_i
+    #print pr_i
+    
+    #entropy = (-1./A) * sum([pr_i[i]*np.log(pr_i[i]) for i in np.arange(A)])
+    entropy = (-1./A) * sum([np.log(pr_i[i]) for i in np.arange(A)])
+    #entropy = (-1.) * sum([pr_i[i]*(np.log2(pr_i[i])) for i in np.arange(A)])
+    
+    #print dm2
+    #print pr_all
+    #print pr_i
+    
+    return entropy
+
+def volumn_intersec(tract1, tract2, vol_dims, voxel_size):
+    from dipy.tracking.vox2track import track_counts
+    
+    #compute the number of fiber crossing every voxel
+    tcv1 = track_counts(tract1,vol_dims, voxel_size, return_elements=False)
+    tcv2 = track_counts(tract2,vol_dims, voxel_size, return_elements=False)
+
+    count = 0    
+    count1 = 0
+    count2 = 0
+    for x in np.arange(vol_dims[0]):
+        for y in np.arange(vol_dims[1]):
+            for z in np.arange(vol_dims[2]):
+                if tcv1[x,y,z]>0:
+                    count1 = count1 + 1
+                    
+                if tcv2[x,y,z]>0:
+                    count2 = count2 + 1
+                
+                if tcv2[x,y,z]>0 and tcv2[x,y,z]>0:
+                    count = count + 1
+                    
+    
+    return count1, count2, count
+
+   
 def visualize_tract(ren, tract,color=fvtk.red):    
     for i in np.arange(len(tract)):
         fvtk.add(ren, fvtk.line(tract[i], color, opacity=1.0))        
