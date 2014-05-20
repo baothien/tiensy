@@ -35,6 +35,78 @@ def mklink():
         
         full_cmd = arg1 + arg2 + arg3        
         os.system(full_cmd)
+ 
+def center_streamlines(streamlines):
+    """ Move streamlines to the origin
+
+    Parameters
+    ----------
+    streamlines : list
+        List of 2D ndarrays of shape[-1]==3
+
+    Returns
+    -------
+    new_streamlines : list
+        List of 2D ndarrays of shape[-1]==3
+    inv_shift : ndarray
+        Translation in x,y,z to go back in the initial position
+
+    """
+    import numpy as np
+    center = np.mean(np.concatenate(streamlines, axis=0), axis=0)
+    return [s - center for s in streamlines], center
+       
+def streamlines_to_vol(static, moving, vol_size,
+                       disp=False):
+
+    #static_centered, static_shift = center_streamlines(static)
+    #moving_centered, moving_shift = center_streamlines(moving)
+    
+    #spts = np.concatenate(static_centered, axis=0)
+    #spts = np.round(spts).astype(np.int)
+
+    #mpts = np.concatenate(moving_centered, axis=0)
+    #mpts = np.round(mpts).astype(np.int)
+
+    spts = np.concatenate(static, axis=0)
+    spts = np.round(spts).astype(np.int)
+
+    mpts = np.concatenate(moving, axis=0)
+    mpts = np.round(mpts).astype(np.int)
+    
+    vol = np.zeros(vol_size)
+    for index in spts:
+        i, j, k = index
+        vol[i, j, k] = 1
+
+    vol1 = np.zeros(vol_size)
+    for index in mpts:
+        i, j, k = index
+        vol1[i, j, k] = 1
+
+   
+        
+    intersec =np.zeros(vol_size)
+    for index in spts:
+        i, j, k = index
+        if (vol1[i, j, k] == 1):
+            intersec[i,j,k] = 1
+    import nibabel as nib
+    nib.save(nib.Nifti1Image(vol.astype('uint16'), np.eye(4)), 'vol.nii.gz')
+    nib.save(nib.Nifti1Image(vol1.astype('uint16'), np.eye(4)), 'vol1.nii.gz')
+    nib.save(nib.Nifti1Image(intersec.astype('uint16'), np.eye(4)), 'intersec.nii.gz')
+
+    if disp:
+        viz_vol(vol)
+        viz_vol(vol1)        
+        viz_vol(intersec)
+    '''
+    if disp:
+        viz_vol(vol,[255.,0.,0.])
+        viz_vol(vol1,[0.,255.,0.])                
+        viz_vol(intersec,[0.,0.,255.])
+    '''     
+    return vol, vol1, intersec
     
 def spheres_intersection(point1, radius1, point2, radius2):
     '''
@@ -116,22 +188,35 @@ def minus(A1, A2):
             
 def load_whole_tract(tracks_filename):
     
-    from dipy.io.dpy import Dpy
     from dipy.io.pickles import load_pickle
-    dpr_tracks = Dpy(tracks_filename, 'r')
-    all_tracks=dpr_tracks.read_tracks()
-    dpr_tracks.close()
-    
+    if (tracks_filename[-3:]=='dpy'):
+        from dipy.io.dpy import Dpy
+        dpr_tracks = Dpy(tracks_filename, 'r')
+        all_tracks=dpr_tracks.read_tracks()
+        dpr_tracks.close()
+    else:
+        import nibabel as nib
+        streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
+        all_tracks = np.array([s[0] for s in streams], dtype=np.object)    
+
     all_tracks = np.array(all_tracks,dtype=np.object)
     return all_tracks
     
 def load_tract(tracks_filename, id_file):
     
-    from dipy.io.dpy import Dpy
+
     from dipy.io.pickles import load_pickle
-    dpr_tracks = Dpy(tracks_filename, 'r')
-    all_tracks=dpr_tracks.read_tracks()
-    dpr_tracks.close()
+    if (tracks_filename[-3:]=='dpy'):
+        from dipy.io.dpy import Dpy
+        dpr_tracks = Dpy(tracks_filename, 'r')
+        all_tracks=dpr_tracks.read_tracks()
+        dpr_tracks.close()
+    else:
+        import nibabel as nib
+        streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
+        all_tracks = np.array([s[0] for s in streams], dtype=np.object)
+    
+    
     tracks_id = load_pickle(id_file)
     	
     tract = [all_tracks[i] for i  in tracks_id]
@@ -177,9 +262,13 @@ def load_trk_file(tracks_filename):
     
 def save_id_tract_plus_sff(tracks_filename, id_file, num_proto, distance, out_fname):
    
-    dpr_tracks = Dpy(tracks_filename, 'r')
-    all_tracks=dpr_tracks.read_tracks()
-    dpr_tracks.close()
+    if (tracks_filename[-3:]=='dpy'):
+        dpr_tracks = Dpy(tracks_filename, 'r')
+        all_tracks=dpr_tracks.read_tracks()
+        dpr_tracks.close()
+    else:
+        all_tracks = load_whole_tract_trk(tracks_filename)
+    
     tracks_id = load_pickle(id_file)
     	
     tract = [all_tracks[i] for i  in tracks_id]    
@@ -211,9 +300,15 @@ def save_id_tract_plus_sff(tracks_filename, id_file, num_proto, distance, out_fn
    
 def save_id_tract_ext(tracks_filename, id_file,  distance, out_fname):
     
-    dpr_tracks = Dpy(tracks_filename, 'r')
-    all_tracks=dpr_tracks.read_tracks()
-    dpr_tracks.close()
+    
+    if (tracks_filename[-3:]=='dpy'):
+        dpr_tracks = Dpy(tracks_filename, 'r')
+        all_tracks=dpr_tracks.read_tracks()
+        dpr_tracks.close()
+    else:
+        all_tracks = load_whole_tract_trk(tracks_filename)    
+    
+    
     tracks_id = load_pickle(id_file)
     	
     tract = [all_tracks[i] for i  in tracks_id]    
@@ -342,7 +437,45 @@ def volumn_intersec(tract1, tract2, vol_dims, voxel_size):
     
     return count1, count2, count
 
-   
+def viz_vol(vol):
+    '''
+    colormap=np.array([[0.0, 0.5, 0.0, 0.0],
+                                        [64.0, 1.0, 0.5, 0.5],
+                                        [128.0, 0.9, 0.2, 0.3],
+                                        [196.0, 0.81, 0.27, 0.1],
+                                       [255.0, 0.5, 0.5, 0.5]])
+    '''
+    
+    ren = fvtk.ren()
+    vl = 100*vol
+    v = fvtk.volume(vl)
+    fvtk.add(ren, v)    
+    fvtk.show(ren)
+    
+    #fvtk.add(ren,fvtk.dots(vol, color=(1, 0, 0), opacity=1, dot_size=5))
+    '''
+    ren = fvtk.ren()
+    vl = 100*vol
+    d1, d2, d3 = shape(vol)
+    for i in np.arange(d1):
+        for j in np.arange(d2):
+            for k in np.arange(d3):    
+                if (vl[i, j, k] == 100):
+                    fvtk.add(ren, fvtk.point([[i,j,k]],[color]))
+    fvtk.show(ren)
+    
+    point = []
+    for i in np.arange(d1):
+        for j in np.arange(d2):
+            for k in np.arange(d3):    
+                if (vol[i, j, k] == 100):
+                    point.append([i,j,k])
+                    p = fvtk.point(point,[[255.,0.,0.]])
+                    fvtk.add(r, fvtk.point([[i,j,k]],[color]))
+    '''
+    
+    
+'''   
 def visualize_tract(ren, tract,color=fvtk.red):    
     for i in np.arange(len(tract)):
         fvtk.add(ren, fvtk.line(tract[i], color, opacity=1.0))        
@@ -352,3 +485,5 @@ def visualize_mapped(ren, tract2, mapping, color = fvtk.blue):
     for i in np.arange(len(mapping)):        
         fvtk.add(ren, fvtk.line(tract2[mapping[i]], color, opacity=1.0))     
     return ren
+    
+'''

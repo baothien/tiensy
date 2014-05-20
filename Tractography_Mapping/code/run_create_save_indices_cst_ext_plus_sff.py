@@ -14,8 +14,8 @@ def clearall():
 
 
 #source_ids = [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212]
-source_ids = [202]#[201, 202, 203, 204, 205, 206, 207, 209, 210, 212,213]
-
+#source_ids = [207,206,210]#[201, 202, 203, 204, 205, 206, 207, 209, 210, 212,213]
+source_ids = [206,210,212,202,204,209]#[201, 202, 203, 204, 205, 206, 207, 209, 210, 212,213]
 for s_id in np.arange(len(source_ids)):   
     source = str(source_ids[s_id])
    
@@ -92,14 +92,12 @@ for s_id in np.arange(len(source_ids)):
     execfile(fname)
     clearall() 
     '''
-    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_L_tvis.pkl'
-    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'        
     
     print 
     print '-----------------------------------------------------------------------------------------'
     fname = 'create_save_indices_cst_ext_plus_sff.py'
     arg1 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'
-    arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_R_tvis.pkl'
+    arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_L_tvis.pkl'
     arg3 = '-pr=50'
     arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_plus_ext/ROI_seg/' + source + '_cst_L_tvis_plus_sff.pkl'    
     arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_plus_ext/ROI_seg/' + source + '_cst_L_tvis_ext.pkl'

@@ -75,6 +75,8 @@ ren = visualize_tract(ren,cst_sff)
 #fvtk.show(ren)
 
 cst_ext_sff_id = save_id_tract_ext_plus_sff(s_file, s_ind, n_pro, bundles_distances_mam, cst_ext_sff_file, cst_ext_file)
+
 cst_ext_sff = load_tract(s_file, cst_ext_sff_file )
+
 ren = visualize_tract(ren,cst_ext_sff,fvtk.yellow)
 fvtk.show(ren)

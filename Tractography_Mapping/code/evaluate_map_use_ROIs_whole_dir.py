@@ -31,8 +31,8 @@ target_ids = [201, 202, 203, 204,205, 206, 207,208, 209,210, 212]
 '''
 
 #for Left CST_BOI - MNI -1000 # 100
-source_ids =[203, 212]#[201, 203, 210, 212]# [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 212]
-target_ids = [201, 202, 203, 204,205, 206, 207,208, 209,210, 212]
+source_ids =[212]#03]#, 212]#[201, 203, 210, 212]# [201]#, 202, 203]#, 204, 205, 206, 207, 208, 209, 210, 212]
+target_ids = [201]#, 202, 203, 204,205, 206, 207,208, 209,210, 212]
 
 for s_id in np.arange(len(source_ids)):
     print '-----------------------------------------------------------------------------------------'
@@ -81,7 +81,7 @@ for s_id in np.arange(len(source_ids)):
             arg5 = '/home/bao/tiensy/Tractography_Mapping/data/50_SFF_plus_ext/BOI_seg/' + target + '_cst_L_3M_ext_plus_sff.pkl'
             arg6 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_BOI/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_1000.txt'
             arg7 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_cst_sff_cst_ext_sff_BOI/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_1000.txt'
-            arg8 = '-vi=0'            #'-vi=1'            
+            arg8 = '-vi=1'            #'-vi=1'            
             import sys
             sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8]
             execfile(fname)
