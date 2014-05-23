@@ -150,3 +150,6 @@ show_both_bundles([cb_subj1, cb_subj2_aligned],
 """
 from common_functions import streamlines_to_vol
 vol1, vol2, intersec = streamlines_to_vol(cb_subj1, cb_subj2_aligned, [128,128,70], disp=False)
+from common_functions import volumn_intersec
+cou1, cou2, inter_cou = volumn_intersec(cb_subj1, cb_subj2_aligned, [128,128,70], [1,1,1], disp=True)
+

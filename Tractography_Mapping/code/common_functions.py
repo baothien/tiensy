@@ -30,12 +30,27 @@ def mklink():
         #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/data/' + sub + '/DIFF2DEPI_EKJ_64dirs_14/DTI/tracks_dti_3M.trk '
         #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/' + sub + '_tracks_dti_3M.trk'
         
-        arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + sub + '/DTI/dti.trk '
-        arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + sub + '_tracks_dti_tvis.trk'
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + sub + '/DTI/dti.trk '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + sub + '_tracks_dti_tvis.trk'
+        
+        #arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + sub + '/DTI/dti_linear.dpy '
+        #arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + sub + '_tracks_dti_tvis_linear.dpy' 
+
+        arg2 = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + sub + '/DTI/dti_linear.trk '
+        arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + sub + '_tracks_dti_tvis_linear.trk' 
         
         full_cmd = arg1 + arg2 + arg3        
         os.system(full_cmd)
  
+def dipy_version():
+    import dipy
+    dipy_ver = dipy.__version__
+    from distutils.version import StrictVersion
+
+    dipy_ver = StrictVersion(dipy_ver.split('.dev')[0])
+    return dipy_ver
+   
+   
 def center_streamlines(streamlines):
     """ Move streamlines to the origin
 
@@ -55,9 +70,39 @@ def center_streamlines(streamlines):
     import numpy as np
     center = np.mean(np.concatenate(streamlines, axis=0), axis=0)
     return [s - center for s in streamlines], center
+
+def volumn_intersec(tract1, tract2, vol_dims, voxel_size, disp=False):
+    from dipy.tracking.vox2track import track_counts
+    
+    #compute the number of fiber crossing every voxel
+    tcv1 = track_counts(tract1,vol_dims, voxel_size, return_elements=False)
+    tcv2 = track_counts(tract2,vol_dims, voxel_size, return_elements=False)
+
+    count = 0    
+    count1 = 0
+    count2 = 0
+    for x in np.arange(vol_dims[0]):
+        for y in np.arange(vol_dims[1]):
+            for z in np.arange(vol_dims[2]):
+                if tcv1[x,y,z]>0:
+                    count1 = count1 + 1
+                    #count1 = count1 + tcv1[x,y,z]
+                    
+                if tcv2[x,y,z]>0:
+                    count2 = count2 + 1
+                    #count2 = count2 + tcv2[x,y,z]
+                
+                if tcv1[x,y,z]>0 and tcv2[x,y,z]>0:
+                    count = count + 1
+                    #count = count +  min(tcv1[x,y,z],tcv2[x,y,z])
+                    
+    if disp:
+        viz_vol1(tcv1,fvtk.colors.red)
+        viz_vol1(tcv2,fvtk.colors.blue)
+    return count1, count2, count
        
 def streamlines_to_vol(static, moving, vol_size,
-                       disp=False):
+                       disp=False, save=False):
 
     #static_centered, static_shift = center_streamlines(static)
     #moving_centered, moving_shift = center_streamlines(moving)
@@ -83,29 +128,30 @@ def streamlines_to_vol(static, moving, vol_size,
     for index in mpts:
         i, j, k = index
         vol1[i, j, k] = 1
-
-   
-        
+          
     intersec =np.zeros(vol_size)
     for index in spts:
         i, j, k = index
         if (vol1[i, j, k] == 1):
             intersec[i,j,k] = 1
-    import nibabel as nib
-    nib.save(nib.Nifti1Image(vol.astype('uint16'), np.eye(4)), 'vol.nii.gz')
-    nib.save(nib.Nifti1Image(vol1.astype('uint16'), np.eye(4)), 'vol1.nii.gz')
-    nib.save(nib.Nifti1Image(intersec.astype('uint16'), np.eye(4)), 'intersec.nii.gz')
-
+    if save:
+        import nibabel as nib
+        nib.save(nib.Nifti1Image(vol.astype('uint16'), np.eye(4)), 'vol.nii.gz')
+        nib.save(nib.Nifti1Image(vol1.astype('uint16'), np.eye(4)), 'vol1.nii.gz')
+        nib.save(nib.Nifti1Image(intersec.astype('uint16'), np.eye(4)), 'intersec.nii.gz')
+    
+    
+    '''
     if disp:
         viz_vol(vol)
         viz_vol(vol1)        
         viz_vol(intersec)
     '''
     if disp:
-        viz_vol(vol,[255.,0.,0.])
-        viz_vol(vol1,[0.,255.,0.])                
-        viz_vol(intersec,[0.,0.,255.])
-    '''     
+        viz_vol1(vol,fvtk.colors.red)
+        viz_vol1(vol1,fvtk.colors.blue)                
+        viz_vol1(intersec,fvtk.colors.yellow)
+         
     return vol, vol1, intersec
     
 def spheres_intersection(point1, radius1, point2, radius2):
@@ -250,15 +296,28 @@ def load_tract_trk(tracks_filename, id_file):
     
     return tract
     
-def load_trk_file(tracks_filename):
-    '''
-    load tract from trackvis format
-    '''
+def save_tract_trk(tract, fa_file, fname_out ):
     import nibabel as nib
-    streams,hdr=nib.trackvis.read(tracks_filename,points_space='voxel')
-    all_tracks = np.array([s[0] for s in streams], dtype=np.object)
-     
-    return all_tracks
+    fa_img = nib.load(fa_file)
+    fa = fa_img.get_data()
+    fa[np.isnan(fa)] = 0
+    hdr = nib.trackvis.empty_header()
+    hdr['voxel_size'] = fa_img.get_header().get_zooms()[:3]
+    hdr['voxel_order'] = 'LAS'
+    hdr['dim'] = fa.shape
+
+    """
+    Then we need to input the streamlines in the way that Trackvis format expects them.
+    """
+
+    tract_trk = ((sl, None, None) for sl in tract)
+    
+    """
+    Save the streamlines.
+    """
+
+    nib.trackvis.write(fname_out, tract_trk, hdr, points_space='voxel')
+
     
 def save_id_tract_plus_sff(tracks_filename, id_file, num_proto, distance, out_fname):
    
@@ -374,7 +433,35 @@ def save_id_tract_ext_plus_sff(tracks_filename, id_file, num_proto, distance, ou
     tract_ext_id = save_id_tract_ext(tracks_filename,id_file, distance, out_fname_ext)
     return save_id_tract_plus_sff(tracks_filename, out_fname_ext, num_proto,distance, out_fname_ext_sff)
     
-   
+def transform_tracks(tracks,affine):        
+        return [(np.dot(affine[:3,:3],t.T).T + affine[:3,3]) for t in tracks]
+        
+def warp_tracks_linearly(flirt_filename,fa_filename, tracks_filename,linear_filename):
+    import nibabel as nib
+    from dipy.external.fsl import flirt2aff
+    
+    fsl_ref = '/usr/share/fsl/data/standard/FMRIB58_FA_1mm.nii.gz'
+    
+    img_fa = nib.load(fa_filename)            
+
+    flirt_affine= np.loadtxt(flirt_filename)    
+        
+    img_ref =nib.load(fsl_ref)
+    
+    #create affine matrix from flirt     
+    mat=flirt2aff(flirt_affine,img_fa,img_ref)        
+
+    #read tracks    
+    tensor_tracks = load_whole_tract(tracks_filename)    
+        
+    #linear tranform for tractography
+    tracks_warped_linear = transform_tracks(tensor_tracks,mat)        
+
+    #save tracks_warped_linear    
+    dpr_linear = Dpy(linear_filename, 'w')
+    dpr_linear.write_tracks(tracks_warped_linear)
+    dpr_linear.close()
+
 def Shannon_entropy(tract):
     '''
     compute the Shannon Entropy of a set of tracks as defined by Lauren
@@ -412,39 +499,10 @@ def Shannon_entropy(tract):
     
     return entropy
 
-def volumn_intersec(tract1, tract2, vol_dims, voxel_size):
-    from dipy.tracking.vox2track import track_counts
-    
-    #compute the number of fiber crossing every voxel
-    tcv1 = track_counts(tract1,vol_dims, voxel_size, return_elements=False)
-    tcv2 = track_counts(tract2,vol_dims, voxel_size, return_elements=False)
 
-    count = 0    
-    count1 = 0
-    count2 = 0
-    for x in np.arange(vol_dims[0]):
-        for y in np.arange(vol_dims[1]):
-            for z in np.arange(vol_dims[2]):
-                if tcv1[x,y,z]>0:
-                    count1 = count1 + 1
-                    
-                if tcv2[x,y,z]>0:
-                    count2 = count2 + 1
-                
-                if tcv2[x,y,z]>0 and tcv2[x,y,z]>0:
-                    count = count + 1
-                    
-    
-    return count1, count2, count
 
 def viz_vol(vol):
-    '''
-    colormap=np.array([[0.0, 0.5, 0.0, 0.0],
-                                        [64.0, 1.0, 0.5, 0.5],
-                                        [128.0, 0.9, 0.2, 0.3],
-                                        [196.0, 0.81, 0.27, 0.1],
-                                       [255.0, 0.5, 0.5, 0.5]])
-    '''
+   
     
     ren = fvtk.ren()
     vl = 100*vol
@@ -452,38 +510,40 @@ def viz_vol(vol):
     fvtk.add(ren, v)    
     fvtk.show(ren)
     
-    #fvtk.add(ren,fvtk.dots(vol, color=(1, 0, 0), opacity=1, dot_size=5))
-    '''
-    ren = fvtk.ren()
-    vl = 100*vol
-    d1, d2, d3 = shape(vol)
-    for i in np.arange(d1):
-        for j in np.arange(d2):
-            for k in np.arange(d3):    
-                if (vl[i, j, k] == 100):
-                    fvtk.add(ren, fvtk.point([[i,j,k]],[color]))
-    fvtk.show(ren)
+   
+def viz_vol1(vol,color):
+       
+    ren = fvtk.ren()   
+    d1, d2, d3 = vol.shape
     
     point = []
     for i in np.arange(d1):
         for j in np.arange(d2):
             for k in np.arange(d3):    
-                if (vol[i, j, k] == 100):
+                if (vol[i, j, k] == 1):
                     point.append([i,j,k])
-                    p = fvtk.point(point,[[255.,0.,0.]])
-                    fvtk.add(r, fvtk.point([[i,j,k]],[color]))
-    '''
-    
-    
-'''   
-def visualize_tract(ren, tract,color=fvtk.red):    
+    pts = fvtk.point(point,color, point_radius=0.5)    
+    fvtk.add(ren, pts)
+    fvtk.show(ren)  
+
+
+def visualize_tract(ren, tract,color=None):  
+    if color == None:
+        dipy_ver = dipy_version()
+        from distutils.version import StrictVersion
+        minimize_version = StrictVersion('0.7') 
+        
+        if dipy_ver >= minimize_version:
+            color = fvtk.colors.red       
+        else:
+            color = fvtk.red            
+
     for i in np.arange(len(tract)):
         fvtk.add(ren, fvtk.line(tract[i], color, opacity=1.0))        
     return ren
 
-def visualize_mapped(ren, tract2, mapping, color = fvtk.blue):
+def visualize_mapped(ren, tract2, mapping, color=None):
     for i in np.arange(len(mapping)):        
         fvtk.add(ren, fvtk.line(tract2[mapping[i]], color, opacity=1.0))     
     return ren
     
-'''

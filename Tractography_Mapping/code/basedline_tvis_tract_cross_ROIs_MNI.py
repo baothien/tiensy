@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 30 18:48:49 2014
+Created on Fri May 23 19:30:13 2014
+
+@author: bao
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 25 15:34:06 2014
 
 @author: bao
 """
 
 import numpy as np
-from dipy.viz import fvtk
-from common_functions import load_whole_tract, load_whole_tract_trk, load_tract, load_tract_trk, visualize_tract
-from dipy.io.pickles import load_pickle, save_pickle
+from intersect_roi import *
+from common_functions import *
 
 def clearall():
-    all = [var for var in globals() if (var[:2], var[-2:]) != ("__", "__") and var != "clearall" and var!="s_id" and var!="source_ids" and var!="t_id" and var!="target_ids"  and var!="np"]
+    all = [var for var in globals() if (var[:2], var[-2:]) != ("__", "__") and var != "clearall" and var!="i" and var!="source_ids" and var!="t_id" and var!="target_ids"  and var!="np"]
     for var in all:
         del globals()[var]
 
@@ -185,91 +191,59 @@ ROIs_MNI_voxel_L_LAS = { '201': (np.array([100.341 , 104.394 , 47.7587], dtype=n
                   '213': (np.array([95.9726,  104.782 ,46.7367], dtype=np.float32), np.array([109.965  ,110.936 , 87.4683], dtype=np.float32))
                   
 		 }
-   
-ROIs_subject = ROIs_MNI_voxel_L_LAS
+
+
+ROIs_subject = ROIs_MNI_voxel_R_LAS
 Rs = [4.,4.]#np.array([2.,2.],dtype=np.float32)
-  
-#source_ids =[201 ,202 ,203, 204, 205, 206, 207, 208, 209, 210, 212,213]
-source_ids =[201 , 202, 203, 204,  205, 206, 207, 208, 209, 210, 212,213]  
-visualize = True# False
-save = True
-        
-for s_id in np.arange(len(source_ids)):
-    print '-----------------------------------------------------------------------------------------'
-    print 'Source: ', source_ids[s_id]
-    source = str(source_ids[s_id])
-    from intersect_roi import *
-    
-    '''
-    #Native space                    
-    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.dpy'        
-    #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_saving_from_trackvis.trk'        
-    tracks_ind_file = '/home/bao/tiensy/Tractography_Mapping/data/ROI_seg/CST_ROI_R_control/'+ source + '_CST_ROI_R_3M.pkl'
-    #tracks = load_tract(tract_file,tracks_ind_file)
-    '''
-    '''
-    tract_file1 = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_saving_from_trackvis.trk'            
-    tracks1 = load_tract_trk(tract_file1,tracks_ind_file)
-    ren = fvtk.ren()
-    ren = visualize_tract(ren, tracks, fvtk.yellow)
-    ren = visualize_tract(ren, tracks1, fvtk.blue)
-    '''
-    '''
-    #tract_file = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/Segmentation/ROI/'+ source + '/NILAB_bao_cst_left.trk'
-    tracks = load_whole_tract(tract_file)
-    print len(tracks)
+ 
+#Left 
+#source_ids = [212, 202, 204, 209]
+#target_ids = [212, 202, 204, 209]
 
-    #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.trk'        
-    #tracks = load_whole_tract_trk(tract_file)
-    
-    
-
-    ROIs = ROIs_subject[source]
-    #convert from LPS in TrackVis software to LAS in dpy format
-    ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
-    '''
-    '''    
-    #trackvis tractography native space  
-    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis_native/' + source + '_corticospinal_R_tvis_native.pkl'
-    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'        
-    tracks = load_whole_tract_trk(tract_file)
-    '''
-    
-    #trackvis tractography-MNI space ROI segmentation 
-    
-    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.dpy'        
-    tracks = load_whole_tract(tract_file)
-    
-    from intersect_roi import *
+#Right
+source_ids = [205, 212, 204, 206]
+target_ids = [205, 212, 204, 206]
+ 
+visualize = True#False#True# False
    
-    ROIs = ROIs_subject[source]    
-    print ROIs
-
-    #common = intersec_ROIs_dpy(tracks, ROIs, Rs, vis = True)
-    common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
-
-    print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
-    
-    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis_MNI/' + source + '_corticospinal_L_tvis_MNI.pkl'
-    save_pickle(tracks_ind_file, common)
-    print "Saved file", tracks_ind_file
-    
-    segment = [tracks[i] for i  in common]
-    '''
-    if save==True:
-        fa_file = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Segmentation_CST_francesca/' + source + '/DTI/dti_fa.nii'     
-        fname = '/home/bao/Personal/PhD_at_Trento/Research/ALS_Nivedita_Bao/Code/Segmentation/ROI/' + source + '/' + source + '_cst_right_ROI_tvis_native.trk'
-        from common_functions import save_tract_trk
-        save_tract_trk(segment, fa_file, fname)
-        print 'Saved ', fname
-    '''
-    if (visualize==True):
-        ren = fvtk.ren()
-        ren = visualize_tract(ren, segment, fvtk.yellow)
-        fvtk.add(ren, fvtk.sphere(ROIs[0],Rs[0],color = fvtk.red, opacity=1.0)) 
-        fvtk.add(ren, fvtk.sphere(ROIs[1],Rs[1],color = fvtk.blue, opacity=1.0)) 
-        fvtk.show(ren)
-    #clearall() 
-    
-    
-          
+print "Check the tractography of source crossing the ROIs of target"
+print " when both tractography and ROIs are in MNI space"     
+for i in np.arange(len(source_ids)):
+    print '----------------------------------------------------------------------------------'
+    print 'Source: ', source_ids[i]
+    source = str(source_ids[i])    
+    for j in np.arange(len(target_ids)):
+        if target_ids[j]!=source_ids[i]:
+            
+            target = str(target_ids[j]) 
+            print '\t\t target', target
+            #MNI space trackvis tractography
+            #tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_L_tvis.pkl'
+            #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.dpy'        
+            #tracks = load_tract(tract_file,tracks_ind_file)
+            
+            tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.dpy'        
+            tracks = load_whole_tract(tract_file)
+            
+            
+            from intersect_roi import *
+            ROIs = ROIs_subject[target]
+             
+            common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
+            
+            print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
+                
+            tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/baseline_anatomy_MNI/' + source + '_tractography_cross_'+ target+'_ROIs_R_tvis_MNI.pkl'
+            save_pickle(tracks_ind_file, common)
+            print "Saved file", tracks_ind_file
+            
+            #print "Done evaluate using ROIs"
+            tracks_cross = [tracks[k] for k in common]
+            if (visualize==True):
+                ren = fvtk.ren()
+                #ren = visualize_tract(ren, tracks, fvtk.yellow)
+                ren = visualize_tract(ren, tracks_cross, fvtk.yellow)
+                fvtk.add(ren, fvtk.sphere(ROIs[0],Rs[0],color = fvtk.red, opacity=1.0)) 
+                fvtk.add(ren, fvtk.sphere(ROIs[1],Rs[1],color = fvtk.blue, opacity=1.0)) 
+                fvtk.show(ren)
+            #clearall()  

@@ -187,11 +187,13 @@ ROIs_MNI_voxel_L_LAS = { '201': (np.array([100.341 , 104.394 , 47.7587], dtype=n
 
 
 #ROIs_subject = ROIs_native_voxel_R_LPS
+#ROIs_subject = ROIs_native_voxel_L_LAS
+#Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
 
-ROIs_subject = ROIs_native_voxel_R_LAS
-Rs = [2.,2.]#np.array([2.,2.],dtype=np.float32)
+ROIs_subject = ROIs_MNI_voxel_L_LAS
+Rs = [4.,4.]#np.array([2.,2.],dtype=np.float32)
   
-source_ids =[202]#[201,202,203, 204, 205, 206, 207, 208, 209, 210, 212,213]#[201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212]
+source_ids =[212, 202, 204, 209]#[201,202,203, 204, 205, 206, 207, 208, 209, 210, 212,213]#[201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 212]
  
 visualize = True#False#True# False
         
@@ -227,28 +229,36 @@ for i in np.arange(len(source_ids)):
     #ROIs = [[r[0],128.-r[1],r[2]] for r in ROIs]
     '''
    
-    
+    '''
     #MNI space  
     tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/BOI_seg/' + source + '_corticospinal_L_3M.pkl'
     tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M_linear.dpy'        
     tracks = load_tract(tract_file,tracks_ind_file)
+    '''
+    
+    #MNI space trackvis tractography-ROI segmentation 
+    #tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_L_tvis.pkl'
+    #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.dpy'        
+    #tracks = load_tract(tract_file,tracks_ind_file)
+    
+    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'        
+    tracks = load_whole_tract(tract_file)
     
     
     from intersect_roi import *
     ROIs = ROIs_subject[source]
-    
-    
-   
-    
-    
+     
     common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
     
     print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
-    #print "Done evaluate using ROIs"
+        
     
+    #print "Done evaluate using ROIs"
+    tracks_cross = [tracks[i] for i in common]
     if (visualize==True):
         ren = fvtk.ren()
-        ren = visualize_tract(ren, tracks, fvtk.yellow)
+        #ren = visualize_tract(ren, tracks, fvtk.yellow)
+        ren = visualize_tract(ren, tracks_cross, fvtk.yellow)
         fvtk.add(ren, fvtk.sphere(ROIs[0],Rs[0],color = fvtk.red, opacity=1.0)) 
         fvtk.add(ren, fvtk.sphere(ROIs[1],Rs[1],color = fvtk.blue, opacity=1.0)) 
         fvtk.show(ren)
