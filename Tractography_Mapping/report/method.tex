@@ -1,0 +1,49 @@
+\section{Method}
+\label{sec:method}
+
+In this work we explore the idea of \textbf{mapping} each streamline
+($s^S_i$, $i \in 1 \ldots M$) of one \emph{source} tractography ($T_S
+= \{s^S_1,\ldots,s^S_M\}$) into one streamline of another
+\emph{target} tractography ($T_T = \{s^T_1,\ldots,s^T_N\}$). The
+mapping $\phi: T_S \mapsto T_T$ just associates the first object to
+the second, e.g. $s^2_j = \phi(s^1_i)$, or more simply $j = \phi(i)$.
+
+The practical application that motivates the idea of mapping is
+related to tractography coregistration. While tractography
+coregistration is based on rigid or non-rigid shape transformations of
+one tractography into another, with the goal of making them the most
+similar, in \emph{mapping} the idea is that no transformation is
+meaningful because it is not possible to reconcile two different
+anatomies by means of rigid (or non-rigid) transformations. The idea
+of mapping is to find to which target streamline a source streamline
+corresponds. This may be done with rigid or non-rigid transformations,
+but here we are interested in a different and indirect approach that
+does not require such transformations.
+
+\subsection{Loss Function}
+\begin{equation}
+  \label{eq:loss}
+  l = \sum_{i \neq j \in 1 \ldots M} (d(s^S_i, s^S_j) -
+  d(s^T_{\phi(i)}, s^T_{\phi(j)}))^2
+\end{equation}
+
+\subsection{Evaluation}
+We use two measurements for quantizing the quality of mapping. 
+Let $T_S = \{s^S_1,\ldots,s^S_M\}$ and $T_T = \{s^T_1,\ldots,s^T_N\}$ be the \emph{source} and the \emph{target} tractography correspondingly. And $\phi(T_S)$ is the mapped of $T_S$ into $T_T$.
+The better of the mapping is, if the more overlap between the mapped tractography $\phi(T_S)$ and the target one $T_T$.
+\begin{equation}
+  \label{eq:Jaccard}
+  J(\phi(T_S), T_T) = \frac{|\phi(T_S) \cap T_T|}{ \min\{|\phi(T_S)|, |T_T|\}}
+\end{equation}
+
+Another index used in this paper is BFN (Balance False Negative) which measures how much information of source and target is explored in the mapping.
+
+\begin{equation}
+  \label{eq:BFN}
+  BFN(T_S, T_T|\phi(T_S)) = \frac{min\{T_S \backslash \phi^{-1}(\phi(T_S) \cap T_T), T_T \backslash (\phi(T_S) \cap T_T)\}}{|T_T|}
+\end{equation}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "tractography_mapping"
+%%% End: 
