@@ -11,6 +11,7 @@ from dipy.viz import fvtk
 from dipy.tracking.metrics import length
 from dipy.io.pickles import load_pickle, save_pickle
 from dissimilarity_common_20130925 import subset_furthest_first as sff
+from dipy.tracking.metrics import downsample
    
 def mklink():
     import os
@@ -71,6 +72,10 @@ def center_streamlines(streamlines):
     center = np.mean(np.concatenate(streamlines, axis=0), axis=0)
     return [s - center for s in streamlines], center
 
+def vectorize_streamlines(streamlines, no_pts):
+    """ Resample all streamlines to the same number of points
+    """
+    return [downsample(s, no_pts) for s in streamlines]
 '''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Some functions for quantizing the    overlap between two tracts
@@ -158,7 +163,7 @@ def volumn_intersec(tract1, tract2, vol_dims, voxel_size, disp=False):
         viz_vol1(tcv2,fvtk.colors.blue)
     return count1, count2, count
        
-def streamlines_to_vol(static, moving, vol_dims,
+def streamlines_to_vol(static1, moving1, vol_dims,
                        disp=False, save=False):
 
     #static_centered, static_shift = center_streamlines(static)
@@ -169,7 +174,10 @@ def streamlines_to_vol(static, moving, vol_dims,
 
     #mpts = np.concatenate(moving_centered, axis=0)
     #mpts = np.round(mpts).astype(np.int)
-
+    
+    static = vectorize_streamlines(static1, 20)
+    moving = vectorize_streamlines(moving1, 20)
+    
     spts = np.concatenate(static, axis=0)
     spts = np.round(spts).astype(np.int)
 
@@ -205,9 +213,19 @@ def streamlines_to_vol(static, moving, vol_dims,
         viz_vol(intersec)
     '''
     if disp:
-        viz_vol1(vol,fvtk.colors.red)
-        viz_vol1(vol1,fvtk.colors.blue)                
-        viz_vol1(intersec,fvtk.colors.yellow)
+        dipy_ver = dipy_version()
+        #print dipy_ver        
+        from distutils.version import StrictVersion
+        minimize_version = StrictVersion('0.7') 
+        
+        if dipy_ver > minimize_version:
+            viz_vol1(vol,fvtk.colors.red)
+            viz_vol1(vol1,fvtk.colors.blue)                
+            viz_vol1(intersec,fvtk.colors.yellow)
+        else:
+            viz_vol1(vol,fvtk.red)
+            viz_vol1(vol1,fvtk.blue)                
+            viz_vol1(intersec,fvtk.yellow)
          
     return vol, vol1, intersec
     
@@ -232,13 +250,13 @@ def BFN_vol(volA, volB, intersecAB):
     BFN = (1.*min(volA - intersecAB, volB - intersecAB))/(1.*volB)
     return BFN
  
-def real_volumn(vol):
+def real_volumn(vol, vol_dims):
     '''
     calculate the number of voxel that has the value 1 in the vol
     in vol, the value of a voxel is 1 if there is any fiber going through that voxel
     otherwhile the value of that voxel is set to 0
     '''
-    x,y,z = shape(vol)
+    [x,y,z] = vol_dims
     count = 0
     for i in np.arange(x):
         for j in np.arange(y):
@@ -258,9 +276,9 @@ def Jac_BFN(tract1, tract2, vol_dims, disp=False, save=False):
     '''
     vol1, vol2, intersec = streamlines_to_vol(tract1, tract2, vol_dims, disp, save)
     
-    real_vol1 = real_volumn(vol1)
-    real_vol2 = real_volumn(vol2)
-    real_intersec = real_volumn(intersec)
+    real_vol1 = real_volumn(vol1, vol_dims)
+    real_vol2 = real_volumn(vol2, vol_dims)
+    real_intersec = real_volumn(intersec, vol_dims)
     
     jac = Jaccard_vol(real_vol1, real_vol2, real_intersec)
     bfn = BFN_vol(real_vol1, real_vol2, real_intersec)
