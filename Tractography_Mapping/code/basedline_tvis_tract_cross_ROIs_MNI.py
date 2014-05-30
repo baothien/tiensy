@@ -193,6 +193,7 @@ ROIs_MNI_voxel_L_LAS = { '201': (np.array([100.341 , 104.394 , 47.7587], dtype=n
 		 }
 
 
+#ROIs_subject = ROIs_MNI_voxel_R_LAS
 ROIs_subject = ROIs_MNI_voxel_R_LAS
 Rs = [4.,4.]#np.array([2.,2.],dtype=np.float32)
  
@@ -213,7 +214,7 @@ for i in np.arange(len(source_ids)):
     print 'Source: ', source_ids[i]
     source = str(source_ids[i])    
     for j in np.arange(len(target_ids)):
-        if target_ids[j]!=source_ids[i]:
+        if target_ids[j]==source_ids[i]:
             
             target = str(target_ids[j]) 
             print '\t\t target', target
@@ -232,7 +233,7 @@ for i in np.arange(len(source_ids)):
             common = intersec_ROIs(tracks, ROIs, Rs, vis = True)
             
             print "\t Total ", len(tracks), " and  the number of fibers cross the ROIs ", len(common)
-                
+            
             tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/baseline_anatomy_MNI/' + source + '_tractography_cross_'+ target+'_ROIs_R_tvis_MNI.pkl'
             save_pickle(tracks_ind_file, common)
             print "Saved file", tracks_ind_file
