@@ -47,7 +47,7 @@ for a_id in np.arange(len(anneal)):
     print "Anneal : ", anneal[a_id]
     print "\t\t Target \t not_map_Jac \t not_map_BFN \t map_Jac \t map_BFN" 
     for s_id in np.arange(len(source_ids)):
-        print "------------------------------------------"
+        #print "------------------------------------------"
         print source_ids[s_id]    
         for t_id in np.arange(len(target_ids)):        
             if (target_ids[t_id] != source_ids[s_id]):                
