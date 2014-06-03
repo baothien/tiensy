@@ -1,3 +1,5 @@
+bundle_registration_elef.py: only run in dipy/bundle_registration branch (git fetch elef)  from eleftherios repository
+
 Hi Sandro and Bao,
 (Paolo in Cc)
 
