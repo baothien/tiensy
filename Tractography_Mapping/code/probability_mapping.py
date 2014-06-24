@@ -17,7 +17,7 @@ Created on Tue Jun 24 16:54:37 2014
 """
 
 
-def loss_function_Eman(dm1, dm2, pr_map12):
+def loss_function(dm1, dm2, pr_map12):
         """
         Computes the loss function of a given probability mapping.
         dm1, and dm2 are the distance matrices of tract1 and tract2 repestively        
