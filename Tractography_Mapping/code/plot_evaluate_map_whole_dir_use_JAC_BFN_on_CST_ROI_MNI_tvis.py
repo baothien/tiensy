@@ -133,6 +133,8 @@ for s_id in np.arange(len(source_ids)):
             mk = t_id
             plt.plot(x, y1, marker[mk],color ='black', label = 'JAC_' + source+'_'+target, markersize = 8,linewidth=2.)            
             plt.plot(x, y2, marker[mk],color ='black', label = 'BFN_' +  source+'_'+target, markersize = 8,linewidth=2.)            
+            
+            #plt.plot(y2, y1, marker[mk],color ='black', label = 'JAC_' + source+'_'+target, markersize = 8,linewidth=2.)            
        
             #plt.plot(x, y, 'g-', label = '201', markersize = 1.2)            
             #plt.plot(x, y,linestyle='-','rD', label = str(data_id), markersize = 1.8)            
