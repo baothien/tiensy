@@ -12,6 +12,7 @@ from dipy.tracking.metrics import length
 from dipy.io.pickles import load_pickle, save_pickle
 from dissimilarity_common_20130925 import subset_furthest_first as sff
 from dipy.tracking.metrics import downsample
+import resource
    
 def mklink():
     import os
@@ -50,7 +51,10 @@ def dipy_version():
 
     dipy_ver = StrictVersion(dipy_ver.split('.dev')[0])
     return dipy_ver
-   
+ 
+def cpu_time():
+    	return resource.getrusage(resource.RUSAGE_SELF)[0]
+  
 
 def center_streamlines(streamlines):
     """ Move streamlines to the origin
@@ -848,4 +852,20 @@ def visualize_mapped(ren, tract2, mapping, color=None):
     for i in np.arange(len(mapping)):        
         fvtk.add(ren, fvtk.line(tract2[mapping[i]], color, opacity=1.0))     
     return ren
+    
+
+'''
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Some functions for operating on matrix
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           
+'''
+
+def normalize_sum_row_1(mat):
+    #normalize a matrix so that: sum(row_i) = 1 for all row_i
+    r,c = np.shape(mat)
+    sr = [np.sum(np.abs(mat[i, :])) for i in np.arange(r)]
+    temp_mat = np.array([np.abs(mat[i,:])*1./sr[i] for i in np.arange(r)],dtype=float)
+    
+    return temp_mat
+    
     
