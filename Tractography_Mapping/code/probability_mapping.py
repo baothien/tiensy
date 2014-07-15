@@ -44,7 +44,18 @@ def init_prb_state_1(tract1, tract2):
     from common_functions import normalize_sum_row_1
     prb = normalize_sum_row_1(dm12)
     
-    return np.array(prb,dtype='float')    
+    return np.array(prb,dtype='float')  
+    
+def init_prb_state_2(size1, size2):
+    '''
+    random distribution
+    '''   
+    prb_1 = np.random.rand(size1, size2) 
+    
+    from common_functions import normalize_sum_row_1
+    prb = normalize_sum_row_1(prb_1)
+    
+    return np.array(prb,dtype='float')   
     
     
 #------------------------------------------------------------------------------       
@@ -101,7 +112,14 @@ def create_constrains(size):
     cons = tuple(cons)
     return cons
     
-
+def create_constrains_ineq(size):
+    cons = []
+    for i in np.arange(size):
+        cons.append({'type': 'ineq', 'fun': constr_sum_1, 'args' : (size , i)})
+        cons.append({'type': 'ineq', 'fun': constr_1_sum, 'args' : (size , i)})
+    cons = tuple(cons)
+    return cons
+    
 #------------------------------------------------------------------------------  
 #loss function for optimize by SLSQP with bounds and constrains
 #p: parameter to optimize - prb_map12
@@ -127,6 +145,32 @@ def f_1D_slsqp(p, y_dm1, x_dm2):
     
     return f
     
+#function for optimize by SLSQP with bounds and no constrains (no bounds is also ok)
+def f_1D_slsqp_no_constrains(p, y_dm1, x_dm2):
+    size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
+    size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
+    
+    prob_temp = np.reshape(p,(size1,-1))    
+    from common_functions import normalize_sum_row_1
+    p_temp = normalize_sum_row_1(prob_temp) 
+        
+    p_temp = p_temp.flatten()
+    f = 0.    
+    for i in np.arange(size1):
+        for j in np.arange(size1):
+            if j!=i:
+                t = 0.
+                for k in np.arange(size2):
+                    for l in np.arange(size2):
+                        t = t + p_temp[i*size2+k]*p_temp[j*size2+l]*x_dm2[k*size2+l]
+                    
+                tmp = (y_dm1[i*size1 + j] - t)
+                f = f + tmp *tmp
+
+    
+    return f
+
+
 #functions for calculating the gradients
 def A_2(j, n, m, p_tmp, x_dm2_tmp, size2): 
     #p_tmp = np.reshape(p,(-1, size2))  
@@ -155,9 +199,15 @@ def B_2(i, n, m, p_tmp, x_dm2_tmp, size2):
         
         B2 = B2 + p_tmp[i,k] * x_dm2_tmp[k,m]
     return B1, B2
-
-
- 
+    
+def U_2(n, m, p_temp, size2):  
+    
+    U = 0.    
+    for k in np.arange(size2):        
+        U = U + p_temp[n,k]         
+    
+    return (1.*(U - p_temp[n,m]))/(1.*U*U)
+    
 #Gradient of loss function for optimize by SLSQP with bounds and constrains
 #p: parameter to optimize - prb_map12
 #y: source    (dm1)   
@@ -195,42 +245,17 @@ def gradient_f_1D_slsqp(p, y_dm1, x_dm2):
             jac[n,m] = grd
             
     return jac.flatten()   
-
-#function for optimize by SLSQP with bounds and no constrains
-def f_1D_slsqp_no_constrains(p, y_dm1, x_dm2):
-    size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
-    size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
-    
-    prob_temp = np.reshape(p,(size1,-1))    
-    from common_functions import normalize_sum_row_1
-    p_temp = normalize_sum_row_1(prob_temp) 
-        
-    p_temp = p_temp.flatten()
-    f = 0.    
-    for i in np.arange(size1):
-        for j in np.arange(size1):
-            if j!=i:
-                t = 0.
-                for k in np.arange(size2):
-                    for l in np.arange(size2):
-                        t = t + p_temp[i*size2+k]*p_temp[j*size2+l]*x_dm2[k*size2+l]
-                    
-                tmp = (y_dm1[i*size1 + j] - t)
-                f = f + tmp *tmp
-
-    
-    return f
     
 def gradient_f_1D_slsqp_no_constrains(p, y_dm1, x_dm2):
     size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
     size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
-   
-    prob_temp = np.reshape(p,(size1,-1))    
-    from common_functions import normalize_sum_row_1
     
-    p_tmp = normalize_sum_row_1(prob_temp)      
-       
-
+    p_temp = np.reshape(p,(-1, size2))
+    from common_functions import normalize_sum_row_1
+    p_tmp = normalize_sum_row_1(p_temp) 
+    
+    
+    
     y_dm1_tmp = np.reshape(y_dm1,(-1, size1))  
     x_dm2_tmp = np.reshape(x_dm2,(-1, size2))  
     
@@ -244,6 +269,7 @@ def gradient_f_1D_slsqp_no_constrains(p, y_dm1, x_dm2):
             for j in np.arange(size1):
                 if j!=n:
                     A1, A2 = A_2(j, n, m, p_tmp, x_dm2_tmp, size2)                
+                    
                     sum1 = sum1 + ((y_dm1_tmp[n,j] - A1) * A2) 
                     
             sum2 = 0.            
@@ -252,21 +278,26 @@ def gradient_f_1D_slsqp_no_constrains(p, y_dm1, x_dm2):
                     B1, B2 = B_2(i, n, m, p_tmp, x_dm2_tmp, size2)                
                     sum2 = sum2 + ((y_dm1_tmp[i,n] - B1) * B2) 
                     
-            grd = - 2.*(sum1 + sum2)
+            U = U_2(n,m, p_temp, size2)                    
+            
+            grd = - 2.*(sum1 + sum2)*U
             
             jac[n,m] = grd
             
-    return jac.flatten() 
-
-
-    
+    return jac.flatten()   
+        
 #def constr_sum_1(p, y_dm1, x_dm2, k):
 def constr_sum_1(p, size1, k):    
     p_2D = np.reshape(p,(size1,-1))
     sp = np.sum(p_2D[k,:])
        
     return 1 - sp
- 
+
+def constr_1_sum(p, size1, k):    
+    p_2D = np.reshape(p,(size1,-1))
+    sp = np.sum(p_2D[k,:])
+       
+    return sp - 1
 
 '''
 just for testingggggggggggggggggggggggggg
@@ -382,9 +413,10 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     bnds = create_bounds(size1*size2)
     cons = create_constrains(size1)
 
+    
     t0 = cpu_time()  
     
-   
+    '''
     #bounds and constrains
     #if vis:
     #    print 'Optimizing based on slsqp with bounds and constrains'
@@ -404,31 +436,65 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     prb_map12 = np.reshape(plsq,(size1,-1))
     
     if vis:        
-        print plsq        
+        #print plsq        
         print 'Probability mapping: ',  prb_map12  
         begin_err = f_1D_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2)
         print 'Loss function before optimizing: ', begin_err
         final_err = f_1D_slsqp(plsq, y_dm1, x_dm2)
         print 'Loss function after optimizing: ', final_err 
         print 'Optimizing cpu time: ', t_opt    
-        
-        
-
-    #test the gradient
-    #from scipy.optimize import check_grad
-    #err = check_grad(f_1D_slsqp, gradient_f_1D_slsqp, prb_map12_init.flatten(), y_dm1, x_dm2) #correct
-    #err = check_grad(f_1D_slsqp_no_constrains, gradient_f_1D_slsqp_no_constrains, prb_map12_init.flatten(), y_dm1, x_dm2)
-
-    #print 'Check grad: ', err
-    
     '''    
+        
+    '''
+    #test the gradient
+    from scipy.optimize import check_grad
+    err = check_grad(f_1D_slsqp, gradient_f_1D_slsqp, prb_map12_init.flatten(), y_dm1, x_dm2) #correct
+    err1 = check_grad(f_1D_slsqp_no_constrains, gradient_f_1D_slsqp_no_constrains, prb_map12_init.flatten(), y_dm1, x_dm2)
+
+    print 'Check grad: ', err, err1
+    stop
+    '''
+    
+    
     #bounds and no constrains
     if vis:
         print 'Optimizing based on slsqp with bounds and NO constrains'
     res = minimize(f_1D_slsqp_no_constrains, prb_map12_init.flatten(),args=(y_dm1, x_dm2), 
                    method='SLSQP', 
-                   jac =  gradient_f_1D_slsqp_no_constrains, #gradient_f_1D_l_bfgs_b,
-                   bounds=bnds, 
+                   #jac =  gradient_f_1D_slsqp_no_constrains, #gradient_f_1D_l_bfgs_b,
+                   #bounds=bnds, 
+                   constraints = cons, 
+                   options = ({'maxiter' : max_nfe, 'disp': True}))
+     
+    t_opt = cpu_time() - t0
+    
+    plsq = res.x
+    
+    prb_map12 = np.reshape(plsq,(size1,-1))
+                  
+    from common_functions import normalize_sum_row_1
+    prb_map12 = normalize_sum_row_1(prb_map12)                
+    
+    if vis:        
+        print plsq        
+        print 'Probability mapping: ',  prb_map12  
+        begin_err = f_1D_slsqp_no_constrains(prb_map12_init.flatten(), y_dm1, x_dm2)
+        print 'Loss function before optimizing: ', begin_err
+        final_err = f_1D_slsqp_no_constrains(plsq, y_dm1, x_dm2)
+        print 'Loss function after optimizing: ', final_err 
+        print 'Optimizing cpu time: ', t_opt 
+    
+    
+
+    '''
+    #NO bounds, only constrains
+    cons = create_constrains_ineq(size1)
+    if vis:
+        print 'Optimizing based on COBYLA with constrains only, NO bounds'
+    res = minimize(f_1D_slsqp_no_constrains, prb_map12_init.flatten(),args=(y_dm1, x_dm2), 
+                   method='COBYLA', 
+                   #jac =  gradient_f_1D_slsqp_no_constrains, #gradient_f_1D_l_bfgs_b,
+                   constraints = cons, 
                    options = ({'maxiter' : max_nfe, 'disp': True}))
      
     t_opt = cpu_time() - t0
@@ -452,6 +518,7 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     '''
 
 
+
     
     return t_opt, prb_map12
 #end of SLSQP with bounds and constains
@@ -466,13 +533,25 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
 def f_1D_l_bfgs_b(p, y_dm1, x_dm2):
     size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
     size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
-    #should nomalize the probability to satisfy the constrains of sum(row_i) = 1 for all i
     
     prob_temp = np.reshape(p,(size1,-1))    
     from common_functions import normalize_sum_row_1
-    p_temp = normalize_sum_row_1(prob_temp)    
-    ad = avg_dis_1D(size1, size2, x_dm2, p_temp.flatten()) 
-    f = np.linalg.norm(y_dm1-ad)
+    p_temp = normalize_sum_row_1(prob_temp) 
+        
+    p_temp = p_temp.flatten()
+    f = 0.    
+    for i in np.arange(size1):
+        for j in np.arange(size1):
+            if j!=i:
+                t = 0.
+                for k in np.arange(size2):
+                    for l in np.arange(size2):
+                        t = t + p_temp[i*size2+k]*p_temp[j*size2+l]*x_dm2[k*size2+l]
+                    
+                tmp = (y_dm1[i*size1 + j] - t)
+                f = f + tmp *tmp
+
+    
     return f
 
 #Gradient of loss function for optimize by L-BFGS-B with no bounds and no constrains
@@ -481,6 +560,8 @@ def f_1D_l_bfgs_b(p, y_dm1, x_dm2):
 #x: target    (dm2)
 #f = sum((y - f(p,x))^2)
 #return the vector that the number of element is equal to the size of parameter needed to optimized p
+
+#-----NOT CORRECT ---------------
 def gradient_f_1D_l_bfgs_b(p, y_dm1, x_dm2):
     size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
     size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
@@ -519,41 +600,49 @@ def scipy_l_bfgs_b(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
     size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
     
-    #bnds = create_bounds(size1*size2)
+    bnds = create_bounds(size1*size2)
     
     t0 = cpu_time()  
 
-    '''    
+    '''  
     #with bounds only, and no constrains
-    #if vis:
-    #    print 'Optimizing based on l_bfgs_b with bounds only, NO constrains'
-    #res = minimize(f_1D_l_bfgs_b, prb_map12_init.flatten(),args=(y_dm1, x_dm2), 
-    #                method='L-BFGS-B', bounds=bnds, 
-    #               options = ({'maxiter' : max_nfe, 'disp': True}))   
+    if vis:
+        print 'Optimizing based on l_bfgs_b with bounds only, NO constrains'
+    res = minimize(f_1D_l_bfgs_b, prb_map12_init.flatten(),args=(y_dm1, x_dm2), 
+                   method='TNC',#'L-BFGS-B', 
+                   bounds=bnds, 
+                   options = ({'maxiter' : max_nfe, 'disp': True}))   
     '''
     
-    '''
+    
     #with no bounds no constrains   
     if vis:
         print 'Optimizing based on l_bfgs_b with NO bounds and NO constrains'
     res = minimize(f_1D_l_bfgs_b, prb_map12_init.flatten(),args=(y_dm1, x_dm2),
-                   method='L-BFGS-B', 
+                   method= 'trust-ncg',#'dogleg',#'Nelder-Mead',#'Powell', #'BFGS',#'CG',#'TNC',#''L-BFGS-B', #'Nelder-Mead',#'Powell', #'BFGS',#'Newton-CG', #'TNC',#'L-BFGS-B', 
                    options = ({'maxiter' : max_nfe, 'disp': True}))
+    
+    
+    
+    
     '''
-
-    #with no bounds no constrains, with gradient provided use CG
+    #with no bounds no constrains, with gradient provided use CG - GRADIENT FOR no bounds +/ no constrains is not correct
     if vis:
-        print 'Optimizing based on CG with NO bounds, NO constrains, and Gradient provided'
+        print 'Optimizing based on CG with NO bounds, NO constrains'#, and Gradient provided'
     res = minimize(f_1D_l_bfgs_b, prb_map12_init.flatten(),args=(y_dm1, x_dm2), 
                    method='CG',#Newton-CG', 
-                   jac = gradient_f_1D_l_bfgs_b, 
+                   #jac = gradient_f_1D_l_bfgs_b, 
                    options = ({'maxiter' : max_nfe, 'disp': True}))
-                   
+    '''
+               
     t_opt = cpu_time() - t0
     
     plsq = res.x
     
     prb_map12 = np.reshape(plsq,(size1,-1))
+    
+    from common_functions import normalize_sum_row_1
+    prb_map12 = normalize_sum_row_1(prb_map12)
     
     if vis:
                 
@@ -655,10 +744,8 @@ size1 = len(tractography1)
 size2 = len(tractography2)
 
 
-#prb_map12_init = init_prb_state(size1, size2)   #normal distribution
-prb_map12_init = init_prb_state_1(tractography1,tractography2) #distribution based on distance
 
-print prb_map12_init
+
 
 if vis:
     ren = fvtk.ren() 
@@ -672,30 +759,29 @@ x_dm2 = dm2.flatten()
 print 'Optimizing ...........................'    
 
 max_nfe = 50000
+
+#prb_map12_init = init_prb_state(size1, size2)   #equal distribution
+#prb_map12_init = init_prb_state_1(tractography1,tractography2) #distribution based on distance
+
 #from scipy.optimize import leastsq, fmin_slsqp,fmin_bfgs, fmin_powell, fmin_cobyla
 
+
 #optimizing with SLSPQ  ---------------------
-#-----------with bounds and constrains
-t_opt, prb_map12 = scipy_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
+#-----------with bounds and (constrains OR NO constrains)
+for t in np.arange(1):
+    print '-------------------- Iteration = ', t
+    #prb_map12_init = init_prb_state_2(size1, size2)   #random distribution
+    prb_map12_init = init_prb_state(size1, size2)      #equal distribution
+    print prb_map12_init
+    t_opt, prb_map12 = scipy_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
 
-
-
-
-'''
-#-----------with bounds and no constrains
-t_opt, prb_map12 = scipy_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
-from common_functions import normalize_sum_row_1
-prb_map12 =normalize_sum_row_1(prb_map12) 
-'''
 
 '''
 #optimizing with L_BFGS_B---------------------
+prb_map12_init = init_prb_state(size1, size2)
+print prb_map12_init
 t_opt, prb_map12 = scipy_l_bfgs_b(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
-from common_functions import normalize_sum_row_1
-prb_map12 =normalize_sum_row_1(prb_map12) 
 '''
-
-
 
 print 'Time :', t_opt
 print 'Map : ', prb_map12
