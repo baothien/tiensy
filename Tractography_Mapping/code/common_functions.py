@@ -852,8 +852,42 @@ def visualize_mapped(ren, tract2, mapping, color=None):
     for i in np.arange(len(mapping)):        
         fvtk.add(ren, fvtk.line(tract2[mapping[i]], color, opacity=1.0))     
     return ren
-    
+   
 
+'''
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Some functions for plotting data
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           
+'''   
+def plot_smooth(plt, x, y, ori = False):
+    
+    n = len(x)
+    xi = np.linspace(x.min(),x.max(),100*n)
+    
+    '''
+    from scipy.interpolate import spline        
+    yi = spline(x, y, xi) 
+    
+    if ori:    
+        plt.plot(x,y,'o',xi, yi)
+    else:
+        plt.plot(xi, yi) 
+    
+    '''    
+    
+    from scipy.interpolate import interp1d
+    yi = interp1d(x, y, kind='cubic')
+
+    if ori:    
+        plt.plot(x,y,'o',xi, yi(xi))
+    else:
+        plt.plot(xi, yi(xi)) 
+    
+    
+    #plt.plot(x,y,'o',xi, yi(xi),'--')
+    #plt.scatter(x,y,'o',xi, ynew(xi),'--')
+    
+    
 '''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Some functions for operating on matrix

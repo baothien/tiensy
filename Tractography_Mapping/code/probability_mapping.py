@@ -19,7 +19,9 @@ import time
 import numpy as np
 from dipy.viz import fvtk
 from dipy.tracking.distances import mam_distances, bundles_distances_mam
-from common_functions import cpu_time, load_tract, visualize_tract
+from common_functions import cpu_time, load_tract, visualize_tract, plot_smooth
+import matplotlib.pyplot as plt
+import os
 import argparse
 
 
@@ -299,10 +301,18 @@ def constr_1_sum(p, size1, k):
        
     return sp - 1
 
+def inter_loss(p):
+    global L, y_dm1, x_dm2
+    l = f_1D_slsqp(p, y_dm1, x_dm2)
+    L.append(l)
+    
+    return l
+
 '''
 just for testingggggggggggggggggggggggggg
 
-
+L = [930.64261814932911, 427.4241367579595, 329.72460554453232, 325.06432923463126, 307.601679619001, 282.74763885893799, 290.13158010428356, 280.58814121175254, 280.3994379287081, 280.44408461131962, 280.46019083434777, 279.486806116347, 300.04710667890356, 279.44224772748453]
+    
 def avg_dis(size1, size2, dm2, prb_map12):
     ad = np.zeros((size1, size1))  
     for i in np.arange(size1):
@@ -406,7 +416,7 @@ def gradient_f_1D_slsqp_3(p, y_dm1, x_dm2):
 ''' 
   
 def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
-    from scipy.optimize import minimize
+    from scipy.optimize import minimize, fmin_slsqp
     size1 = np.sqrt(len(y_dm1)) #number of fibers in source tract
     size2 = np.sqrt(len(x_dm2)) #number of fibers in target tract
     
@@ -416,7 +426,7 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     
     t0 = cpu_time()  
     
-    '''
+    
     #bounds and constrains
     #if vis:
     #    print 'Optimizing based on slsqp with bounds and constrains'
@@ -424,26 +434,37 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     #            constraints = cons, options = ({'maxiter' : max_nfe, 'disp': True}))
     if vis:
         print 'Optimizing based on slsqp with bounds and constrains. Also gradient is provided'
+        
+    
     res = minimize(f_1D_slsqp, prb_map12_init.flatten(), args=(y_dm1, x_dm2), 
                    method='SLSQP', 
                    jac = gradient_f_1D_slsqp,
-                   bounds=bnds, constraints = cons, 
-                   options = ({'maxiter' : max_nfe, 'disp': True}))
+                   bounds=bnds, 
+                   constraints = cons, 
+                   callback = inter_loss,
+                   options = ({'maxiter' : max_nfe, 'disp': True}))                   
+    
     t_opt = cpu_time() - t0
     
     plsq = res.x
     
-    prb_map12 = np.reshape(plsq,(size1,-1))
+    prb_map12 = np.reshape(plsq,(size1,-1))    
+   
+    
+    #print 'Number of iteration', res.nit
+    #print 'Final value of object func:', res.fun    
+    #print 'Exit mode', res.status, res.message
+    
     
     if vis:        
         #print plsq        
-        print 'Probability mapping: ',  prb_map12  
+        #print 'Probability mapping: ',  prb_map12  
         begin_err = f_1D_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2)
         print 'Loss function before optimizing: ', begin_err
         final_err = f_1D_slsqp(plsq, y_dm1, x_dm2)
         print 'Loss function after optimizing: ', final_err 
         print 'Optimizing cpu time: ', t_opt    
-    '''    
+       
         
     '''
     #test the gradient
@@ -455,7 +476,7 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
     stop
     '''
     
-    
+    '''
     #bounds and no constrains
     if vis:
         print 'Optimizing based on slsqp with bounds and NO constrains'
@@ -484,7 +505,7 @@ def scipy_slsqp(prb_map12_init, y_dm1, x_dm2, max_nfe=50000, vis=False):
         print 'Loss function after optimizing: ', final_err 
         print 'Optimizing cpu time: ', t_opt 
     
-    
+    '''
 
     '''
     #NO bounds, only constrains
@@ -743,10 +764,6 @@ dm2 = bundles_distances_mam(tractography2, tractography2)
 size1 = len(tractography1)
 size2 = len(tractography2)
 
-
-
-
-
 if vis:
     ren = fvtk.ren() 
     ren = visualize_tract(ren, tractography1, fvtk.yellow)
@@ -756,6 +773,7 @@ if vis:
 y_dm1 = dm1.flatten()
 x_dm2 = dm2.flatten()
 
+L = []
 print 'Optimizing ...........................'    
 
 max_nfe = 50000
@@ -766,15 +784,45 @@ max_nfe = 50000
 #from scipy.optimize import leastsq, fmin_slsqp,fmin_bfgs, fmin_powell, fmin_cobyla
 
 
+
 #optimizing with SLSPQ  ---------------------
 #-----------with bounds and (constrains OR NO constrains)
-for t in np.arange(1):
+for t in np.arange(10):
+    L = []
     print '-------------------- Iteration = ', t
-    #prb_map12_init = init_prb_state_2(size1, size2)   #random distribution
-    prb_map12_init = init_prb_state(size1, size2)      #equal distribution
-    print prb_map12_init
+       
+    prb_map12_init = init_prb_state_2(size1, size2)   #random distribution
+   
+    #prb_map12_init = init_prb_state(size1, size2)      #equal distribution
+    #print prb_map12_init
+    
     t_opt, prb_map12 = scipy_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
+    
+    #print 'Time :', t_opt
+    #print 'Map : ', prb_map12
 
+    #test the result 
+    #for i in np.arange(size1):
+    #    print 'sum row ', i , np.sum(prb_map12[i,:])
+
+    #compare to mapping results
+    if t==0:
+        pre_map12 = np.copy(prb_map12_init)            
+    norm = np.linalg.norm(prb_map12 - pre_map12)
+    print "Norm of results - with previous: ", norm
+    pre_map12 = np.copy(prb_map12)
+    
+         
+    #print L      
+    plot_smooth(plt, np.arange(len(L)), L, False)       
+    
+    
+    
+plt.title('Loss function ')  
+plt.xlabel('Gradient evaluations')  
+plt.savefig(os.path.join(os.path.curdir, 'objective_function_'+ str(num_pro) + '_' + str(num_pro) + '.pdf'))
+plt.show()
+    
 
 '''
 #optimizing with L_BFGS_B---------------------
@@ -783,15 +831,7 @@ print prb_map12_init
 t_opt, prb_map12 = scipy_l_bfgs_b(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)
 '''
 
-print 'Time :', t_opt
-print 'Map : ', prb_map12
-
-
-
-
-#test the result 
-for i in np.arange(size1):
-    print 'sum row ', i , np.sum(prb_map12[i,:]) 
+ 
 
 '''
 #leastsq

@@ -43,7 +43,7 @@ for s_id in np.arange(len(source_ids)):
             arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'
             arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractograph/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
             arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
-            arg6 = '-pr=5'            
+            arg6 = '-pr=20'            
             arg7 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/probability_mapping/prob_map_' + source + '_' + target + '_cst_L_MNI_20_20.txt'            
             import sys
             sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7]
