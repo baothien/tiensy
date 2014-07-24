@@ -864,7 +864,7 @@ def plot_smooth(plt, x, y, ori = False):
     n = len(x)
     xi = np.linspace(x.min(),x.max(),100*n)
     
-    '''
+    
     from scipy.interpolate import spline        
     yi = spline(x, y, xi) 
     
@@ -873,8 +873,9 @@ def plot_smooth(plt, x, y, ori = False):
     else:
         plt.plot(xi, yi) 
     
-    '''    
-    
+        
+    '''
+    #don't use it 
     from scipy.interpolate import interp1d
     yi = interp1d(x, y, kind='cubic')
 
@@ -882,7 +883,7 @@ def plot_smooth(plt, x, y, ori = False):
         plt.plot(x,y,'o',xi, yi(xi))
     else:
         plt.plot(xi, yi(xi)) 
-    
+    '''
     
     #plt.plot(x,y,'o',xi, yi(xi),'--')
     #plt.scatter(x,y,'o',xi, ynew(xi),'--')
