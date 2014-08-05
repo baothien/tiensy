@@ -56,11 +56,13 @@ def init_prb_state_sparse(tract1, tract2, nearest = 10):
     
     dm12 = bundles_distances_mam(tract1, tract2)
     
-    #print dm12
+    print dm12
     
     cs_idxs = [dm12[i].argsort()[:nearest] for i in np.arange(len(tract1))] #chosen indices
     ncs_idxs = [dm12[i].argsort()[nearest:] for i in np.arange(len(tract1))] #not chosen indices
-
+    
+    size1 = len(tract1)
+    
     for i in np.arange(size1):
         dm12[i][ncs_idxs[i]] = 0      
     
@@ -68,13 +70,13 @@ def init_prb_state_sparse(tract1, tract2, nearest = 10):
     test sparse optimzation
     '''
     
-    #print dm12
+    print dm12
     
     
     from common_functions import normalize_sum_row_1
     prb = normalize_sum_row_1(dm12)
     
-    #print prb
+    print prb
     
     return np.array(prb,dtype='float'), cs_idxs
     
@@ -591,7 +593,7 @@ def gradient_f_1D_slsqp_3(p, y_dm1, x_dm2):
 def scipy_slsqp_sparse(prb_map12_init, y_dm1, x_dm2, cs_idxs, max_nfe=50000, vis=False):
     
     
-    
+    '''
     #test the gradient
     from scipy.optimize import check_grad
     err = check_grad(f_1D_slsqp_sparse, gradient_f_1D_slsqp_sparse, prb_map12_init.flatten(), y_dm1, x_dm2, cs_idxs) #correct
@@ -600,13 +602,13 @@ def scipy_slsqp_sparse(prb_map12_init, y_dm1, x_dm2, cs_idxs, max_nfe=50000, vis
     print 'Check grad: ', err, err1
     stop
     
-    
+    '''
     
     from scipy.optimize import minimize, fmin_slsqp
     size1 = np.shape(y_dm1)[0]
     size2 = np.shape(x_dm2)[0]
     
-    bnds = create_bounds_sparse(size1,size2, cs_idxs)
+    bnds = create_bounds_sparse(size1, size2, cs_idxs)
     cons = create_constrains(size1)
     #stop
     
@@ -622,9 +624,9 @@ def scipy_slsqp_sparse(prb_map12_init, y_dm1, x_dm2, cs_idxs, max_nfe=50000, vis
         print 'Optimizing based on slsqp with bounds and constrains. Also gradient is provided'
         
     
-    res = minimize(f_1D_slsqp_sparse, prb_map12_init.flatten(), args=(y_dm1, x_dm2, cs_idxs), 
+    res = minimize(f_1D_slsqp, prb_map12_init.flatten(), args=(y_dm1, x_dm2), 
                    method='SLSQP', 
-                   jac = gradient_f_1D_slsqp_sparse,
+                   jac = gradient_f_1D_slsqp,
                    bounds=bnds, 
                    constraints = cons, 
                    callback = inter_loss,
@@ -1265,9 +1267,7 @@ for t in np.arange(1):
     #t_opt, prb_map12 = scipy_slsqp(prb_map12_init.flatten(), y_dm1, x_dm2, max_nfe,vis = True)    
     
     #sparse optimization    
-    prb_map12_init, cs_idxs = init_prb_state_sparse(tractography1,tractography2,nearest = 10) 
-    
-    
+    prb_map12_init, cs_idxs = init_prb_state_sparse(tractography1,tractography2,nearest = 5) 
     t_opt, prb_map12 = scipy_slsqp_sparse(prb_map12_init.flatten(), y_dm1, x_dm2, cs_idxs, max_nfe,vis = True)
     
     #print 'Time :', t_opt
