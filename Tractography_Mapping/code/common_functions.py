@@ -887,7 +887,39 @@ def plot_smooth(plt, x, y, ori = False):
     
     #plt.plot(x,y,'o',xi, yi(xi),'--')
     #plt.scatter(x,y,'o',xi, ynew(xi),'--')
+  
+
+def smooth(x,beta):
+    import numpy
+    """ kaiser window smoothing """
+    window_len=11
+    # extending the data at beginning and at the end
+    # to apply the window at the borders
+    s = numpy.r_[x[window_len-1:0:-1],x,x[-1:-window_len:-1]]
+    w = numpy.kaiser(window_len,beta)
+    y = numpy.convolve(w/w.sum(),s,mode='valid')
+    return y[5:len(y)-5] 
+     
+#Let's test it on a random sequence:   
+def test_smooth():
+    import numpy
+    import pylab
+    beta = [2,4,16,32]
+
+    pylab.figure()
+    # random data generation
+    y = numpy.random.random(100)*100 
+    for i in range(100):
+        y[i]=y[i]+i**((150-i)/80.0) # modifies the trend
     
+    # smoothing the data
+    pylab.figure(1)
+    pylab.plot(y,'-k',label="original signal",alpha=.3)
+    for b in beta:
+        yy = smooth(y,b) 
+        pylab.plot(yy,label="filtered (beta = "+str(b)+")")
+    pylab.legend()
+    pylab.show()  
     
 '''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -136,7 +136,11 @@ def constr_1_sum(p, size1, k):
 '''
 sparse optimization
 '''
+import numba as nb
+#from numba import autojit, jit
 
+#@nb.jit('float[:,:](int8, int8, float[:,:],float[:,:], float[:,:], float[:,:])')
+#@nb.autojit
 def avg_dis_sparse(size1, size2, dm1, dm2, p, cs_idxs):
     #ad = np.zeros((size1, size1))      
     tmp = 0.
@@ -152,6 +156,9 @@ def avg_dis_sparse(size1, size2, dm1, dm2, p, cs_idxs):
                 tmp = tmp + (dm1[i,j] - t)*(dm1[i,j] - t)
     return tmp# ad
 
+#fast_avg = jit(float(int, int, float[:,:], float[:,:], float[:], int[:,:]))(avg_dis_sparse)
+fast_avg = nb.jit(avg_dis_sparse)
+#@jit    
 def f_1D_slsqp_sparse(p, y_dm1, x_dm2, cs_idxs):    
     """
     Computes the loss function of a given probability mapping.
@@ -168,15 +175,19 @@ def f_1D_slsqp_sparse(p, y_dm1, x_dm2, cs_idxs):
     '''
 
     return avg_dis_sparse(size1, size2, y_dm1, x_dm2, p, cs_idxs)
-    
+    #return fast_avg(size1, size2, y_dm1, x_dm2, p, cs_idxs)
+
+#@jit    
 def inter_loss_sparse(p):
     global L, y_dm1, x_dm2, cs_idxs
     l = f_1D_slsqp_sparse(p, y_dm1, x_dm2, cs_idxs)
     L.append(l)
     
     return l
+    
+#inter_loss_sparse = nb.jit(inter_loss_sparse_1)
 
-
+#@jit
 #functions for calculating the gradients
 def A_2_sparse(j, n, m, p_tmp, x_dm2_tmp, size2, cs_idxs): 
     #p_tmp = np.reshape(p,(-1, size2))  
@@ -197,6 +208,9 @@ def A_2_sparse(j, n, m, p_tmp, x_dm2_tmp, size2, cs_idxs):
         
     return A1, A2
     
+#A_2_sparse = nb.jit(A_2_sparse_1)
+
+#@jit    
 def B_2_sparse(i, n, m, p_tmp, x_dm2_tmp, size2, cs_idxs):  
     #p_tmp = np.reshape(p,(-1, size2))  
     #x_dm2_tmp = np.reshape(x_dm2,(-1, size2))  
@@ -210,8 +224,8 @@ def B_2_sparse(i, n, m, p_tmp, x_dm2_tmp, size2, cs_idxs):
         B2 = B2 + p_tmp[i,k] * x_dm2_tmp[cs_idxs[i,k],cs_idxs[n,m]]
     return B1, B2
     
-
-    
+#B_2_sparse = nb.jit(B_2_sparse_1)
+#@jit    
 def gradient_f_1D_slsqp_sparse(p, y_dm1, x_dm2, cs_idxs):
     #size1 number of fibers in source tract
     #size2 number of fibers in target tract (nearest neighbors)
@@ -240,9 +254,11 @@ def gradient_f_1D_slsqp_sparse(p, y_dm1, x_dm2, cs_idxs):
                     
             grd = - 2.*(sum1 + sum2)
             
-            jac[n,m] = grd# * p_tmp[n,m]
+            jac[n,m] = grd
             
     return jac.flatten() 
+
+#gradient_f_1D_slsqp_sparse = nb.jit(gradient_f_1D_slsqp_sparse_1)
     
 '''
 end of sparse optimization
@@ -394,6 +410,7 @@ map_prob = args.outputMapProbFile
 obj_func_file = args.outputObjFuncFile
 #obj_func_file = os.path.join(os.path.curdir, 'objective_function_'+ str(num_pro) + '_' + str(num_pro) + '_sparse_density_' + str(nearest) + '_neighbors.pdf')
 vis = False
+save = True#False
 
 source_cst = load_tract(s_file,s_ind)
 
@@ -402,8 +419,8 @@ target_cst_ext = load_tract(t_file,t_ind)
 print len(source_cst), len(target_cst_ext)
 
 tractography1 = source_cst[-num_pro:]
-#tractography2 = target_cst_ext[:num_pro]
-tractography2 = target_cst_ext[:num_pro*2]
+tractography2 = target_cst_ext[:num_pro]
+#tractography2 = target_cst_ext[:num_pro*2]
 
 print "Source", len(tractography1)
 print "Target", len(tractography2)
@@ -461,12 +478,14 @@ for t in np.arange(1):
     #print L      
     plot_smooth(plt, np.arange(len(L)), L, False)       
     
-    save_pickle(map_prob, prb_map12)
+    if save:
+        save_pickle(map_prob, prb_map12)
     
 plt.title('Loss function ')  
 plt.xlabel('Gradient evaluations')  
-#plt.savefig(os.path.join(os.path.curdir, 'objective_function_'+ str(num_pro) + '_' + str(num_pro) + '_sparse_density_' + str(nearest) + '_neighbors.pdf'))
-plt.savefig(obj_func_file)
+if save:
+    #plt.savefig(os.path.join(os.path.curdir, 'objective_function_'+ str(num_pro) + '_' + str(num_pro) + '_sparse_density_' + str(nearest) + '_neighbors.pdf'))
+    plt.savefig(obj_func_file)
 plt.show()
 
 #end of optimize with slsqp
