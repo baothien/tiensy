@@ -832,7 +832,7 @@ def viz_vol1(vol,color):
     fvtk.show(ren)  
 
 
-def visualize_tract(ren, tract,color=None):  
+def visualize_tract(ren, tract, color=None):  
     if color == None:
         dipy_ver = dipy_version()
         #print dipy_ver        
@@ -846,6 +846,22 @@ def visualize_tract(ren, tract,color=None):
 
     for i in np.arange(len(tract)):
         fvtk.add(ren, fvtk.line(tract[i], color, opacity=1.0))        
+    return ren
+
+def visualize_tract_transparence(ren, tract, color=None, tran = 1.0, lwidth=1.0):  
+    if color == None:
+        dipy_ver = dipy_version()
+        #print dipy_ver        
+        from distutils.version import StrictVersion
+        minimize_version = StrictVersion('0.7') 
+        
+        if dipy_ver > minimize_version:
+            color = fvtk.colors.red       
+        else:
+            color = fvtk.red            
+
+    for i in np.arange(len(tract)):
+        fvtk.add(ren, fvtk.line(tract[i], color, opacity=tran, linewidth=lwidth))        
     return ren
 
 def visualize_mapped(ren, tract2, mapping, color=None):
@@ -888,6 +904,21 @@ def plot_smooth(plt, x, y, ori = False):
     #plt.plot(x,y,'o',xi, yi(xi),'--')
     #plt.scatter(x,y,'o',xi, ynew(xi),'--')
   
+def plot_smooth_label(plt, x, y, marker, label, ori = False):
+    
+    n = len(x)
+    xi = np.linspace(x.min(),x.max(),100*n)
+    
+    
+    from scipy.interpolate import spline        
+    yi = spline(x, y, xi) 
+    
+    if ori:    
+        plt.plot(x,y,'o', color = 'black')
+        
+    plt.plot(xi, yi, linestyle = marker, color = 'black', label = label, linewidth=1.85)        
+    
+        
 
 def smooth(x,beta):
     import numpy
@@ -935,4 +966,47 @@ def normalize_sum_row_1(mat):
     
     return temp_mat
     
+ 
+'''
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Some functions for probability mapping
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           
+'''
+ 
+def init_prb_state_sparse(tract1, tract2, nearest = 10):
+    '''
+    distribution based on the convert of distance
+    '''   
+    from dipy.tracking.distances import bundles_distances_mam
     
+    dm12 = bundles_distances_mam(tract1, tract2)
+    
+    #print dm12
+    
+    cs_idxs = [dm12[i].argsort()[:nearest] for i in np.arange(len(tract1))] #chosen indices
+    ncs_idxs = [dm12[i].argsort()[nearest:] for i in np.arange(len(tract1))] #not chosen indices
+
+    size1 = len(tract1)
+    
+    for i in np.arange(size1):
+        cs_idxs[i].sort()
+        ncs_idxs[i].sort()
+        dm12[i][ncs_idxs[i]] = 0      
+    
+    '''
+    test sparse optimzation
+    '''
+    #print cs_idxs
+    #print dm12
+    
+    prb = np.zeros((size1,nearest))
+ 
+    for i in np.arange(size1):
+        prb[i] = dm12[i][cs_idxs[i]]
+       
+    from common_functions import normalize_sum_row_1
+    prb = normalize_sum_row_1(prb)
+    
+    #print prb
+    #stop
+    return np.array(prb,dtype='float'),np.array(cs_idxs, dtype = 'float')   

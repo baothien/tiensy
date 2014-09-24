@@ -418,9 +418,15 @@ target_cst_ext = load_tract(t_file,t_ind)
 
 print len(source_cst), len(target_cst_ext)
 
+'''
 tractography1 = source_cst[-num_pro:]
 tractography2 = target_cst_ext[:num_pro]
 #tractography2 = target_cst_ext[:num_pro*2]
+'''
+
+#full_full
+tractography1 = source_cst[:]
+tractography2 = target_cst_ext[:]
 
 print "Source", len(tractography1)
 print "Target", len(tractography2)

@@ -11,15 +11,16 @@ def clearall():
     for var in all:
         del globals()[var]
 
+
 #for CST_ROI_L
-source_ids = [212]#, 202, 204, 209]
-target_ids = [212, 202]#, 204, 209]
+source_ids = [209]#, 202, 204, 209]
+target_ids = [204]#202]#, 204, 209]
 
 
 '''
 #for CST_ROI_R
-source_ids = [206, 204, 212, 205]
-target_ids = [206, 204, 212, 205]
+source_ids = [204]#[206, 204, 212, 205]
+target_ids = [206]#,212,205]#[206, 204, 212, 205]
 '''
 
 
@@ -32,10 +33,11 @@ for s_id in np.arange(len(source_ids)):
            #=================================================================================================
             #MNI space
             #=================================================================================================
-                                 
+           
+                                  
             #MNI_ROI_left            
             pro = 60
-            nn = 20
+            nn = 10#20
             print 
             print '-----------------------------------------------------------------------------------------'
             fname = 'probability_mapping_sparse_density.py'
@@ -46,8 +48,10 @@ for s_id in np.arange(len(source_ids)):
             arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
             arg6 = '-pr=' + str(pro) 
             arg7 = '-nn=' + str(nn) 
-            arg8 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_' + str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.txt'            
-            arg9 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/objective_function_' + source + '_' + target + '_cst_L_MNI_'+ str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.pdf'            
+            #arg8 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_' + str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.txt'            
+            #arg9 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/objective_function_' + source + '_' + target + '_cst_L_MNI_'+ str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.pdf'            
+            arg8 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'            
+            arg9 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/objective_function_' + source + '_' + target + '_cst_L_MNI_full_full'+ '_sparse_density_' + str(nn) + '_neighbors.pdf'                        
             import sys
             sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
             execfile(fname)
@@ -56,18 +60,24 @@ for s_id in np.arange(len(source_ids)):
             
             '''
             #MNI_ROI_right                         
+            pro = 60
+            nn = 10
             print 
             print '-----------------------------------------------------------------------------------------'
-            fname = 'probability_mapping.py'
+            fname = 'probability_mapping_sparse_density.py'
             arg1 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
             arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_R_tvis_sff_in_ext.pkl'
             arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'
             arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractograph/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_R_tvis.pkl'
             arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
-            arg6 = '-pr=50'
-            arg7 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/probability_mapping/prob_map_' + source + '_' + target + '_cst_R_MNI.txt'            
+            arg6 = '-pr=' + str(pro) 
+            arg7 = '-nn=' + str(nn) 
+            #arg8 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_' + str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.txt'            
+            #arg9 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/objective_function_' + source + '_' + target + '_cst_R_MNI_'+ str(pro) + '_' + str(pro*2)+ '_sparse_density_' + str(nn) + '_neighbors.pdf'            
+            arg8 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'            
+            arg9 = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/objective_function_' + source + '_' + target + '_cst_R_MNI_full_full'+ '_sparse_density_' + str(nn) + '_neighbors.pdf'                        
             import sys
-            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7]
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9]
             execfile(fname)
             clearall()
             '''

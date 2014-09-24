@@ -32,9 +32,9 @@ y_loss_right = { '206_204': np.array([227.35,	178.37,	147.06,	126.13,	121.22,	12
                 '212_206': np.array([137.87,    	110.26,	95.72	,    78.33	,	76.42,	75.73	,	74.13], dtype=np.float32),
                 '212_204': np.array([170.20,    	128.50,	111.23,	91.43	,	85.30,	85.20	,	84.41], dtype=np.float32),
                 '212_205': np.array([241.24,    	178.86,	153.84,	128.08,	120.68,	117.42,	112.12], dtype=np.float32),
-                '205_206': np.array([137.14,    	99.35	,	85.66	,	74.04	,	68.85	,	64.50	,	62.84], dtype=np.float32),
-                '205_204': np.array([128.32,    	100.07,	91.28	,	67.92	,	65.72	,	64.77	,	64.73], dtype=np.float32),
-                '205_212': np.array([190.38,    	132.69,	109.82,	85.61	,	74.59	,	70.06	,	66.95], dtype=np.float32)
+                '205_206': np.array([137.14,    	99.35,	85.66,	74.04,	68.85,	64.50,	62.84], dtype=np.float32),
+                '205_204': np.array([128.32,    	100.07,	91.28,	67.92,	65.72,	64.77,	64.73], dtype=np.float32),
+                '205_212': np.array([190.38,    	132.69,	109.82,	85.61,	74.59,	70.06,	66.95], dtype=np.float32)
          }
 
 y_jac_left = { '212_202': np.array([0.07,	0.62,	0.63,	0.62,	0.59,	0.60,	0.59], dtype=np.float32),
@@ -101,24 +101,24 @@ y_bfn_right = { '206_204': np.array([0.65,	0.27,	0.27,	0.25,	0.25,	0.25,	0.24], 
 
 
 #for CST_ROI_L
-source_ids = [212]#, 202, 204, 209]
-target_ids = [212, 202, 204, 209]
-
+source_ids = [209]#[212, 202, 204, 209]
+target_ids = [202, 204, 212 ]#209, 212]#, 212]#, 204, 202]#, 202, 209]#, 212, 209]# [212, 202, 204, 209]
 
 '''
 #for CST_ROI_R
-source_ids = [206, 204, 212, 205]
-target_ids = [206, 204, 212, 205]
+source_ids = [205]#, 204, 212, 205]
+target_ids = [ 204, 206, 212]#[206, 204, 212, 205]
 '''
 
-marker = ['-',':', '--','-.']
+marker = ['-','--','-.', ':']
 x = [0, 100, 200, 400, 600, 800, 1000]
 mk = 0
 
-#y_all = y_loss_left
-y1_all = y_jac_left
-y2_all = y_bfn_left
-x = x[1:]
+y_all = y_loss_left
+#y_all = y_loss_right
+#y1_all = y_jac_left
+#y2_all = y_bfn_left
+x = x[0:]
 for s_id in np.arange(len(source_ids)):
     #print "------------------------------------------"
     print source_ids[s_id]    
@@ -126,16 +126,26 @@ for s_id in np.arange(len(source_ids)):
         if (target_ids[t_id] != source_ids[s_id]):                
             source = str(source_ids[s_id])
             target = str(target_ids[t_id])
-            y1 = y1_all[source+'_'+target][1:]
-            y2 = y2_all[source+'_'+target][1:]
             
-            print y1, y2
+            #y1 = y1_all[source+'_'+target][1:]
+            #y2 = y2_all[source+'_'+target][1:]
+            
+            #print y1, y2
             mk = t_id
-            plt.plot(x, y1, marker[mk],color ='black', label = 'JAC_' + source+'_'+target, markersize = 8,linewidth=2.)            
-            plt.plot(x, y2, marker[mk],color ='black', label = 'BFN_' +  source+'_'+target, markersize = 8,linewidth=2.)            
+            #plt.plot(x, y1, marker[mk],color ='black', label = 'JAC_' + source+'_'+target, markersize = 8,linewidth=2.)            
+            #plt.plot(x, y2, marker[mk],color ='black', label = 'BFN_' +  source+'_'+target, markersize = 8,linewidth=2.)            
             
             #plt.plot(y2, y1, marker[mk],color ='black', label = 'JAC_' + source+'_'+target, markersize = 8,linewidth=2.)            
-       
+            
+            #110 is len of 205 CST_R_ext - for normalization
+            #len_cst = 110
+            #145 is len of 209 CST_L_ext - for normalization
+            len_cst = 145
+            y = 1./len_cst * y_all[source+'_'+target][0:] 
+            from common_functions import plot_smooth_label
+            
+            plot_smooth_label(plt, np.array(x,int), y, marker[mk], source+'_'+target, True)#False) 
+            #plt.plot(x, y, 'g-', color ='black', label = source+'_'+target, markersize = 8,linewidth=2.)            
             #plt.plot(x, y, 'g-', label = '201', markersize = 1.2)            
             #plt.plot(x, y,linestyle='-','rD', label = str(data_id), markersize = 1.8)            
             #plt.plot(x, y, marker[mk],color ='black', label = source+'_'+target, markersize = 8,linewidth=2.)            
@@ -143,8 +153,9 @@ for s_id in np.arange(len(source_ids)):
             #markers_on = np.linspace(0, 1, ward.height_[len(ward.height_)-1])+0.5/ ward.height_[len(ward.height_)-1]
             #y_markers_on = [R_function(ward.R_alpha_,ward.height_[len(ward.height_)-1],x_i+0.5/ ward.height_[len(ward.height_)-1]) for x_i in markers_on]
             #plt.plot(markers_on, y_markers_on, 'rD')
-            plt.legend(loc='up right')    
-            plt.xlabel('loss function', fontsize=17)
-            plt.ylabel('goodness score', fontsize=17)
-            #plt.title('Choosing scale based on goodness of a cut')            
-            plt.show()
+plt.legend(loc='up right')    
+plt.xlabel('annealing number', fontsize=17)
+plt.ylabel('normalized loss function value', fontsize=17)
+#plt.title('Choosing scale based on goodness of a cut')            
+plt.show()
+plt.savefig('loss_anneal_' + str(source_ids[0]) + '_all_R')
