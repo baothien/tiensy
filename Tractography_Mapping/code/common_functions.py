@@ -223,13 +223,13 @@ def streamlines_to_vol(static1, moving1, vol_dims,
         minimize_version = StrictVersion('0.7') 
         
         if dipy_ver > minimize_version:
-            viz_vol1(vol,fvtk.colors.red)
-            viz_vol1(vol1,fvtk.colors.blue)                
-            viz_vol1(intersec,fvtk.colors.yellow)
+            viz_vol1(vol,fvtk.colors.blue)
+            viz_vol1(vol1,fvtk.colors.green)                
+            viz_vol1(intersec,fvtk.colors.red)
         else:
-            viz_vol1(vol,fvtk.red)
-            viz_vol1(vol1,fvtk.blue)                
-            viz_vol1(intersec,fvtk.yellow)
+            viz_vol1(vol,fvtk.blue)
+            viz_vol1(vol1,fvtk.green)                
+            viz_vol1(intersec,fvtk.red)
          
     return vol, vol1, intersec
     
@@ -818,7 +818,8 @@ def viz_vol(vol):
 #visualize a volumn with a specific color   
 def viz_vol1(vol,color):
        
-    ren = fvtk.ren()   
+    ren = fvtk.ren()
+    ren.SetBackground(255,255,255)
     d1, d2, d3 = vol.shape
     
     point = []
@@ -827,7 +828,7 @@ def viz_vol1(vol,color):
             for k in np.arange(d3):    
                 if (vol[i, j, k] == 1):
                     point.append([i,j,k])
-    pts = fvtk.point(point,color, point_radius=0.5)    
+    pts = fvtk.point(point,color, point_radius=0.85)#0.85)    
     fvtk.add(ren, pts)
     fvtk.show(ren)  
 

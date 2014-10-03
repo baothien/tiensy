@@ -153,6 +153,7 @@ for s_id in np.arange(len(source_ids)):
             #markers_on = np.linspace(0, 1, ward.height_[len(ward.height_)-1])+0.5/ ward.height_[len(ward.height_)-1]
             #y_markers_on = [R_function(ward.R_alpha_,ward.height_[len(ward.height_)-1],x_i+0.5/ ward.height_[len(ward.height_)-1]) for x_i in markers_on]
             #plt.plot(markers_on, y_markers_on, 'rD')
+            plt.ylim([0.4,1.8])
 plt.legend(loc='up right')    
 plt.xlabel('annealing number', fontsize=17)
 plt.ylabel('normalized loss function value', fontsize=17)

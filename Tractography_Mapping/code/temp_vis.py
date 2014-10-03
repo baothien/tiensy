@@ -79,12 +79,31 @@ for a_id in np.arange(len(anneal)):
                 
                 mapped_s_cst = [t_cst_ext[idx] for idx in mapped]
                 
-                '''
-                jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=False)
-                jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
+#                s1_idx = load_pickle(s_cst_idx)                
+#                s_idx = [ i for i in s1_idx] 
+#                print s1_idx
+#                t1_idx = load_pickle(t_cst_idx)      
+#                t_idx = [i for i in t1_idx]
+#                print t_idx
+#                s_TP_idx = []
+#                s_FN_idx = []
+#                for k in np.arange(cst_len):
+#                    j = mapped[k]
+#                    if j in t1_idx:
+#                        s_TP_idx.append(s_idx[k])
+#                    else:
+#                        s_FN_idx.append(s_idx[k])
+#                print len(s_idx), len(s_TP_idx), len(s_FN_idx)
+#                
+#                stop
+                
+                
+                #jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=True, save=False)
+                print 'mapped'
+                jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=True, save=False)
                 
                 print "\t\t", target_ids[t_id], "\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1
-                '''
+                
                 #print "Before mapping: ", jac0, bfn0
                 #print "After mapping: ", jac1, bfn1
                

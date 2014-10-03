@@ -14,10 +14,9 @@ result of the mapping as in
      - run_tractography_mapping_cst_sff_in_ext_2_cst_ext.py
 note that the mapp saves the index of fiber in the source tract
 with each fiber index i in source, mapp[i] is the index of fiber in target
-       
-"""
+      """
 from common_functions import load_tract, Jac_BFN, visualize_tract
-from dipy.io.pickles import load_pickle
+from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
 
@@ -29,14 +28,16 @@ def clearall():
         
 '''
 #for CST_ROI_L
-source_ids = [212, 202, 204, 209]
-target_ids = [212, 202, 204, 209]
+source_ids = [202]#, 204, 209]#[212, 202, 204, 209]
+target_ids = [212, 209]#[212, 202, 204, 209]
 '''
 
 
 #for CST_ROI_R
-source_ids = [205,212,206]# [206, 204, 212, 205]
+source_ids = [204]#206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
+
+
 
 vol_dims = [182,218,182]
 vis = False#True#False
@@ -171,9 +172,23 @@ for s_id in np.arange(len(source_ids)):
             source = str(source_ids[s_id])
             target = str(target_ids[t_id])
             
+            '''
             #Left
+            nn = 10#15#10            
+            
+            s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
+            t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
+            
+            s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
+            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
+            
+            s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_L_tvis_sff_in_ext.pkl'            
+            t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
             
             
+            map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'                            
+            
+            '''
             
             #Right
             nn = 10#15#10            
@@ -205,6 +220,21 @@ for s_id in np.arange(len(source_ids)):
             
             #aang lam do den fan nay
             #load cai map va chon cai co prob cao nhat
+            #-------------------------------------------------------
+            #only for saving the higest prob map            
+            cst_sff_len = len(s_cst_sff)
+            
+            map_idxs_all = [map_all[i].argsort()[-1] for i in np.arange(cst_sff_len)]
+            
+            mapped_all = [cs_idxs[i][map_idxs_all[i]] for i in np.arange(cst_sff_len)]
+            
+            save_pickle(map_file+'choose_highest.txt',mapped_all)
+            
+            stop
+
+            # end only for saving the higest prob map            
+            #-------------------------------------------------------
+            
             
             cst_len = len(s_cst)
             map_tmp = map_all[:cst_len]

@@ -13,7 +13,7 @@ def clearall():
 
 
 #for CST_ROI_L
-source_ids = [209]#, 202, 204, 209]
+source_ids = [202]#, 202, 204, 209]
 target_ids = [204]#202]#, 204, 209]
 
 
@@ -37,7 +37,7 @@ for s_id in np.arange(len(source_ids)):
                                   
             #MNI_ROI_left            
             pro = 60
-            nn = 10#20
+            nn = 5#20
             print 
             print '-----------------------------------------------------------------------------------------'
             fname = 'probability_mapping_sparse_density.py'
