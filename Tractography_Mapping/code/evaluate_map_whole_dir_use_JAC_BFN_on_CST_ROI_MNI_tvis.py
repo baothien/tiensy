@@ -26,17 +26,17 @@ def clearall():
     for var in all:
         del globals()[var]
         
-'''
+
 #for CST_ROI_L
 source_ids = [202]#, 204, 209]#[212, 202, 204, 209]
-target_ids = [212, 209]#[212, 202, 204, 209]
+target_ids = [204]#[212, 209]#[212, 202, 204, 209]
+
+
 '''
-
-
 #for CST_ROI_R
 source_ids = [204]#206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
-
+'''
 
 
 vol_dims = [182,218,182]
@@ -172,9 +172,9 @@ for s_id in np.arange(len(source_ids)):
             source = str(source_ids[s_id])
             target = str(target_ids[t_id])
             
-            '''
+            
             #Left
-            nn = 10#15#10            
+            nn = 5#10
             
             s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
             t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
@@ -204,7 +204,7 @@ for s_id in np.arange(len(source_ids)):
             
             
             map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'                            
-            
+            '''
             
             s_cst = load_tract(s_file, s_cst_idx)
             t_cst = load_tract(t_file, t_cst_idx)
@@ -218,19 +218,20 @@ for s_id in np.arange(len(source_ids)):
             
             prb_map12_init, cs_idxs = init_prb_state_sparse(s_cst_sff,t_cst_ext,nn) 
             
-            #aang lam do den fan nay
+            
             #load cai map va chon cai co prob cao nhat
+            
             #-------------------------------------------------------
             #only for saving the higest prob map            
-            cst_sff_len = len(s_cst_sff)
+            #cst_sff_len = len(s_cst_sff)
             
-            map_idxs_all = [map_all[i].argsort()[-1] for i in np.arange(cst_sff_len)]
+            #map_idxs_all = [map_all[i].argsort()[-1] for i in np.arange(cst_sff_len)]
             
-            mapped_all = [cs_idxs[i][map_idxs_all[i]] for i in np.arange(cst_sff_len)]
+            #mapped_all = [cs_idxs[i][map_idxs_all[i]] for i in np.arange(cst_sff_len)]
             
-            save_pickle(map_file+'choose_highest.txt',mapped_all)
+            #save_pickle(map_file+'choose_highest.txt',mapped_all)
             
-            stop
+            #stop
 
             # end only for saving the higest prob map            
             #-------------------------------------------------------

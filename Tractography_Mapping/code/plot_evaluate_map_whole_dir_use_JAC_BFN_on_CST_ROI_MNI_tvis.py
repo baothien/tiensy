@@ -103,8 +103,8 @@ y_bfn_right = { '206_204': np.array([0.65,	0.27,	0.27,	0.25,	0.25,	0.25,	0.24], 
 #for CST_ROI_L
 source_ids = [209]#[212, 202, 204, 209]
 target_ids = [202, 204, 212 ]#209, 212]#, 212]#, 204, 202]#, 202, 209]#, 212, 209]# [212, 202, 204, 209]
-
 '''
+
 #for CST_ROI_R
 source_ids = [205]#, 204, 212, 205]
 target_ids = [ 204, 206, 212]#[206, 204, 212, 205]
@@ -155,7 +155,7 @@ for s_id in np.arange(len(source_ids)):
             #plt.plot(markers_on, y_markers_on, 'rD')
             plt.ylim([0.4,1.8])
 plt.legend(loc='up right')    
-plt.xlabel('annealing number', fontsize=17)
+plt.xlabel('annealing iteration', fontsize=17)
 plt.ylabel('normalized loss function value', fontsize=17)
 #plt.title('Choosing scale based on goodness of a cut')            
 plt.show()

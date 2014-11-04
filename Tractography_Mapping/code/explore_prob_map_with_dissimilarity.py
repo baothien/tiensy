@@ -52,7 +52,7 @@ def clearall():
 
 #for CST_ROI_L
 source_ids = [202]#[212, 202, 204, 209]
-target_ids = [212,209]#[212, 202, 204, 209]
+target_ids = [204]#[212, 202, 204, 209]
 
 
 '''
@@ -70,7 +70,7 @@ vis = False#True#False
 #-------------------------------------------------------------------
 anneal = [100]#[100, 200, 400, 600, 800, 1000]
 num_pro = 50
-nn = 10
+nn = 5#10
 for a_id in np.arange(len(anneal)):
     print "==================================================================="
     print "Anneal : ", anneal[a_id]
@@ -84,7 +84,7 @@ for a_id in np.arange(len(anneal)):
                 target = str(target_ids[t_id])
                 
                 #Left
-                nn = 10
+               
                 
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
                 t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
@@ -100,7 +100,7 @@ for a_id in np.arange(len(anneal)):
                 
                 '''
                 #Right
-                nn = 10
+                
                 
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
                 t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
