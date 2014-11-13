@@ -30,7 +30,7 @@ source_ids = [206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
 '''
 
-vol_dims = [256,256,224]
+vol_dims = [128,128,80]
 vis = False#True
 
 
@@ -56,9 +56,10 @@ for s_id in np.arange(len(source_ids)):
        
 
             #indir = 'out_registered_defaultpara'            
-            indir = 'out_registered'            
+            indir = 'out_registered_f750_l60'            
             s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source + '_tracks_dti_tvis_reg.trk'
-            t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source + '_tracks_dti_tvis_reg.trk'
+            t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + target + '_tracks_dti_tvis_reg.trk'
+            
             
             #Left            
             s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
