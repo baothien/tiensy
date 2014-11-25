@@ -797,7 +797,25 @@ def Shannon_entropy(tract):
     #print pr_i
     
     return entropy
-
+    
+def Silhouette_Inertia(tract):
+    
+    from dissimilarity_common import compute_dissimilarity
+    from dipy.tracking.distances import bundles_distances_mam
+    from sklearn import metrics
+    from sklearn.cluster import MiniBatchKMeans#, KMeans
+    #from sklearn.metrics.pairwise import euclidean_distances
+    diss = compute_dissimilarity(tract, distance=bundles_distances_mam, prototype_policy='sff', num_prototypes=20)
+    
+    mbk = MiniBatchKMeans(init='k-means++', n_clusters=1, batch_size=100,
+                              n_init=10, max_no_improvement=10, verbose=0)        
+    mbk.fit(diss)
+        
+    labels = mbk.labels_        
+    print labels    
+    #labels = np.ones(len(tract))
+    sil = metrics.silhouette_score(diss, labels, metric='euclidean')
+    return sil, mbk.inertia_
 
 '''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
