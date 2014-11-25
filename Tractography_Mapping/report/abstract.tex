@@ -1,27 +1,31 @@
-Abstract
-
-Diffusion tensor imaging (DTI) and tractography have opened up new avenues in neuroscience. As most applications require precise spatial localization of the fibre images, image registration is an important area of research. Registration of tractography is most often performed by applying the
+\begin{abstract}
+Diffusion tensor imaging (DTI) and tractography have provided a means of study of the anatomical structures within the white matter and opened up new avenues in neuroscience. As most applications require precise spatial localization of the fibre images, image registration is an important area of research. Registration of tractography is most often performed by applying the
 transformation resulting from an image-based fractional anisotropy (FA) or diffusion
-tensor imaging (DTI) registration method \cite{goodlett2009group, dan2011comparision, wang2011dti}. Recently, O’Donnell et al. proposed an
-unbiased multiple subject registration method using the trajectory data produced by
+tensor imaging (DTI) registration method \cite{goodlett2009group, dan2011comparision, wang2011dti}. Recently, O’Donnell et al. proposed an unbiased multiple subject registration method using the trajectory data produced by
 streamline tractography~\cite{odonnell2012unbiased}. The idea to work on deterministic tractography rather than
 dMRI images or FA images is quite innovative, and it may be advantageous to register
 the tracts themselves as the quantity being optimized would be closely related to the final
 goal. However, in this work we explore the idea of \textbf{mapping} each streamline
-($s^S_i$, $i \in 1 \ldots M$) of one \emph{source} tractography ($T_S
-= \{s^S_1,\ldots,s^S_M\}$) into one streamline of another
-\emph{target} tractography ($T_T = \{s^T_1,\ldots,s^T_N\}$) dirrectly. The
-mapping $\phi: T_S \mapsto T_T$ just associates the first object to
-the second, e.g. $s^2_j = \phi(s^1_i)$, or more simply $j = \phi(i)$. While tractography
-coregistration is based on rigid or non-rigid shape transformations of
+%($s^S_i$, $i \in 1 \ldots M$) 
+of one \emph{source} tractography 
+%($T_S = \{s^S_1,\ldots,s^S_M\}$) 
+into one or some streamlines of another
+\emph{target} tractography 
+%($T_T = \{s^T_1,\ldots,s^T_N\}$) 
+directly, or in another way it just associates the first object to
+the second.
+%The mapping $\phi: T_S \mapsto T_T$ just associates the first object to the second, e.g. $s^2_j = \phi(s^1_i)$, or more simply $j = \phi(i)$. 
+While tractography registration is based on rigid or non-rigid shape transformations of
 one tractography into another, with the goal of making them the most
 similar, in \emph{mapping} the idea is that no transformation is
 meaningful because it is not possible to reconcile two different
-anatomies by means of rigid (or non-rigid) transformations. The idea
-of mapping is to find to which target streamline a source streamline
+anatomies by means of rigid (or non-rigid) transformations. The main goal 
+%The ideaof mapping 
+of mapping is to find which target streamline a source streamline
 corresponds. This may be done with rigid or non-rigid transformations,
-but here we are interested in a different and indirect approach that
+but here we are interested in a different and direct approach that
 does not require such transformations.
+\end{abstract}
 
 
 
