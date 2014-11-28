@@ -30,7 +30,7 @@ target_ids = [206, 204, 212, 205]
 
 vol_dims = [128,128,80]
 vis = False#True
-save = True
+save = False#True
 
 
 def mapping_nn(tractography1, tractography2):
