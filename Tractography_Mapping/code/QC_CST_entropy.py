@@ -37,8 +37,8 @@ for s_id in np.arange(len(source_ids)):
     #tract_file = '/home/bao/tiensy/Tractography_Mapping/data/' + source + '_tracks_dti_3M.dpy'        
     #tract = load_tract(tract_file,tracks_ind_file)     
     
-    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/' + source + '_corticospinal_R_tvis.pkl'
-    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/' + source + '_tracks_dti_tvis.trk'        
+    tracks_ind_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_R_tvis.pkl'
+    tract_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis.trk'        
         
     tract = load_tract_trk(tract_file,tracks_ind_file)     
      
