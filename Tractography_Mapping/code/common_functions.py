@@ -773,7 +773,7 @@ def Shannon_entropy(tract):
     
     dm = np.array(dm, dtype =float)
     
-    dm2 = dm**2
+    #dm2 = dm**2
     
     A = len(tract)
     theta = 10.
