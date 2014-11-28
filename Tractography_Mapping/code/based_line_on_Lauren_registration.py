@@ -8,8 +8,6 @@ from common_functions import load_tract, Jac_BFN, visualize_tract
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
-import numpy as np
-from dipy.io.dpy import Dpy
 from dipy.tracking.distances import mam_distances, bundles_distances_mam
 from dipy.tracking.metrics import length
 
@@ -32,6 +30,7 @@ target_ids = [206, 204, 212, 205]
 
 vol_dims = [128,128,80]
 vis = False#True
+save = True
 
 
 def mapping_nn(tractography1, tractography2):
@@ -51,30 +50,33 @@ for s_id in np.arange(len(source_ids)):
     print source_ids[s_id]    
     for t_id in np.arange(len(target_ids)):        
         if (target_ids[t_id] != source_ids[s_id]):                
-            source = str(source_ids[s_id])
-            target = str(target_ids[t_id])
+            source_sub = str(source_ids[s_id])
+            target_sub = str(target_ids[t_id])
        
 
             #indir = 'out_registered_defaultpara'            
             indir = 'out_registered_f750_l60'            
-            s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source + '_tracks_dti_tvis_reg.trk'
-            t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + target + '_tracks_dti_tvis_reg.trk'
+            s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source_sub + '_tracks_dti_tvis_reg.trk'
+            t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + target_sub + '_tracks_dti_tvis_reg.trk'
             
             
             #Left            
-            s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
-            s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_L_tvis_sff_in_ext.pkl'
+            s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
+            s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source_sub + '_cst_L_tvis_sff_in_ext.pkl'
             
-            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
-            t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
+            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_L_Lauren.txt'
             '''
             
             #Right
-            s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_R_tvis.pkl'
-            s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_R_tvis_sff_in_ext.pkl'
+            s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_R_tvis.pkl'
+            s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source_sub + '_cst_R_tvis_sff_in_ext.pkl'
             
-            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_R_tvis.pkl'
-            t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
+            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
+            t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
+            
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_R_Lauren.txt'
             '''
             
             source = load_tract(s_file,s_cst_sff_idx)
@@ -87,7 +89,11 @@ for s_id in np.arange(len(source_ids)):
             
                        
             map_all = mapping_nn(tractography1, tractography2)
-
+            
+            if save:            
+                print 'Saving 1-NN tract based: ', out_file
+                save_pickle(out_file, map_all)
+            
             s_cst = load_tract(s_file, s_cst_idx)
             t_cst = load_tract(t_file, t_cst_idx)
             t_cst_ext = load_tract(t_file, t_cst_ext_idx)
