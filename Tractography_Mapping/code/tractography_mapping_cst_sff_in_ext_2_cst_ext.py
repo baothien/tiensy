@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue May 27 14:33:27 2014
-
 @author: bao
-
 ==========================================
 Evaluation the mapping with local assessment
-
 ==========================================
-
 Mapping CST-SFF-in-Extension to CST-Extension
-
 """
-print(__doc__)
+#print(__doc__)
 
 
 import numpy as np
@@ -109,12 +104,13 @@ def informed_random_mapping(size1, size2, dm1, dm2):
     
 def tracts_mapping(tractography1, tractography2, loss_function, neighbour, iterations_anneal):
         
-    print
-    print "The best coregistration+1NN gives a mapping12 with the following loss:"
+    #print
+    
     dm12 = bundles_distances_mam(tractography1, tractography2)
     mapping12_coregistration_1nn = np.argmin(dm12, axis=1)
     loss_coregistration_1nn = loss_function(mapping12_coregistration_1nn)
-    print "loss =", loss_coregistration_1nn
+    print "The best coregistration+1NN gives a mapping12 with the following loss:", loss_coregistration_1nn     
+    #print "loss =", loss_coregistration_1nn
 
     #iterations_anneal = 100
     print "Simulated Annealing"

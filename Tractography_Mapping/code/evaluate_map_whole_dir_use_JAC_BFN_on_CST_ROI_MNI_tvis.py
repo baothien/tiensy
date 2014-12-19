@@ -26,17 +26,17 @@ def clearall():
     for var in all:
         del globals()[var]
         
-'''
+
 #for CST_ROI_L
-source_ids = [202]#, 204, 209]#[212, 202, 204, 209]
-target_ids = [204]#[212, 209]#[212, 202, 204, 209]
+source_ids = [212, 202, 204, 209]
+target_ids = [212, 202, 204, 209]
 
 
 '''
 #for CST_ROI_R
 source_ids = [205]#206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [204]#[206, 204, 212, 205]
-
+'''
 
 
 vol_dims = [182,218,182]
@@ -46,7 +46,7 @@ vis = False#True#False
 #-------------------------------------------------------------------
 #            Annealing
 #-------------------------------------------------------------------
-anneal = [100, 200, 400, 600, 800, 1000]
+anneal = [100]#, 200, 400, 600, 800, 1000]
 
 for a_id in np.arange(len(anneal)):
     print "==================================================================="
@@ -61,20 +61,20 @@ for a_id in np.arange(len(anneal)):
                 target = str(target_ids[t_id])
                 
                 #Left
-                #s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
-                #t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
-                #s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
-                #t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
-                #t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
-                
-                #Right
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
                 t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
-                s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_R_tvis.pkl'
-                t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_R_tvis.pkl'
-                t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
+                t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
+                t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI_2nd_trial/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'                
+                #Right
+                #s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
+                #t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
+                #s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_R_tvis.pkl'
+                #t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_R_tvis.pkl'
+                #t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
                                 
                 s_cst = load_tract(s_file, s_cst_idx)
                 t_cst = load_tract(t_file, t_cst_idx)
@@ -159,8 +159,8 @@ for s_id in np.arange(len(source_ids)):
                 ren = visualize_tract(ren, t_cst, fvtk.blue)
                 ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                 fvtk.show(ren)
- '''
-
+'''
+'''
 #------------------------------------------------------------
 #          probability mapping
 #------------------------------------------------------------                 
@@ -188,7 +188,7 @@ for s_id in np.arange(len(source_ids)):
             
             map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'                            
             
-            '''
+            
             
             #Right
             nn = 10#15#10            
@@ -204,7 +204,7 @@ for s_id in np.arange(len(source_ids)):
             
             
             map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt'                            
-            '''
+            
             
             s_cst = load_tract(s_file, s_cst_idx)
             t_cst = load_tract(t_file, t_cst_idx)
@@ -264,3 +264,4 @@ for s_id in np.arange(len(source_ids)):
                 ren = visualize_tract(ren, t_cst, fvtk.blue)
                 ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                 fvtk.show(ren)               
+'''

@@ -9,6 +9,8 @@ Created on Tue Jun  3 15:18:56 2014
 import matplotlib.pyplot as plt
 import numpy as np
 
+#ann = [100, 200, 400, 600, 800, 1000]  
+# the first trial
 y_loss_left = { '212_202': np.array([152.90,	   120.10,	104.35,	81.10,	77.46	,	75.73,	74.64], dtype=np.float32),
                 '212_204': np.array([160.34,	   129.47,	108.00,	82.57	,	75.38	,	74.33	,	73.99], dtype=np.float32),
                 '212_209': np.array([175.90,    133.16,	118.11,	90.97	,	86.12	,	84.29	,	83.91], dtype=np.float32),
@@ -97,7 +99,7 @@ y_bfn_right = { '206_204': np.array([0.65,	0.27,	0.27,	0.25,	0.25,	0.25,	0.24], 
 
          }
          
-
+# the second trial
 
 
 #for CST_ROI_L

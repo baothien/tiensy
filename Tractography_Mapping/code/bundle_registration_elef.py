@@ -7,6 +7,9 @@ This example explains how you can register two bundles from two different
 subjects directly in native space [Garyfallidis14]_.
 
 To show the concept we will use two pre-saved cingulum bundles.
+
+This is run under  https://github.com/Garyfallidis/dipy.git branche bundle_registration
+(url: https://github.com/Garyfallidis/dipy/tree/bundle_registration)
 """
 
 from dipy.viz import fvtk
