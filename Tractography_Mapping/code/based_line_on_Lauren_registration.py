@@ -4,7 +4,7 @@ Created on Wed Nov 12 13:07:51 2014
 
 @author: bao
 """
-from common_functions import load_tract, Jac_BFN, visualize_tract
+from common_functions import load_tract, load_whole_tract, Jac_BFN, visualize_tract
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
@@ -30,7 +30,7 @@ target_ids = [206, 204, 212, 205]
 
 vol_dims = [128,128,80]
 vis = False#True
-save = False#True
+save = True
 
 
 def mapping_nn(tractography1, tractography2):
@@ -44,7 +44,7 @@ def mapping_nn(tractography1, tractography2):
 #          1-NN 
 #------------------------------------------------------------                 
 print "The coregistration+1NN gives a mapping12 with the following measurement:"
-print "\t\t Target \t not_map_Jac \t not_map_BFN \t map_Jac \t map_BFN" 
+print "\t\t Target \t Lauren_Jac \t Lauren_BFN \t 1NN_Lauren_Jac \t 1_NN_Lauren_BFN" 
 for s_id in np.arange(len(source_ids)):
     #print "------------------------------------------"
     print source_ids[s_id]    
@@ -53,7 +53,11 @@ for s_id in np.arange(len(source_ids)):
             source_sub = str(source_ids[s_id])
             target_sub = str(target_ids[t_id])
        
-
+            """
+            #---------------------------------------------------------------------------------------
+            #This is for computing JAC and BFN of when group registration using Lauren method
+            
+            '''
             #indir = 'out_registered_defaultpara'            
             indir = 'out_registered_f750_l60'            
             s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source_sub + '_tracks_dti_tvis_reg.trk'
@@ -81,6 +85,44 @@ for s_id in np.arange(len(source_ids)):
             
             source = load_tract(s_file,s_cst_sff_idx)
             target = load_tract(t_file,t_cst_ext_idx)
+            #---------------------------------------------------------------------------------------
+            """
+            
+            #---------------------------------------------------------------------------------------
+            #This is for computing JAC and BFN of with pairwise registration using Lauren method
+            
+            #Left            
+            #s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + source_sub + '_corticospinal_L_tvis_reg.trk'
+            #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
+            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren.txt'
+            
+            s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_corticospinal_L_tvis_reg.trk'
+            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
+            
+            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            
+            '''
+            
+            #Right            
+            #s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
+            #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
+            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren.txt'
+            
+            s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
+            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren_f100_l25.txt'
+            
+            t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
+            '''
+            
+            
+            source = load_whole_tract(s_cst_file)
+            target_ext = load_whole_tract(t_cst_ext_file)
+            
+            t_cst_idx = load_pickle(t_cst_idx)            
+            target = target_ext[:len(t_cst_idx)]            
+            #----------------------------------------------------------------------------------------            
             
             #print len(source), len(target)
             
@@ -91,12 +133,12 @@ for s_id in np.arange(len(source_ids)):
             map_all = mapping_nn(tractography1, tractography2)
             
             if save:            
-                print 'Saving 1-NN tract based: ', out_file
+                #print 'Saving 1-NN tract based: ', out_file
                 save_pickle(out_file, map_all)
             
-            s_cst = load_tract(s_file, s_cst_idx)
-            t_cst = load_tract(t_file, t_cst_idx)
-            t_cst_ext = load_tract(t_file, t_cst_ext_idx)
+            s_cst = source
+            t_cst = target
+            t_cst_ext = target_ext
             
             
             cst_len = len(s_cst)
@@ -104,7 +146,7 @@ for s_id in np.arange(len(source_ids)):
             
             mapped_s_cst = [t_cst_ext[idx] for idx in mapped]
             
-            jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=False)
+            jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=False)            
             jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
             
             print "\t\t", target_ids[t_id], "\t", len(source), "\t", len(target),"\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1

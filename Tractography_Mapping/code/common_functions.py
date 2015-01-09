@@ -56,6 +56,65 @@ def cpu_time():
     	return resource.getrusage(resource.RUSAGE_SELF)[0]
   
 
+def length_min(tracks):
+    i_min = 0        
+    for k in range(len(tracks)):
+        if len(tracks[k])<len(tracks[i_min]):
+            i_min = k
+        
+    return len(tracks[i_min])
+
+def length_max(tracks):
+    i_max = 0        
+    for k in range(len(tracks)):
+        if len(tracks[k])>len(tracks[i_max]):
+            i_max = k
+        
+    return len(tracks[i_max])    
+
+def length_avg(tracks):
+    s = 0.            
+    for k in range(len(tracks)):
+        s = s + len(tracks[k])
+    return s/len(tracks)          
+    
+def truth_length_min(tracks):
+    lmin = length(tracks[0], False)        
+    for k in range(len(tracks)):
+        if lmin>length(tracks[k]):
+            lmin = length(tracks[k])        
+    return lmin
+
+def truth_length_max(tracks):
+    lmax = length(tracks[0], False)        
+    for k in range(len(tracks)):
+        if lmax<length(tracks[k],False):
+            lmax = length(tracks[k])       
+    return lmax
+
+def truth_length_avg(tracks):
+    s = 0            
+    for k in range(len(tracks)):
+        s = s + length(tracks[k])
+    return s/len(tracks)    
+    
+def volumns(vol):
+    #input: a volume
+    #count the number of voxel in volume which has the value > 0
+    #return: N: number of voxel in volume which has the value > 0
+    #        an array shape (N,3) of the intergers, where the (x,y,z) is the cordinate of voxel having value > 0
+    s = vol.shape
+    cordinate = []
+    count = 0
+    for x in np.arange(s[0]):
+        for y in np.arange(s[1]):
+            for z in np.arange(s[2]):
+                if vol[x,y,z]>0:
+                    cordinate.append((x,y,z))        
+                    count = count + 1#vol[x,y,z]
+    return count,cordinate
+
+
 def center_streamlines(streamlines):
     """ Move streamlines to the origin
 
@@ -179,8 +238,11 @@ def streamlines_to_vol(static1, moving1, vol_dims,
     #mpts = np.concatenate(moving_centered, axis=0)
     #mpts = np.round(mpts).astype(np.int)
     
-    static = vectorize_streamlines(static1, 20)
-    moving = vectorize_streamlines(moving1, 20)
+    num_pnts = 20
+    #print num_pnts
+    
+    static = vectorize_streamlines(static1, num_pnts)
+    moving = vectorize_streamlines(moving1, num_pnts)
     
     spts = np.concatenate(static, axis=0)
     spts = np.round(spts).astype(np.int)
@@ -269,6 +331,23 @@ def real_volumn(vol, vol_dims):
                     count = count + 1
     
     return count
+
+def Jac_BFN_1(tract1, tract2, vol_dims, voxel_size = [1,1,1], disp=False, save=False):
+    '''
+     [128,128,70], [1,1,1]
+    calculate the Jaccard and BFN indices of two given tract
+    vol_size is the volume dimension of two tracts (two tracts have the same dimension of brain)
+    disp: visualize or not
+    save: save the volumn of each tract and the volumn of the interesection
+    
+    '''
+    vol1, vol2, intersec = volumn_intersec(tract1, tract2, vol_dims, voxel_size, disp)
+    
+    
+    jac = Jaccard_vol(vol1, vol2, intersec)
+    bfn = BFN_vol(vol1, vol2, intersec)
+    
+    return jac, bfn  
     
 def Jac_BFN(tract1, tract2, vol_dims, disp=False, save=False):
     '''
@@ -493,6 +572,12 @@ def save_tract_trk(tract, fa_file, fname_out ):
 
     nib.trackvis.write(fname_out, tract_trk, hdr, points_space='voxel')
 
+def save_tracks_dpy(tracks,filename):
+    from dipy.io.dpy import Dpy
+    dpw = Dpy(filename, 'w')
+    dpw.write_tracks(tracks)
+    dpw.close() 
+ 
  
 '''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -797,6 +882,7 @@ def Shannon_entropy(tract):
     #print pr_i
     
     return entropy
+    
     
 def Silhouette_Inertia(tract):
     
