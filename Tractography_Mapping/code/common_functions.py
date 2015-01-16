@@ -167,6 +167,19 @@ def overlap(A1, A2):
             overlap.append(A1[i])
     return overlap
     
+def intersec(A1, A2):
+    '''
+    Return the overlap array between two arrays: A1 and A2
+    Note that if in A1, one element appears many times, then these appearance are the same,
+    and calculated only one.
+    So, the return is a set.
+    '''
+    inter = []
+    for i in np.arange(len(A2)):
+        if (A2[i] in A1):
+            inter.append(A2[i])
+    return inter
+    
 def minus(A1, A2):
     '''
     Return the A1 - A2
@@ -306,6 +319,16 @@ def Jaccard_vol(volA, volB, intersecAB):
     jac = (1.*intersecAB)/(1.*min(volA, volB))
     return jac
     
+def Jaccard_vol2(volA, volB, intersecAB):
+    '''
+    calculate the Jaccard index of two volume A, B
+    volA, volB is the volume of two set A, B (float value)
+    intersecAB is the volume of the intersection between set A and set B
+    J(A,B) = intersecAB/(min{volA, volB})    
+    '''
+    jac = (1.*intersecAB)/volB
+    return jac
+    
 def BFN_vol(volA, volB, intersecAB):
     '''
     calculate the BFN (Balance False Negative) index of two volume A, B
@@ -332,6 +355,26 @@ def real_volumn(vol, vol_dims):
     
     return count
 
+def vol_corr_notcorr(tract1, tract2, vol_dims, disp=False, save=False):
+    '''
+    calculate the Jaccard and BFN indices of two given tract
+    vol_size is the volume dimension of two tracts (two tracts have the same dimension of brain)
+    disp: visualize or not
+    save: save the volumn of each tract and the volumn of the interesection
+    
+    '''
+    vol1, vol2, intersec = streamlines_to_vol(tract1, tract2, vol_dims, disp, save)
+    
+    real_vol1 = real_volumn(vol1, vol_dims)
+    #real_vol2 = real_volumn(vol2, vol_dims)
+    real_intersec = real_volumn(intersec, vol_dims)
+    
+    vol_corr = real_intersec
+    vol_notcorr = real_vol1 - vol_corr
+    
+    return vol_corr, vol_notcorr
+    
+    
 def Jac_BFN_1(tract1, tract2, vol_dims, voxel_size = [1,1,1], disp=False, save=False):
     '''
      [128,128,70], [1,1,1]
@@ -348,6 +391,25 @@ def Jac_BFN_1(tract1, tract2, vol_dims, voxel_size = [1,1,1], disp=False, save=F
     bfn = BFN_vol(vol1, vol2, intersec)
     
     return jac, bfn  
+ 
+def Jac_BFN2(tract1, tract2, vol_dims, disp=False, save=False):
+    '''
+    calculate the Jaccard and BFN indices of two given tract
+    vol_size is the volume dimension of two tracts (two tracts have the same dimension of brain)
+    disp: visualize or not
+    save: save the volumn of each tract and the volumn of the interesection
+    
+    '''
+    vol1, vol2, intersec = streamlines_to_vol(tract1, tract2, vol_dims, disp, save)
+    
+    real_vol1 = real_volumn(vol1, vol_dims)
+    real_vol2 = real_volumn(vol2, vol_dims)
+    real_intersec = real_volumn(intersec, vol_dims)
+    
+    jac = Jaccard_vol2(real_vol1, real_vol2, real_intersec)
+    bfn = BFN_vol(real_vol1, real_vol2, real_intersec)
+    
+    return jac, bfn     
     
 def Jac_BFN(tract1, tract2, vol_dims, disp=False, save=False):
     '''

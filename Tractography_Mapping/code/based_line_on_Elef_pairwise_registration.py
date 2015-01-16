@@ -4,7 +4,7 @@ Created on Thu Jan  8 17:10:35 2015
 
 @author: bao
 """
-from common_functions import load_tract, load_whole_tract, Jac_BFN, Jac_BFN_1, visualize_tract
+from common_functions import load_tract, load_whole_tract,vol_corr_notcorr, Jac_BFN, Jac_BFN_1, Jac_BFN2, visualize_tract
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
@@ -42,7 +42,7 @@ save = True
 #------------------------------------------------------------
 #          1-NN 
 #------------------------------------------------------------  
-print 'Left 50 random'               
+#print 'Left 50 random'               
 print "The coregistration+1NN gives a mapping12 with the following measurement:"
 print "\t\t Target \t Elef_Jac \t Elef_BFN \t Elef_1NN_Jac \t Elef_1NN_BFN" 
 for s_id in np.arange(len(source_ids)):
@@ -72,14 +72,14 @@ for s_id in np.arange(len(source_ids)):
             
             '''
             #Right            
-            s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef.dpy'
-            out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef.txt'
+            #s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef.dpy'
+            #out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef.txt'
 
             #s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_100.dpy'
             #out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_100.txt'
             
-            #s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_200.dpy'
-            #out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_200.txt'
+            s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_200.dpy'
+            out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_200.txt'
 
             t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
@@ -117,14 +117,20 @@ for s_id in np.arange(len(source_ids)):
                 new_s_cst.append(np.array(s_cst[k], dtype = np.float32))
                 
            
-            jac0, bfn0 = Jac_BFN(new_s_cst, t_cst, vol_dims, disp=False)
-            jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
+            #jac0, bfn0 = Jac_BFN(new_s_cst, t_cst, vol_dims, disp=False)
+            #jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
+            
+            #jac0, bfn0 = Jac_BFN2(new_s_cst, t_cst, vol_dims, disp=False)
+            #jac1, bfn1 = Jac_BFN2(mapped_s_cst, t_cst, vol_dims, disp=False)
 
-            #jac0, bfn0 = Jac_BFN_1(s_cst, t_cst, vol_dims,[2,2,2], disp=False)
-            #jac1, bfn1 = Jac_BFN_1(mapped_s_cst, t_cst, vol_dims,[2,2,2], disp=False)            
-            print "\t\t", target_ids[t_id], "\t", len(source), "\t", len(target),"\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1
-            #print "Before mapping: ", jac0, bfn0
-            #print "After mapping: ", jac1, bfn1
+            
+
+            cor0, ncor0 = vol_corr_notcorr(new_s_cst, t_cst, vol_dims, disp=False)
+            cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
+                
+            print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+               
+            
            
             if vis:
                #visualize target cst and mapped source cst - yellow and blue
