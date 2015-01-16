@@ -35,7 +35,7 @@ Step 5: Compute JAC and BFN between cst_t and nn_cst_s_in_t
 
 """
 
-from common_functions import load_tract, Jac_BFN, visualize_tract
+from common_functions import load_tract, Jac_BFN, vol_corr_notcorr, visualize_tract
 from dipy.tracking.distances import mam_distances, bundles_distances_mam
 from dipy.io.pickles import load_pickle
 from dipy.viz import fvtk
@@ -49,7 +49,7 @@ def clearall():
     for var in all:
         del globals()[var]
         
-
+'''
 #for CST_ROI_L
 source_ids = [212, 202, 204, 209]
 target_ids = [212, 202, 204, 209]
@@ -57,9 +57,9 @@ target_ids = [212, 202, 204, 209]
 
 
 #for CST_ROI_R
-source_ids = [204, 212, 205]#[206, 204, 212, 205]
+source_ids = [206, 204, 212, 205]#[204, 212, 205]#
 target_ids = [206, 204, 212, 205]#[206, 204, 212, 205]
-'''
+
 
 vol_dims = [182,218,182]
 vis = False#True#False
@@ -68,12 +68,13 @@ vis = False#True#False
 #-------------------------------------------------------------------
 #            Annealing
 #-------------------------------------------------------------------
-anneal = [100]#[100, 200, 400, 600, 800, 1000]
+anneal = [100, 200, 400, 600, 800, 1000]#[100]#
 num_pro = 50
 for a_id in np.arange(len(anneal)):
     print "==================================================================="
     print "Anneal : ", anneal[a_id]
-    print "\t\t Target \t not_map_Jac \t not_map_BFN \t map_Jac \t map_BFN" 
+    #print "\t\t Target \t not_map_Jac \t not_map_BFN \t map_Jac \t map_BFN" 
+    print "\t\t Target \t vol correct(not map) \t vol not correct (not map) \t vol correct(mapping+dis) \t vol not correct (mapping+dis)" 
     for s_id in np.arange(len(source_ids)):
         #print "------------------------------------------"
         print source_ids[s_id]    
@@ -82,6 +83,9 @@ for a_id in np.arange(len(anneal)):
                 source = str(source_ids[s_id])
                 target = str(target_ids[t_id])
                 
+                
+                #-------------------------------------------------------------------------------------------------------------------------------------------
+                #Mapping method
                 '''
                 #Left
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
@@ -94,13 +98,14 @@ for a_id in np.arange(len(anneal)):
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
                 
                 #annealing
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                """
+                ##probability
+                ##nn = 10
+                ##map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt' 
+                """
                 
-                #probability
-                nn = 10
-                map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_L_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt' 
-                '''
                 '''
                 #Right
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
@@ -113,26 +118,35 @@ for a_id in np.arange(len(anneal)):
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
                    
                 #annealing
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                """
+                ##probability
+                ##nn = 10
+                ##map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt' 
+                """
                 
-                #probability
-                nn = 10
-                map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt' 
-                '''
+                #-------end of mapping method-----------------------------------------
                 #-------------------------------------------------------------------------------------------------------------------------------------------
-                #Lauren_method
+                
+                #==============================================================================================================================================================                
+                """
+                #-------------------------------------------------------------------------------------------------------------------------------------------
+                #Lauren_method of group registration
                 indir = 'out_registered_f750_l60'            
+                #indir = 'out_registered_f300_l75'            
                 s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source + '_tracks_dti_tvis_reg.trk'
                 t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + target + '_tracks_dti_tvis_reg.trk'
             
+                
                 #Left
                 s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
                 t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
 
                 s_cst_sff_in_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_L_tvis_sff_in_ext.pkl'                
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_L_Lauren.txt'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f300_l75/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_L_Lauren.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f750_l60/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_L_Lauren.txt'
                 
                 '''                
                 #Right
@@ -141,9 +155,15 @@ for a_id in np.arange(len(anneal)):
 
                 s_cst_sff_in_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_R_tvis_sff_in_ext.pkl'                
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_R_Lauren.txt'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f300_l75/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_R_Lauren.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f750_l60/map_1nn_'+ source + '_' + target + '_cst_sff_in_ext_R_Lauren.txt'
+                
                 '''
-                #-------end of Lauren method-----------------------------------------
+                #-------end of Lauren group registration method-----------------------------------------
+                
+                """
+                
+                #==============================================================================================================================================================                
                 
                 
                 s_cst = load_tract(s_file, s_cst_idx)
@@ -194,12 +214,17 @@ for a_id in np.arange(len(anneal)):
                 
                 #Step 5: Compute JAC and BFN between cst_t and nn_cst_s_in_t
                 
-                jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=False)
-                jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
-                
-                print "\t\t", target_ids[t_id], "\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1
+                #jac0, bfn0 = Jac_BFN(s_cst, t_cst, vol_dims, disp=False)
+                #jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
+                #print "\t\t", target_ids[t_id], "\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1
                 #print "Before mapping: ", jac0, bfn0
                 #print "After mapping: ", jac1, bfn1
+                
+                cor0, ncor0 = vol_corr_notcorr(s_cst, t_cst, vol_dims, disp=False)
+                cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)
+                print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+                
+                
                
                 if vis:
                    #visualize target cst and mapped source cst - yellow and blue

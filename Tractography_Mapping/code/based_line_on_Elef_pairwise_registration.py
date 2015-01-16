@@ -53,7 +53,7 @@ for s_id in np.arange(len(source_ids)):
             source_sub = str(source_ids[s_id])
             target_sub = str(target_ids[t_id])
            
-            
+            '''
             #Left            
             s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef.dpy'
             out_file = out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/Elef_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef.txt'
@@ -84,7 +84,7 @@ for s_id in np.arange(len(source_ids)):
             t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
             t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
-            '''
+            
             
             
               

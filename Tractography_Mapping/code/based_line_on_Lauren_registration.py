@@ -16,7 +16,7 @@ def clearall():
     for var in all:
         del globals()[var]
         
-'''
+
 #for CST_ROI_L
 source_ids = [212, 202, 204, 209]#[212, 202, 204, 209]
 target_ids = [212, 202, 204, 209]
@@ -26,11 +26,11 @@ target_ids = [212, 202, 204, 209]
 #for CST_ROI_R
 source_ids = [206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
-
+'''
 
 vol_dims = [128,128,80]
 vis = False#True
-save = False#True
+save = True#False#True
 
 
 def mapping_nn(tractography1, tractography2):
@@ -55,24 +55,25 @@ for s_id in np.arange(len(source_ids)):
             target_sub = str(target_ids[t_id])
        
            
-            """
+            
             #---------------------------------------------------------------------------------------
             #This is for computing JAC and BFN of when group registration using Lauren method
             
             
-            indir = 'out_registered_f300_l75'            
-            #indir = 'out_registered_f750_l60'            
+            #indir = 'out_registered_f300_l75'            
+            indir = 'out_registered_f750_l60'            
             s_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + source_sub + '_tracks_dti_tvis_reg.trk'
             t_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/' + indir + '/iteration_4/' + target_sub + '_tracks_dti_tvis_reg.trk'
             
-            '''
+            
             #Left            
             s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
             s_cst_sff_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source_sub + '_cst_L_tvis_sff_in_ext.pkl'
             
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
             t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_L_Lauren.txt'
+            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f300_l75/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_L_Lauren.txt'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f750_l60/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_L_Lauren.txt'
             
             '''            
             #Right
@@ -82,8 +83,9 @@ for s_id in np.arange(len(source_ids)):
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
             t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
             
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_R_Lauren.txt'
-            
+            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f300_l75/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_R_Lauren.txt'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_Lauren_1NN/Lauren_group_f750_l60/map_1nn_' + source_sub + '_' + target_sub + '_cst_sff_in_ext_R_Lauren.txt'
+            '''
             
             
             source = load_tract(s_file,s_cst_sff_idx)
@@ -101,7 +103,7 @@ for s_id in np.arange(len(source_ids)):
                 #print 'Saving 1-NN tract based: ', out_file
                 save_pickle(out_file, map_all)
             
-            s_cst = source
+            s_cst = source[:-50]#remove 50 SFF prototypes
             t_cst_ext = target
             t_cst = load_tract(t_file,t_cst_idx)
             
@@ -231,4 +233,4 @@ for s_id in np.arange(len(source_ids)):
             
             
             #----------------------------------------------------------------------------------------            
-            
+            """
