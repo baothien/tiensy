@@ -16,7 +16,7 @@ def clearall():
     for var in all:
         del globals()[var]
         
-
+'''
 #for CST_ROI_L
 source_ids = [212, 202, 204, 209]#[212, 202, 204, 209]
 target_ids = [212, 202, 204, 209]
@@ -26,7 +26,7 @@ target_ids = [212, 202, 204, 209]
 #for CST_ROI_R
 source_ids = [206, 204, 212, 205]# [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
-'''
+
 
 vol_dims = [128,128,80]
 vis = False#True
@@ -55,7 +55,7 @@ for s_id in np.arange(len(source_ids)):
             target_sub = str(target_ids[t_id])
        
            
-            
+            """
             #---------------------------------------------------------------------------------------
             #This is for computing JAC and BFN of when group registration using Lauren method
             
@@ -160,17 +160,18 @@ for s_id in np.arange(len(source_ids)):
             #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
             
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            
             '''
             
             
             #Right            
-            s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
-            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren.txt'
+            #s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
+            #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
+            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren.txt'
             
-            #s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
-            #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
-            #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren_f100_l25.txt'
+            s_cst_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_corticospinal_R_tvis_reg.trk'
+            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_R_tvis_ext_reg.trk'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CST2CSText/Lauren_pair_CST2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_R_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_Lauren_f100_l25.txt'
             
             t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
             
@@ -185,7 +186,7 @@ for s_id in np.arange(len(source_ids)):
             #print len(source), len(target)
             
             tractography1 = source
-            tractography2 = target
+            tractography2 = target_ext
             
                        
             map_all = mapping_nn(tractography1, tractography2)
@@ -233,4 +234,4 @@ for s_id in np.arange(len(source_ids)):
             
             
             #----------------------------------------------------------------------------------------            
-            """
+            
