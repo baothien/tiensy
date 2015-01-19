@@ -49,7 +49,7 @@ def clearall():
     for var in all:
         del globals()[var]
         
-'''
+
 #for CST_ROI_L
 source_ids = [212, 202, 204, 209]
 target_ids = [212, 202, 204, 209]
@@ -59,16 +59,17 @@ target_ids = [212, 202, 204, 209]
 #for CST_ROI_R
 source_ids = [206, 204, 212, 205]#[204, 212, 205]#
 target_ids = [206, 204, 212, 205]#[206, 204, 212, 205]
+'''
 
-
-vol_dims = [182,218,182]
+vol_dims = [182,218,182] # MNI
+#vol_dims = [128,128,70] #native 
 vis = False#True#False
 
 
 #-------------------------------------------------------------------
 #            Annealing
 #-------------------------------------------------------------------
-anneal = [100, 200, 400, 600, 800, 1000]#[100]#
+anneal = [100]#[100, 200, 400, 600, 800, 1000]#[100]#
 num_pro = 50
 for a_id in np.arange(len(anneal)):
     print "==================================================================="
@@ -86,7 +87,7 @@ for a_id in np.arange(len(anneal)):
                 
                 #-------------------------------------------------------------------------------------------------------------------------------------------
                 #Mapping method
-                '''
+                
                 #Left
                 s_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis_linear.trk'
                 t_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis_linear.trk'            
@@ -98,8 +99,8 @@ for a_id in np.arange(len(anneal)):
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
                 
                 #annealing
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 """
                 ##probability
                 ##nn = 10
@@ -120,11 +121,13 @@ for a_id in np.arange(len(anneal)):
                 #annealing
                 map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_R_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                                
                 """
                 ##probability
                 ##nn = 10
                 ##map_file = '/home/bao/tiensy/Tractography_Mapping/code/results/result_prob_map/prob_map_prob_map_' + source + '_' + target + '_cst_R_MNI_full_full' + '_sparse_density_' + str(nn) + '_neighbors.txt' 
                 """
+                '''
                 
                 #-------end of mapping method-----------------------------------------
                 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -171,6 +174,17 @@ for a_id in np.arange(len(anneal)):
                 
                 s_cst_sff_in_ext = load_tract(s_file, s_cst_sff_in_ext_idx)
                 t_cst_ext = load_tract(t_file, t_cst_ext_idx)
+                
+                
+                
+                #this is only for mapping - to conver voxel size from 1,1,1 to 2,2,2
+                s_cst = .5 * s_cst
+                t_cst = .5 * t_cst
+                s_cst_sff_in_ext = .5 * s_cst_sff_in_ext
+                t_cst_ext = .5 * t_cst_ext
+                #vol_dims = [182*2,218*2,182*2]
+                
+                # end of this is only for mapping - to conver voxel size from 1,1,1 to 2,2,2
                 
                 #---------------------------------------------------
                 #for normal mapping
