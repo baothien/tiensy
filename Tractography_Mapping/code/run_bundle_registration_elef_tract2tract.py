@@ -11,17 +11,18 @@ def clearall():
     all = [var for var in globals() if (var[:2], var[-2:]) != ("__", "__") and var != "clearall" and var!="s_id" and var!="source_ids" and var!="t_id" and var!="target_ids"  and var!="np"]
     for var in all:
         del globals()[var]
-'''
+
+
 #for CST_ROI_L
 source_ids = [212, 202, 204, 209]
 target_ids = [212, 202, 204, 209]
-
-
 '''
+
+
 #for CST_ROI_R
 source_ids = [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
-
+'''
 
 
 for s_id in np.arange(len(source_ids)):
@@ -34,6 +35,51 @@ for s_id in np.arange(len(source_ids)):
             #Native space
             #=================================================================================================
             
+            #source: CST_extension
+            #target: CST_extension
+            
+            
+            #native_ROI_Left
+            print 
+            print '-----------------------------------------------------------------------------------------'
+            fname = 'bundle_registration_elef_tract2tract.py'
+            arg1 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis.trk'
+            arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_L_tvis_ext.pkl'            
+            arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis.trk'            
+            arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
+            arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source + '_aligned_to_CST_L_ext_' + target + '_elef_rand_30_fiberpoint_20.dpy'
+            #arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source + '_aligned_to_CST_L_ext_' + target + '_elef_rand_100.dpy'
+            #arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source + '_aligned_to_CST_L_ext_' + target + '_elef_rand_200.dpy'
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5]
+            execfile(fname)
+            clearall()            
+            
+            
+            '''
+            #native_ROI_Right
+            print 
+            print '-----------------------------------------------------------------------------------------'
+            fname = 'bundle_registration_elef_tract2tract.py'
+            arg1 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis.trk'
+            arg2 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + source + '_cst_R_tvis_ext.pkl'            
+            arg3 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis.trk'            
+            arg4 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_R_tvis_ext.pkl'
+            arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source + '_aligned_to_CST_R_ext_' + target + '_elef_rand_30_fiberpoint_20.dpy'
+            #arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source + '_aligned_to_CST_R_ext_' + target + '_elef_rand_100.dpy'
+            #arg5 = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source + '_aligned_to_CST_R_ext_' + target + '_elef_rand_200.dpy'
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5]            
+            execfile(fname)
+            clearall() 
+            '''
+            
+            
+            
+            """
+            
+            source: CST
+            #target: CST_extension
             '''
             #native_ROI_Left
             print 
@@ -66,4 +112,4 @@ for s_id in np.arange(len(source_ids)):
             sys.argv = [fname, arg1, arg2, arg3, arg4, arg5]            
             execfile(fname)
             clearall() 
-           
+            """

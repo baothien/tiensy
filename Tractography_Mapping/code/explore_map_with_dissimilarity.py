@@ -51,8 +51,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [212, 202, 204, 209]
-target_ids = [212, 202, 204, 209]
+source_ids = [202]#[212, 202, 204, 209]
+target_ids = [204]#[212, 202, 204, 209]
 '''
 
 
@@ -63,13 +63,13 @@ target_ids = [206, 204, 212, 205]#[206, 204, 212, 205]
 
 vol_dims = [182,218,182] # MNI
 #vol_dims = [128,128,70] #native 
-vis = False#True#False
+vis = True#False#True#False
 
 
 #-------------------------------------------------------------------
 #            Annealing
 #-------------------------------------------------------------------
-anneal = [100]#[100, 200, 400, 600, 800, 1000]#[100]#
+anneal = [800]#[100, 200, 400, 600, 800, 1000]#[100]#
 num_pro = 50
 for a_id in np.arange(len(anneal)):
     print "==================================================================="
@@ -99,8 +99,8 @@ for a_id in np.arange(len(anneal)):
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
                 
                 #annealing
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 """
                 ##probability
                 ##nn = 10
@@ -239,12 +239,17 @@ for a_id in np.arange(len(anneal)):
                 print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
                 
                 
-               
                 if vis:
-                   #visualize target cst and mapped source cst - yellow and blue
+                    from common_functions import show_both_bundles
+                    show_both_bundles([t_cst, mapped_s_cst],                      
+                      colors=[fvtk.colors.blue, fvtk.colors.red],
+                      show=True,
+                      fname='Our_map_dis_202_204_L.png')
+                    """  
+                    #visualize target cst and mapped source cst - yellow and blue
                     ren = fvtk.ren()                
                     ren = visualize_tract(ren, s_cst, fvtk.yellow)
                     ren = visualize_tract(ren, t_cst, fvtk.blue)
                     ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                     fvtk.show(ren)
-                    
+                    """

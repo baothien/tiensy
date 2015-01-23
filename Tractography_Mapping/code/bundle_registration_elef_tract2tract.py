@@ -83,20 +83,21 @@ from dipy.align.streamlinear import (StreamlineLinearRegistration,
 """
 An important step before running the registration is to resample the streamlines
 so that they both have the same number of points per streamline. Here we will
-use 20 points.
+use 10 points.
 """
-
-s_tract = vectorize_streamlines(s_tract, 20)
-t_tract = vectorize_streamlines(t_tract, 20)
+points = 20#10#20
+s_tract = vectorize_streamlines(s_tract, points)
+t_tract = vectorize_streamlines(t_tract, points)
 
 """
 Let's say now that we want to move the ``s_tract`` (moving) so that it can be
 aligned with ``t_tract`` (static). Here is how this is done.
 """
-s_rand_idx = np.random.randint(low = 0, high = len(s_tract), size = min(200,len(s_tract)))
+num_fiber = 300#50#100,200
+s_rand_idx = np.random.randint(low = 0, high = len(s_tract), size = min(num_fiber,len(s_tract)))
 s_tract_tmp = [s_tract[i] for i in s_rand_idx]
 
-t_rand_idx = np.random.randint(low = 0, high = len(t_tract), size = min(200,len(t_tract)))
+t_rand_idx = np.random.randint(low = 0, high = len(t_tract), size = min(num_fiber,len(t_tract)))
 t_tract_tmp = [t_tract[i] for i in t_rand_idx]
 
 #s_tract_tmp = s_tract[:50]

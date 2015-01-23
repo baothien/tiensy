@@ -24,8 +24,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [212, 202, 204, 209]#[212, 202, 204, 209]
-target_ids = [212, 202, 204, 209]
+source_ids = [202]#[212, 202, 204, 209]#[212, 202, 204, 209]
+target_ids = [204]#[212, 202, 204, 209]
 
 
 '''
@@ -36,15 +36,15 @@ target_ids = [206, 204, 212, 205]
 
 #vol_dims = [182,218,182]#MNI, voxel = [1,1,1]
 vol_dims =[128,128,80]# [128,128,70] #native, voxel = [2,2,2]
-vis = False#True
-save = True
+vis = True#False#True
+save = False#True
 
 #------------------------------------------------------------
 #          1-NN 
 #------------------------------------------------------------  
 #print 'Left 50 random'               
 print "The coregistration+1NN gives a mapping12 with the following measurement:"
-print "\t\t Target \t Elef_Jac \t Elef_BFN \t Elef_1NN_Jac \t Elef_1NN_BFN" 
+print "\t\t Target \t Elef_cor \t Elef_not_cor \t Elef_1NN_cor \t Elef_1NN_not_cor" 
 for s_id in np.arange(len(source_ids)):
     #print "------------------------------------------"
     print source_ids[s_id]    
@@ -52,7 +52,104 @@ for s_id in np.arange(len(source_ids)):
         if (target_ids[t_id] != source_ids[s_id]):                
             source_sub = str(source_ids[s_id])
             target_sub = str(target_ids[t_id])
+            
+            #---------------------------------------------------------------------------------------
+            #This is for computing cor and not-cor number of voxel with pairwise registration using Eleftherios method
+            # used for registering cst_ext to cst_ext
+            
+            
+            #Left            
+            s_cst_ext_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+
+            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
+            t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
+            
+
+            
+            '''
+            #Right            
+            s_cst_ext_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+
+            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_R_tvis.pkl'
+            t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
+            t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
+            '''
+            
+            
+            s_cst_idx = load_pickle(s_cst_idx_file)  
+            
+            source_ext = load_whole_tract(s_cst_ext_file)
+            source = source_ext[:len(s_cst_idx)]
+            
+            target = load_tract(t_file, t_cst_ext_idx_file)
+            
+            
+            #print len(source), len(target)
+            
+            tractography1 = source
+            tractography2 = target
+            
+                       
+            map_all = mapping_nn(tractography1, tractography2)
+            
+            if save:            
+                #print 'Saving 1-NN Eleftherios tract based method: ', out_file
+                save_pickle(out_file, map_all)
+                
+            s_cst = source
+            t_cst = load_tract(t_file, t_cst_idx_file)           
+            
+            cst_len = len(s_cst)
+            mapped = map_all[:cst_len]
+            
+            mapped_s_cst = [target[idx] for idx in mapped]
+            
+            new_s_cst = []
+            for k in np.arange(cst_len):
+                new_s_cst.append(np.array(s_cst[k], dtype = np.float32))
+                
            
+            #jac0, bfn0 = Jac_BFN(new_s_cst, t_cst, vol_dims, disp=False)
+            #jac1, bfn1 = Jac_BFN(mapped_s_cst, t_cst, vol_dims, disp=False)
+            
+            #jac0, bfn0 = Jac_BFN2(new_s_cst, t_cst, vol_dims, disp=False)
+            #jac1, bfn1 = Jac_BFN2(mapped_s_cst, t_cst, vol_dims, disp=False)
+
+            
+
+            cor0, ncor0 = vol_corr_notcorr(new_s_cst, t_cst, vol_dims, disp=False)
+            cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
+                
+            print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+               
+            
+           
+            if vis:
+                from common_functions import show_both_bundles
+                show_both_bundles([s_cst, t_cst],
+                      #colors=[fvtk.colors.orange, fvtk.colors.red],
+                      colors=[fvtk.colors.green, fvtk.colors.blue],
+                      show=True,
+                      fname='Elef_reg_only_202_204_L.png')
+                
+                show_both_bundles([t_cst, mapped_s_cst],
+                      colors=[fvtk.colors.blue, fvtk.colors.red],
+                      show=True,
+                      fname='Elef_reg_1NN_202_204_L.png')
+                """
+                #visualize target cst and mapped source cst - yellow and blue
+                ren = fvtk.ren()                
+                ren = visualize_tract(ren, s_cst, fvtk.yellow)
+                ren = visualize_tract(ren, t_cst, fvtk.blue)
+                ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
+                fvtk.show(ren)
+                """
+            """            
             '''
             #Left            
             s_cst_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CST2CSText/CST_L_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef.dpy'
@@ -139,3 +236,5 @@ for s_id in np.arange(len(source_ids)):
                 ren = visualize_tract(ren, t_cst, fvtk.blue)
                 ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                 fvtk.show(ren)
+                
+            """
