@@ -34,7 +34,48 @@ for s_id in np.arange(len(source_ids)):
             #=================================================================================================
             #Native space
             #=================================================================================================
-                        
+            
+            #native_ROI_Left
+            print 
+            print '-----------------------------------------------------------------------------------------'
+            fname = 'wm_register_multisubject.py'
+            arg1 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/in_reg'
+            arg2 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg'
+            arg4 = '-f 300'            
+            arg5 = '-l 75'
+            #arg2 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25'            
+            #arg4 = '-f 100'            
+            #arg5 = '-l 25'
+            
+            arg3 = '-j 4'            
+            
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5]
+            execfile(fname)
+            clearall()            
+            '''
+            
+            #native_ROI_Right
+            print 
+            print '-----------------------------------------------------------------------------------------'
+            fname = 'wm_register_multisubject.py'
+            arg1 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/in_reg'
+            arg2 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg'
+            arg4 = '-f 300'            
+            arg5 = '-l 75'
+            
+            #arg2 = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25'
+            #arg4 = '-f 100'            
+            #arg5 = '-l 25'
+            
+            arg3 = '-j 4'            
+            import sys
+            sys.argv = [fname, arg1, arg2, arg3, arg4, arg5]
+            execfile(fname)
+            clearall()            
+            '''
+            
+            """
             #native_ROI_Left
             print 
             print '-----------------------------------------------------------------------------------------'
@@ -66,3 +107,4 @@ for s_id in np.arange(len(source_ids)):
             execfile(fname)
             clearall()            
             '''
+            """

@@ -72,6 +72,7 @@ source_ids = [206, 204, 212, 205]
 target_ids = [206, 204, 212, 205]
 '''
 
+
 in_format = ".vtk"
 out_format = str(".trk")
 
@@ -87,10 +88,16 @@ for s_id in np.arange(len(source_ids)):
             
             #native_ROI_Left
             
-            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
-            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
-            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
-            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
+            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
+            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
+            
+            
+            ##input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
+            ##output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_L_tvis_ext_reg'+ out_format
             
             input_anatomy_ref = "/home/bao/tiensy/Lauren_registration/data_compare_mapping/anatomy/" + target + "_data_brain.nii.gz"
                        
@@ -100,10 +107,15 @@ for s_id in np.arange(len(source_ids)):
             tractconverter.convert(in_put, out_put)
             print "Done", output_file
             
-            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ in_format
-            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ out_format
-            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ in_format
-            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ out_format
+            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_cst_L_tvis_ext_reg'+ in_format
+            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_cst_L_tvis_ext_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_cst_L_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_cst_L_tvis_ext_reg'+ out_format
+            
+            ##input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ in_format
+            ##output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Left/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_L_tvis_reg'+ out_format
             
             input_anatomy_ref = "/home/bao/tiensy/Lauren_registration/data_compare_mapping/anatomy/" + source + "_data_brain.nii.gz"
             
@@ -116,10 +128,16 @@ for s_id in np.arange(len(source_ids)):
             
             #native_ROI_Right
             
-            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
-            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
-            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
-            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
+            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
+            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
+            
+            ##input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
+            ##output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + target + '_cst_R_tvis_ext_reg'+ out_format
+            
             input_anatomy_ref = "/home/bao/tiensy/Lauren_registration/data_compare_mapping/anatomy/" + target + "_data_brain.nii.gz"
                        
             input_format = tractconverter.detect_format(input_file)
@@ -128,10 +146,16 @@ for s_id in np.arange(len(source_ids)):
             tractconverter.convert(in_put, out_put)
             print "Done", output_file
             
-            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ in_format
-            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ out_format
-            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ in_format
-            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ out_format
+            input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_cst_R_tvis_ext_reg'+ in_format
+            output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_cst_R_tvis_ext_reg'+ out_format            
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_cst_R_tvis_ext_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_cst_R_tvis_ext_reg'+ out_format
+                        
+            ##input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ in_format
+            ##output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ out_format
+            #input_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ in_format
+            #output_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg/CST_ROI_trkvis_Right/' + source + '_' + target + '/out_reg_f100_l25/iteration_4/' + source + '_corticospinal_R_tvis_reg'+ out_format
+            
             input_anatomy_ref = "/home/bao/tiensy/Lauren_registration/data_compare_mapping/anatomy/" + source + "_data_brain.nii.gz"
             input_format = tractconverter.detect_format(input_file)
             in_put = input_format(input_file, input_anatomy_ref)
