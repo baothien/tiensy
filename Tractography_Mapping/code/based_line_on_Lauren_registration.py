@@ -66,12 +66,12 @@ for s_id in np.arange(len(source_ids)):
             #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
             #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f300_l75_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f300_l75.txt'
             
-            s_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_cst_L_tvis_ext_reg.trk'
-            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
+            s_cst_ext_file = '/home/nilab/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_cst_L_tvis_ext_reg.trk'
+            t_cst_ext_file = '/home/nilab/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
+            out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
             
-            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'            
-            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'            
+            t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
             '''
             
             

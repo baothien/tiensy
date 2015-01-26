@@ -59,25 +59,25 @@ for s_id in np.arange(len(source_ids)):
             
             
             #Left            
-            s_cst_ext_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+            s_cst_ext_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
+            out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
 
-            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
-            t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
-            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
-            t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
+            s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
+            t_file  = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            t_cst_ext_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
             
 
             
             '''
             #Right            
-            s_cst_ext_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'
-            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+            s_cst_ext_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'
+            out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_R_ext_' + source_sub + '_aligned_to_CST_R_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
 
-            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_R_tvis.pkl'
-            t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
-            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
-            t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
+            s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_R_tvis.pkl'
+            t_file  = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_R_tvis.pkl'
+            t_cst_ext_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_R_tvis_ext.pkl'
             '''
             
             
