@@ -4,7 +4,7 @@ Created on Thu Jan  8 17:10:35 2015
 
 @author: bao
 """
-from common_functions import load_tract, load_whole_tract,vol_corr_notcorr, Jac_BFN, Jac_BFN_1, Jac_BFN2, visualize_tract
+from common_functions import load_tract, load_whole_tract,vol_corr_notcorr, TP_FP_TP_FN, Jac_BFN, Jac_BFN_1, Jac_BFN2, visualize_tract
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
@@ -24,8 +24,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [202]#[212, 202, 204, 209]#[212, 202, 204, 209]
-target_ids = [204]#[212, 202, 204, 209]
+source_ids = [209]#[212, 202, 204, 209]#[212, 202, 204, 209]
+target_ids = [212]#[212, 202, 204, 209]
 
 
 '''
@@ -59,14 +59,21 @@ for s_id in np.arange(len(source_ids)):
             
             
             #Left            
-            s_cst_ext_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
-            out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+            s_cst_ext_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
 
-            s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
-            t_file  = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
-            t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
-            t_cst_ext_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
+            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
+            t_file  = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
             
+            #s_cst_ext_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.dpy'#100.dpy 200.dpy
+            #out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Elef_pair_CSText2CSText/Elef_pair_CSText2CSText_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_elef_rand_50_fiberpoint_40.txt'
+
+            #s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'
+            #t_file  = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'                        
+            #t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            #t_cst_ext_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
 
             
             '''
@@ -122,25 +129,58 @@ for s_id in np.arange(len(source_ids)):
 
             
 
-            cor0, ncor0 = vol_corr_notcorr(new_s_cst, t_cst, vol_dims, disp=False)
-            cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
+            #cor0, ncor0 = vol_corr_notcorr(new_s_cst, t_cst, vol_dims, disp=False)
+            #cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
                 
-            print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+            #print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
                
             
            
             if vis:
+                s_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source_sub + '_tracks_dti_tvis.trk'
+                t_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'
+                s_cst_native = load_tract(s_file_native, s_cst_idx_file)
+                t_cst_native = load_tract(t_file_native, t_cst_idx_file)
+                t_cst_ext_native = load_tract(t_file_native, t_cst_ext_idx_file)
+                TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst_native, t_cst_native, t_cst_ext_native, mapped)
+                
+                #TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst, t_cst, target, mapped)
+                from common_functions import show_both_bundles
+                       
+                show_both_bundles([TP_mapped, FP_mapped],
+                      #colors=[fvtk.colors.orange, fvtk.colors.red],
+                      colors=[fvtk.colors.red, fvtk.colors.green],
+                      show=True,
+                      fname='Elef_reg_1NN_' + source_sub + '_'+ target_sub + '_L_TP_red_FP_green_in_mapped_show_in_native.png')
+                
+                
+                show_both_bundles([TP_source, FN_source],
+                      colors=[fvtk.colors.blue, fvtk.colors.yellow],
+                      show=True,
+                      fname='Elef_reg_1NN_' + source_sub + '_'+ target_sub + '_L_TP_blue_FN_yellow_in_source_show_in_native.png')
+
+                import matplotlib.pyplot as plt
+                plt.xlabel('streamline id')
+                plt.ylabel('Frequency')
+                plt.title('Eleftherios streamline based registration method')
+                plt.axis([0,len(target)/3,0,50])
+                n, bins, patches = plt.hist(mapped, bins = len(target), range=[0,len(target)])
+                plt.show()
+                #plt.savefig('Histogram_Elef_reg_1NN_' + source_sub + '_'+ target_sub + '_L.png')   
+                
+                '''      
                 from common_functions import show_both_bundles
                 show_both_bundles([s_cst, t_cst],
                       #colors=[fvtk.colors.orange, fvtk.colors.red],
                       colors=[fvtk.colors.green, fvtk.colors.blue],
                       show=True,
-                      fname='Elef_reg_only_202_204_L.png')
+                      fname='Elef_reg_only_204_202_L.png')
                 
                 show_both_bundles([t_cst, mapped_s_cst],
                       colors=[fvtk.colors.blue, fvtk.colors.red],
                       show=True,
-                      fname='Elef_reg_1NN_202_204_L.png')
+                      fname='Elef_reg_1NN_204_202_L.png')
+                '''
                 """
                 #visualize target cst and mapped source cst - yellow and blue
                 ren = fvtk.ren()                
@@ -149,6 +189,10 @@ for s_id in np.arange(len(source_ids)):
                 ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                 fvtk.show(ren)
                 """
+                
+                                 
+                
+                
             """            
             '''
             #Left            

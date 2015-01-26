@@ -4,7 +4,7 @@ Created on Wed Nov 12 13:07:51 2014
 
 @author: bao
 """
-from common_functions import load_tract, load_whole_tract, Jac_BFN,Jac_BFN2, vol_corr_notcorr, visualize_tract
+from common_functions import load_tract, load_whole_tract, TP_FP_TP_FN, Jac_BFN,Jac_BFN2, vol_corr_notcorr, visualize_tract
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
@@ -18,8 +18,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [202]#[212, 202, 204, 209]#[212, 202, 204, 209]
-target_ids = [204]#[212, 202, 204, 209]
+source_ids = [204]#[202]#[212, 202, 204, 209]#[212, 202, 204, 209]
+target_ids = [202]#[204]#[212, 202, 204, 209]
 
 
 '''
@@ -60,18 +60,29 @@ for s_id in np.arange(len(source_ids)):
             
             
            
-            #Left            
+            #Left
+
+            s_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_cst_L_tvis_ext_reg.trk'
+            t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
+            out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
+            
+            s_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'            
+            t_cst_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+                     
             
             #s_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + source_sub + '_cst_L_tvis_ext_reg.trk'
             #t_cst_ext_file = '/home/bao/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
             #out_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f300_l75_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f300_l75.txt'
             
+            '''
             s_cst_ext_file = '/home/nilab/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + source_sub + '_cst_L_tvis_ext_reg.trk'
             t_cst_ext_file = '/home/nilab/tiensy/Lauren_registration/data_compare_mapping/pairwise_reg_cstext2cstext/CST_ROI_trkvis_Left/' + source_sub + '_' + target_sub + '/out_reg_f100_l25/iteration_4/' + target_sub + '_cst_L_tvis_ext_reg.trk'
             out_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/Lauren_pair_CSText2CSText/Lauren_pair_CSText2CSText_f100_l25_1NN/map_1nn_pairwise_reg_CST_L_ext_' + source_sub + '_aligned_to_CST_L_ext_' + target_sub + '_Lauren_f100_l25.txt'
             
             s_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source_sub + '_corticospinal_L_tvis.pkl'            
             t_cst_idx_file = '/home/nilab/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target_sub + '_corticospinal_L_tvis.pkl'
+            '''
+            
             '''
             
             
@@ -135,10 +146,41 @@ for s_id in np.arange(len(source_ids)):
             cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
                 
             print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
-               
             
-           
             if vis:
+                s_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source_sub + '_tracks_dti_tvis.trk'
+                t_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target_sub + '_tracks_dti_tvis.trk'
+                t_cst_ext_idx_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target_sub + '_cst_L_tvis_ext.pkl'
+                s_cst_native = load_tract(s_file_native, s_cst_idx_file)
+                t_cst_native = load_tract(t_file_native, t_cst_idx_file)
+                t_cst_ext_native = load_tract(t_file_native, t_cst_ext_idx_file)
+                TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst_native, t_cst_native, t_cst_ext_native, mapped)
+                
+                #TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst, t_cst, t_cst_ext, mapped)
+                from common_functions import show_both_bundles
+                   
+                show_both_bundles([TP_mapped, FP_mapped],
+                      #colors=[fvtk.colors.orange, fvtk.colors.red],
+                      colors=[fvtk.colors.red, fvtk.colors.green],
+                      show=True,
+                      fname='Lauren_reg_1NN_' + source_sub + '_'+ target_sub + '_L_TP_red_FP_green_in_mapped_show_in_native.png')
+                
+                
+                show_both_bundles([TP_source, FN_source],
+                      colors=[fvtk.colors.blue, fvtk.colors.yellow],
+                      show=True,
+                      fname='Lauren_reg_1NN_' + source_sub + '_'+ target_sub + '_L_TP_blue_FN_yellow_in_source_show_in_native.png')
+
+                import matplotlib.pyplot as plt
+                plt.xlabel('streamline id')
+                plt.ylabel('Frequency')
+                plt.title('Lauren streamline based registration method')
+                plt.axis([0,len(t_cst_ext)/3,0,50])
+                n, bins, patches = plt.hist(mapped, bins = len(t_cst_ext), range=[0,len(t_cst_ext)])
+                plt.show()
+                #plt.savefig('Histogram_Lauren_reg_1NN_' + source_sub + '_'+ target_sub + '_L.png')   
+               
+                '''               
                 from common_functions import show_both_bundles
                 show_both_bundles([s_cst, t_cst],
                       #colors=[fvtk.colors.orange, fvtk.colors.red],
@@ -150,6 +192,7 @@ for s_id in np.arange(len(source_ids)):
                       colors=[fvtk.colors.blue, fvtk.colors.red],
                       show=True,
                       fname='Lauren_reg_1NN_202_204_L.png')
+                '''
                 """
                 #visualize target cst and mapped source cst - yellow and blue
                 ren = fvtk.ren() 

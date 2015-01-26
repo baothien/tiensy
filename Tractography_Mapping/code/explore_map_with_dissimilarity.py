@@ -35,7 +35,7 @@ Step 5: Compute JAC and BFN between cst_t and nn_cst_s_in_t
 
 """
 
-from common_functions import load_tract, Jac_BFN, vol_corr_notcorr, visualize_tract
+from common_functions import load_tract, Jac_BFN, vol_corr_notcorr, TP_FP_TP_FN, visualize_tract
 from dipy.tracking.distances import mam_distances, bundles_distances_mam
 from dipy.io.pickles import load_pickle
 from dipy.viz import fvtk
@@ -51,8 +51,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [202]#[212, 202, 204, 209]
-target_ids = [204]#[212, 202, 204, 209]
+source_ids = [204]#[202]#[212, 202, 204, 209]
+target_ids = [202]#[204]#[212, 202, 204, 209]
 '''
 
 
@@ -177,7 +177,7 @@ for a_id in np.arange(len(anneal)):
                 
                 
                 
-                #this is only for mapping - to conver voxel size from 1,1,1 to 2,2,2
+                #this is only for mapping - to convert voxel size from 1,1,1 to 2,2,2
                 s_cst = .5 * s_cst
                 t_cst = .5 * t_cst
                 s_cst_sff_in_ext = .5 * s_cst_sff_in_ext
@@ -234,17 +234,52 @@ for a_id in np.arange(len(anneal)):
                 #print "Before mapping: ", jac0, bfn0
                 #print "After mapping: ", jac1, bfn1
                 
-                cor0, ncor0 = vol_corr_notcorr(s_cst, t_cst, vol_dims, disp=False)
-                cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)
-                print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+                #cor0, ncor0 = vol_corr_notcorr(s_cst, t_cst, vol_dims, disp=False)
+                #cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)
+                #print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
                 
                 
-                if vis:
+                if vis:                    
+                    mapped = [idx_nn[i][0] for i in np.arange(cst_len)]
+                    
+                    s_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis.trk'
+                    t_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis.trk'
+                    s_cst_native = load_tract(s_file_native, s_cst_idx)
+                    t_cst_native = load_tract(t_file_native, t_cst_idx)
+                    t_cst_ext_native = load_tract(t_file_native, t_cst_ext_idx)
+                    TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst_native, t_cst_native, t_cst_ext_native, mapped)
+                  
+                  
+                    #TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst, t_cst, t_cst_ext, mapped)
+                    from common_functions import show_both_bundles
+                       
+                    show_both_bundles([TP_mapped, FP_mapped],
+                          #colors=[fvtk.colors.orange, fvtk.colors.red],
+                          colors=[fvtk.colors.red, fvtk.colors.green],
+                          show=True,
+                          fname='Our_map_dis_1NN_' + source + '_'+ target + '_L_TP_red_FP_green_in_mapped_show_in_native.png')
+                    
+                    
+                    show_both_bundles([TP_source, FN_source],
+                          colors=[fvtk.colors.blue, fvtk.colors.yellow],
+                          show=True,
+                          fname='Our_map_dis_1NN_' + source + '_'+ target + '_L_TP_blue_FN_yellow_in_source_show_in_native.png')
+    
+                    import matplotlib.pyplot as plt
+                    plt.xlabel('streamline id')
+                    plt.ylabel('Frequency')
+                    plt.title('Mapping for dissimilarity representation method')
+                    plt.axis([0,len(t_cst_ext)/3,0,50])
+                    n, bins, patches = plt.hist(mapped, bins = len(t_cst_ext), range=[0,len(t_cst_ext)])
+                    plt.show()
+                    #plt.savefig('Histogram_our_map_dis_1NN_' + source + '_'+ target + '_L.png')   
+                    '''
                     from common_functions import show_both_bundles
                     show_both_bundles([t_cst, mapped_s_cst],                      
                       colors=[fvtk.colors.blue, fvtk.colors.red],
                       show=True,
                       fname='Our_map_dis_202_204_L.png')
+                    '''
                     """  
                     #visualize target cst and mapped source cst - yellow and blue
                     ren = fvtk.ren()                

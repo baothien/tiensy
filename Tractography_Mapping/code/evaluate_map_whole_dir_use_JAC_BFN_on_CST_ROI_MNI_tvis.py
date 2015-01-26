@@ -15,7 +15,7 @@ result of the mapping as in
 note that the mapp saves the index of fiber in the source tract
 with each fiber index i in source, mapp[i] is the index of fiber in target
       """
-from common_functions import load_tract, Jac_BFN, Jac_BFN2, vol_corr_notcorr, Jac_BFN_1, visualize_tract, Shannon_entropy
+from common_functions import load_tract, Jac_BFN, Jac_BFN2, vol_corr_notcorr, TP_FP_TP_FN, vol_tracts, Jac_BFN_1, visualize_tract, Shannon_entropy
 from dipy.io.pickles import load_pickle, save_pickle
 from dipy.viz import fvtk
 import numpy as np
@@ -28,8 +28,8 @@ def clearall():
         
 
 #for CST_ROI_L
-source_ids = [202]#[212, 202, 204, 209]
-target_ids = [204]#[212, 202, 204, 209]
+source_ids =[204]# [212, 202, 204, 209]#[202]#
+target_ids = [202]#[212, 202, 204, 209]#[204]#
 
 
 '''
@@ -40,7 +40,7 @@ target_ids = [206, 204, 212, 205]
 
 
 vol_dims = [182,218,182]
-vis = True#False#True#False
+vis = True#False#True#False#True#False
 
 """
 #-------------------------------------------------------------------
@@ -205,8 +205,8 @@ for a_id in np.arange(len(anneal)):
                 s_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + source + '_corticospinal_L_tvis.pkl'
                 t_cst_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/ROI_seg_tvis/ROI_seg_tvis_native/' + target + '_corticospinal_L_tvis.pkl'
                 t_cst_ext_idx = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/50_SFF_in_ext/ROI_seg_native/' + target + '_cst_L_tvis_ext.pkl'
-                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
-                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                #map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_best_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
+                map_file = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/results/result_cst_sff_in_ext_2_cst_ext/50_SFF_MNI/map_1nn_' + source + '_' + target + '_cst_L_ann_' + str(anneal[a_id]) + '_MNI.txt'
                 '''
                 
                 #Right
@@ -245,31 +245,62 @@ for a_id in np.arange(len(anneal)):
                 #jac1, bfn1 = Jac_BFN2(mapped_s_cst, t_cst, vol_dims, disp=False)
                 #print "\t\t", target_ids[t_id], "\t", jac0,"\t",  bfn0, "\t", jac1,"\t",  bfn1
                 
-               
-                
+                                
                 cor0, ncor0 = vol_corr_notcorr(s_cst, t_cst, vol_dims, disp=False)
                 cor1, ncor1 = vol_corr_notcorr(mapped_s_cst, t_cst, vol_dims, disp=False)                
+
+                vl_s, vl_t = vol_tracts(s_cst, t_cst, vol_dims, disp=False)
                 
-                print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1
+                print "\t\t", target_ids[t_id], "\t", cor0,"\t",  ncor0, "\t", cor1,"\t",  ncor1, "\t", vl_s,"\t",  vl_t
                 
                 
                 if vis:
+                    s_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + source + '_tracks_dti_tvis.trk'
+                    t_file_native = '/home/bao/tiensy/Tractography_Mapping/data/trackvis_tractography/tvis_tractography/' + target + '_tracks_dti_tvis.trk'
+                    s_cst_native = load_tract(s_file_native, s_cst_idx)
+                    t_cst_native = load_tract(t_file_native, t_cst_idx)
+                    t_cst_ext_native = load_tract(t_file_native, t_cst_ext_idx)
+                    TP_mapped,FP_mapped,TP_source, FN_source = TP_FP_TP_FN(s_cst_native, t_cst_native, t_cst_ext_native, mapped)
+                    from common_functions import show_both_bundles
+                    
+                    show_both_bundles([TP_mapped, FP_mapped],
+                          #colors=[fvtk.colors.orange, fvtk.colors.red],
+                          colors=[fvtk.colors.red, fvtk.colors.green],
+                          show=True,
+                          fname='Flirt_reg_1NN_' + source + '_'+ target + '_L_TP_red_FP_green_in_mapped_show_in_native.png')
+                    
+                    
+                    show_both_bundles([TP_source, FN_source],
+                          colors=[fvtk.colors.blue, fvtk.colors.yellow],
+                          show=True,
+                          fname='Flirt_reg_1NN_' + source + '_'+ target + '_L_TP_blue_FN_yellow_in_source_show_in_native.png')
+    
+                    import matplotlib.pyplot as plt
+                    plt.xlabel('streamline id')
+                    plt.ylabel('frequency')
+                    plt.title('Flirt, voxel based registration method')
+                    plt.axis([0,len(t_cst_ext)/3,0,50])
+                    n, bins, patches = plt.hist(mapped, bins = len(t_cst_ext), range=[0,len(t_cst_ext)])
+                    plt.show()
+                    plt.savefig('Histogram_Flirt_reg_1NN_' + source + '_'+ target + '_L.png')   
+                    '''
                     from common_functions import show_both_bundles
                     show_both_bundles([mapped_s_cst, t_cst],                      
                       colors=[fvtk.colors.green, fvtk.colors.blue],
                       show=True,
-                      fname='Flirt_reg_only_202_204_L.png')
+                      fname='Flirt_reg_only_204_202_L.png')
+                    '''
                     '''
                     show_both_bundles([s_cst, t_cst],
                       #colors=[fvtk.colors.orange, fvtk.colors.red],
                       colors=[fvtk.colors.green, fvtk.colors.blue],
                       show=True,
-                      fname='Flirt_reg_only_202_204_L.png')
+                      fname='Flirt_reg_only_204_202_L.png')
                 
                     show_both_bundles([t_cst, mapped_s_cst],
                       colors=[fvtk.colors.blue, fvtk.colors.red],
                       show=True,
-                      fname='Flirt_reg_1NN_202_204_L.png')
+                      fname='Flirt_reg_1NN_204_202_L.png')
                      '''
                     """  
                     #visualize target cst and mapped source cst - yellow and blue
@@ -279,7 +310,10 @@ for a_id in np.arange(len(anneal)):
                     ren = visualize_tract(ren, mapped_s_cst, fvtk.red)
                     fvtk.show(ren)
                     """
-
+                
+                #import matplotlib.pyplot as plt
+                #n, bins, patches = plt.hist(mapped, bins = len(t_cst_ext), range=[0,len(t_cst_ext)])
+                #l = plt.plot(bins, y, 'r--', linewidth=1)
 '''
 #------------------------------------------------------------
 #          1-NN 

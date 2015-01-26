@@ -373,7 +373,19 @@ def vol_corr_notcorr(tract1, tract2, vol_dims, disp=False, save=False):
     vol_notcorr = real_vol1 - vol_corr
     
     return vol_corr, vol_notcorr
+
+def vol_tracts(tract1, tract2, vol_dims, voxel_size = [1,1,1], disp=False, save=False):
+    '''
+     [128,128,70], [1,1,1]
     
+    
+    '''
+    vol1, vol2, intersec = streamlines_to_vol(tract1, tract2, vol_dims, disp, save)
+    
+    real_vol1 = real_volumn(vol1, vol_dims)
+    real_vol2 = real_volumn(vol2, vol_dims)
+    
+    return real_vol1, real_vol2      
     
 def Jac_BFN_1(tract1, tract2, vol_dims, voxel_size = [1,1,1], disp=False, save=False):
     '''
@@ -971,6 +983,24 @@ Some functions for visualization: a tract, a volumn, ...
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++           
 '''
 
+def TP_FP_TP_FN(s_cst, t_cst, t_cst_ext, mapped):
+    TP_mapped = []
+    FP_mapped = []
+    TP_source = []
+    FN_source = []
+    for j_idx in mapped:
+        if j_idx < len(t_cst):
+            TP_mapped.append(t_cst_ext[j_idx])
+        else:
+            FP_mapped.append(t_cst_ext[j_idx])
+     
+    for k_idx in np.arange(len(s_cst)):
+        if mapped[k_idx] >= len(t_cst):   
+            FN_source.append(s_cst[k_idx])
+        else:
+            TP_source.append(s_cst[k_idx])
+    return TP_mapped,FP_mapped,TP_source, FN_source
+    
 #visualize a volumn without color
 def viz_vol(vol):
    
@@ -1042,9 +1072,10 @@ def show_both_bundles(bundles, colors=None, show=False, fname=None):
     ren.SetBackground(1., 1, 1)
     for (i, bundle) in enumerate(bundles):
         color = colors[i]
-        lines = fvtk.streamtube(bundle, color, linewidth=0.3)
+        lines = fvtk.streamtube(bundle, color, linewidth=0.15)
         lines.RotateX(-90)
-        lines.RotateZ(90)
+        #lines.RotateZ(90)
+        lines.RotateZ(-90)
         fvtk.add(ren, lines)
     if show:
         fvtk.show(ren)
